@@ -1,14 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-const Song = () => {
+const Artist = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Song</Text>
+      <Text>Artist</Text>
     </View>
   );
 };
 
-export default Song;
+export default Artist;
 
 const styles = StyleSheet.create({});

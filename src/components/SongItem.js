@@ -1,14 +1,14 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View } from "react-native";
+import React from "react";
 
 const SongItem = () => {
   return (
     <View>
       <Text>SongItem</Text>
     </View>
-  )
-}
+  );
+};
 
-export default SongItem
+export default SongItem;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({});
