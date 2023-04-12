@@ -3,7 +3,7 @@ import React from "react";
 
 const Song = () => {
   return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+    <View style={styles.container}>
       <Text>Song</Text>
     </View>
   );
@@ -11,4 +11,11 @@ const Song = () => {
 
 export default Song;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    justifyContent: "center",
+    alignItems: "center",
+  },
+});
