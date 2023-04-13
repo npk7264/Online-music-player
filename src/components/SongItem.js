@@ -1,14 +1,74 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import React, { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
 
 const SongItem = () => {
+  [isPlay, setIsPlay] = useState(false);
+  let handlePress = () => {
+    setIsPlay(!isPlay);
+  }
   return (
-    <View>
-      <Text>SongItem</Text>
-    </View>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={handlePress}>
+      <View style={styles.content}>
+        <Image
+          source={require("../../assets/poster_music.png")}
+          style={styles.poster} >
+        </Image>
+        <View
+          style={styles.inf}
+        >
+          <Text style={styles.song} numberOfLines={1}>HI</Text>
+          <Text style={styles.artist}>Hello  |  3:50</Text>
+        </View>
+        <Ionicons
+          name={!isPlay ? "play-circle" : "pause"}
+          size={30}
+          color='#ff973e'
+          style={styles.playIcon} />
+        <TouchableOpacity>
+          <Ionicons
+            name="ellipsis-vertical"
+            size={20} />
+        </TouchableOpacity>
+      </View>
+    </TouchableOpacity>
   );
 };
-
 export default SongItem;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+    height: 70,
+    paddingVertical: 5,
+    paddingHorizontal: 20,
+    justifyContent: "space-around",
+    backgroundColor: 'white',
+  },
+  content: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  poster: {
+    width: 50,
+    height: 50,
+    marginRight: 20,
+    borderRadius: 15
+  },
+  inf: {
+    height: "100%",
+    justifyContent: 'center',
+  },
+  song: {
+    fontSize: 16,
+
+  },
+  artist: { fontSize: 14, color: "gray", },
+  playIcon: {
+    marginLeft: '35%',
+    marginRight: 20,
+  },
+});
