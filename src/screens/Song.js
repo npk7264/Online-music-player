@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import SongItem from "../components/SongItem.js"
+import OptionModal from "../components/OptionModal.js";
 
 
 const songs = [
@@ -31,13 +32,34 @@ const songs = [
 ]
 
 const Song = () => {
+  const [optionModalVisible, setOptionModalVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
   return (
     <View style={styles.container}>
       <FlatList
         data={songs}
-        renderItem={({ item }) => <SongItem song={item.song} singer={item.singer} time={item.time} />}
+        renderItem={({ item }) =>
+          <SongItem
+            song={item.song}
+            singer={item.singer}
+            time={item.time}
+            onPressOptionModal={() => {
+              setOptionModalVisible(true);
+              setCurrentItem(item);
+            }}
+          />
+        }
         keyExtractor={item => item.id}
       />
+      <OptionModal
+        options={[
+          {
+            title: 'Add to playlist',
+            onPress: () => { console.log('add playlist') },
+          }]}
+        currentItem={currentItem}
+        onClose={() => setOptionModalVisible(false)}
+        visible={optionModalVisible} />
     </View>
   );
 };

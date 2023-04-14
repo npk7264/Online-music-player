@@ -30,7 +30,8 @@ const SongItem = (props) => {
             size={30}
             color='#ff973e'
             style={styles.playIcon} />
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={props.onPressOptionModal}>
             <Ionicons
               name="ellipsis-vertical"
               size={20} />
