@@ -16,7 +16,12 @@ const SearchBar = ({ title }) => {
         </Text>
       </View>
       {/* search button */}
-      <TouchableOpacity onPress={() => { }}>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Search");
+        }}
+      >
         <FontAwesome name="search" size={24}></FontAwesome>
       </TouchableOpacity>
     </View>
@@ -33,7 +38,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 10,
     backgroundColor: "white",
-
+    height: 60,
   },
   container: {
     flexDirection: "row",
