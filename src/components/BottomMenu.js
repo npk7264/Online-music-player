@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 import React from "react";
 
-import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Entypo, Ionicons } from "@expo/vector-icons";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
@@ -9,6 +9,7 @@ const Tab = createBottomTabNavigator();
 import TopMenu from "./TopMenu";
 import Playlist from "../screens/Playlist";
 import Chart from "../screens/Chart";
+import Setting from "../screens/Setting";
 
 const BottomMenu = () => {
   return (
@@ -56,6 +57,22 @@ const BottomMenu = () => {
           tabBarIcon: ({ focused }) => (
             <Entypo
               name="bar-graph"
+              size={24}
+              color={focused ? "#ff8216" : "#ccc"}
+            />
+          ),
+          tabBarInactiveTintColor: "#ccc",
+          tabBarActiveTintColor: "#ff8216",
+        }}
+      />
+      <Tab.Screen
+        name="Cài đặt"
+        component={Setting}
+        options={{
+          tabBarLabelStyle: styles.menuTitle,
+          tabBarIcon: ({ focused }) => (
+            <Ionicons
+              name="settings-sharp"
               size={24}
               color={focused ? "#ff8216" : "#ccc"}
             />
