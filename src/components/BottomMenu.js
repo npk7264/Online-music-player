@@ -7,7 +7,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
 import TopMenu from "./TopMenu";
-import Song from "../screens/Song";
 import Playlist from "../screens/Playlist";
 import Chart from "../screens/Chart";
 import Setting from "../screens/Setting";
