@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet } from "react-native";
 import React from "react";
 
 import { MaterialCommunityIcons, Entypo } from "@expo/vector-icons";
@@ -7,7 +7,6 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
 import TopMenu from "./TopMenu";
-import Song from "../screens/Song";
 import Playlist from "../screens/Playlist";
 import Chart from "../screens/Chart";
 
