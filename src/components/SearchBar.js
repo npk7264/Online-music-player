@@ -16,6 +16,7 @@ const SearchBar = ({ title }) => {
         </Text>
       </View>
       {/* search button */}
+
       <TouchableOpacity
         onPress={() => {
           navigation.navigate("Search");
@@ -36,6 +37,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 10,
+    backgroundColor: "white",
     height: 60,
   },
   container: {
