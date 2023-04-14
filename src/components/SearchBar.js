@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 const SearchBar = ({ title }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.searchBar}>
       {/* title */}
@@ -29,7 +32,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingHorizontal: 20,
     paddingVertical: 10,
-    backgroundColor: "#ccc", // test
   },
   container: {
     flexDirection: "row",
