@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 
 const SongItem = (props) => {
-  [isPlay, setIsPlay] = useState(false);
+  const [isPlay, setIsPlay] = useState(false);
   let handlePress = () => {
     setIsPlay(!isPlay);
   }
