@@ -1,23 +1,22 @@
-import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, SafeAreaView, StatusBar } from "react-native";
 import React from "react";
 
 import SearchBar from "../components/SearchBar";
 
-const Playlist = () => {
+const Setting = () => {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar></StatusBar>
 
-      <SearchBar title={"Playlist"} />
-
+      <SearchBar title={"Setting"} />
       <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Playlist</Text>
+        <Text>Setting</Text>
       </View>
     </SafeAreaView>
   );
 };
 
-export default Playlist;
+export default Setting;
 
 const styles = StyleSheet.create({
   container: {
