@@ -26,7 +26,7 @@ const BottomMenu = () => {
           tabBarIcon: ({ focused }) => (
             <Entypo
               name="home"
-              size={24}
+              size={20}
               color={focused ? "#ff8216" : "#ccc"}
             />
           ),
@@ -42,7 +42,7 @@ const BottomMenu = () => {
           tabBarIcon: ({ focused }) => (
             <MaterialCommunityIcons
               name="playlist-music"
-              size={24}
+              size={20}
               color={focused ? "#ff8216" : "#ccc"}
             />
           ),
@@ -58,7 +58,7 @@ const BottomMenu = () => {
           tabBarIcon: ({ focused }) => (
             <Entypo
               name="bar-graph"
-              size={24}
+              size={20}
               color={focused ? "#ff8216" : "#ccc"}
             />
           ),
@@ -74,7 +74,7 @@ const BottomMenu = () => {
           tabBarIcon: ({ focused }) => (
             <Ionicons
               name="settings-sharp"
-              size={24}
+              size={20}
               color={focused ? "#ff8216" : "#ccc"}
             />
           ),
@@ -89,5 +89,5 @@ const BottomMenu = () => {
 export default BottomMenu;
 
 const styles = StyleSheet.create({
-  menuTitle: { fontSize: 14, fontWeight: "500" },
+  menuTitle: { fontSize: 13, fontWeight: "500" },
 });

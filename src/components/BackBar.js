@@ -1,13 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
+
 import { FontAwesome } from "@expo/vector-icons";
 
 const BackBar = ({ title }) => {
+  const navigation = useNavigation();
   return (
     <View style={styles.backBar}>
       {/* title */}
       <View style={styles.container}>
-        <TouchableOpacity style={{ paddingHorizontal: 20 }}>
+        <TouchableOpacity
+          style={{ paddingHorizontal: 20 }}
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
           <FontAwesome name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
         <Text style={styles.title} numberOfLines={1}>
@@ -31,7 +39,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingRight: 20,
     paddingVertical: 10,
-    backgroundColor: "#ccc", // test
   },
   container: {
     flexDirection: "row",
