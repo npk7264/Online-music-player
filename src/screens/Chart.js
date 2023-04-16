@@ -1,7 +1,17 @@
-import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  StatusBar,
+  SafeAreaView,
+  FlatList,
+} from "react-native";
 import React from "react";
 
 import SearchBar from "../components/SearchBar";
+import SongItem from "../components/SongItem";
+
+import { songs } from "../../data";
 
 const Chart = () => {
   return (
@@ -9,9 +19,21 @@ const Chart = () => {
       <StatusBar></StatusBar>
 
       <SearchBar title={"Chart"} />
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-        <Text>Chart</Text>
-      </View>
+      <FlatList
+        data={songs}
+        renderItem={({ item }) => (
+          <SongItem
+            song={item.song}
+            singer={item.singer}
+            time={item.time}
+            onPressOptionModal={() => {
+              setOptionModalVisible(true);
+              setCurrentItem(item);
+            }}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 };
