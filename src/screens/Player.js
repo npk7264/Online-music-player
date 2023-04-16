@@ -6,6 +6,7 @@ import {
   StatusBar,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
 import React from "react";
 
@@ -28,7 +29,10 @@ const Player = () => {
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <View style={styles.thumbnail}></View>
+        <Image
+          style={styles.thumbnail}
+          source={require("../../assets/temp.jpg")}
+        />
         {/* Song name */}
         <View
           style={{
