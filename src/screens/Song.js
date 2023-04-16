@@ -1,44 +1,64 @@
-import { StyleSheet, Text, View, FlatList } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  FlatList,
+  TouchableOpacity,
+} from "react-native";
 import React, { useState } from "react";
-import SongItem from "../components/SongItem.js"
+
+import SongItem from "../components/SongItem.js";
 import OptionModal from "../components/OptionModal.js";
+import MiniPlayer from "../components/MiniPlayer.js";
 
+import { FontAwesome } from "@expo/vector-icons";
 
-const songs = [
-  {
-    id: 1,
-    song: 'Nang am xa dan',
-    singer: 'Son Tung',
-    time: '2:20'
-  },
-  {
-    id: 2,
-    song: 'Con buom xinh',
-    singer: 'Ho Quang Hieu',
-    time: '3:10'
-  },
-  {
-    id: 3,
-    song: 'Big city boy',
-    singer: 'BinZ',
-    time: '5:00'
-  },
-  {
-    id: 4,
-    song: 'Ngu mot minh',
-    singer: 'Hieu Thu Hai',
-    time: '4:40'
-  },
-]
+// test data
+import { songs } from "../../data.js";
 
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   return (
     <View style={styles.container}>
+      <View
+        style={{
+          height: 50,
+          paddingHorizontal: 20,
+          flexDirection: "row",
+          justifyContent: "space-between",
+        }}
+      >
+        <View style={{ justifyContent: "center" }}>
+          <Text style={{ fontSize: 18, fontWeight: "500" }}>10 bài hát</Text>
+        </View>
+        <TouchableOpacity
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "bold",
+              color: "#ff8216",
+              marginRight: 10,
+            }}
+          >
+            Sắp xếp
+          </Text>
+          <View>
+            <FontAwesome name="sort" size={30} color="#ff8216" />
+          </View>
+        </TouchableOpacity>
+      </View>
+
+      {/* Song list */}
       <FlatList
         data={songs}
-        renderItem={({ item }) =>
+        renderItem={({ item }) => (
           <SongItem
             song={item.song}
             singer={item.singer}
@@ -48,18 +68,23 @@ const Song = () => {
               setCurrentItem(item);
             }}
           />
-        }
-        keyExtractor={item => item.id}
+        )}
+        keyExtractor={(item) => item.id}
       />
+      {/* <MiniPlayer /> */}
       <OptionModal
         options={[
           {
-            title: 'Add to playlist',
-            onPress: () => { console.log('add playlist') },
-          }]}
+            title: "Add to playlist",
+            onPress: () => {
+              console.log("add playlist");
+            },
+          },
+        ]}
         currentItem={currentItem}
         onClose={() => setOptionModalVisible(false)}
-        visible={optionModalVisible} />
+        visible={optionModalVisible}
+      />
     </View>
   );
 };
@@ -69,8 +94,6 @@ export default Song;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    // justifyContent: "center",
-    // alignItems: "center",
+    backgroundColor: "white",
   },
 });

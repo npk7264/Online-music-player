@@ -6,35 +6,44 @@ const SongItem = (props) => {
   const [isPlay, setIsPlay] = useState(false);
   let handlePress = () => {
     setIsPlay(!isPlay);
-  }
+  };
+
   return (
-    <TouchableOpacity
-      style={styles.container}
-      onPress={handlePress}>
+    <TouchableOpacity style={styles.container} onPress={handlePress}>
       <View style={styles.content}>
-        <View style={{ flex: 2, flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flex: 1,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          {/* Image */}
           <Image
-            source={require("../../assets/poster_music.png")}
-            style={styles.poster} >
-          </Image>
-          <View
-            style={styles.inf}
-          >
-            <Text style={styles.song} numberOfLines={1}>{props.song}</Text>
-            <Text style={styles.artist}>{props.singer}  |  {props.time}</Text>
+            source={require("../../assets/temp.jpg")}
+            style={styles.poster}
+          />
+
+          {/* Info */}
+          <View style={{ flex: 1, paddingRight: 10 }}>
+            <Text style={{ fontSize: 18 }} numberOfLines={1}>
+              {props.song}
+            </Text>
+            <Text style={{ fontSize: 16, color: "gray" }}>{props.singer}</Text>
           </View>
         </View>
-        <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center' }}>
+
+        {/* Button */}
+        <View style={styles.buttonContainter}>
+          {/* PLAY/PAUSE */}
           <Ionicons
             name={!isPlay ? "play-circle" : "pause"}
             size={30}
-            color='#ff973e'
-            style={styles.playIcon} />
-          <TouchableOpacity
-            onPress={props.onPressOptionModal}>
-            <Ionicons
-              name="ellipsis-vertical"
-              size={20} />
+            color="#ff973e"
+          />
+          {/* OPTION */}
+          <TouchableOpacity onPress={props.onPressOptionModal}>
+            <Ionicons name="ellipsis-vertical" size={20} />
           </TouchableOpacity>
         </View>
       </View>
@@ -49,31 +58,23 @@ const styles = StyleSheet.create({
     height: 70,
     paddingVertical: 5,
     paddingHorizontal: 20,
-    justifyContent: "space-around",
-    backgroundColor: 'white',
+    backgroundColor: "white",
   },
   content: {
     flex: 1,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
   },
   poster: {
     width: 50,
     height: 50,
     marginRight: 20,
-    borderRadius: 15
+    borderRadius: 15,
   },
-  inf: {
-    height: "100%",
-    justifyContent: 'center',
-  },
-  song: {
-    fontSize: 16,
-
-  },
-  artist: { fontSize: 14, color: "gray", },
-  playIcon: {
-    marginLeft: '35%',
-    marginRight: 20,
+  buttonContainter: {
+    width: "20%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
 });
