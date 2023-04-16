@@ -5,20 +5,28 @@ import {
   TouchableOpacity,
   TextInput,
   SafeAreaView,
+  FlatList,
 } from "react-native";
 import { useState } from "react";
 
-import { FontAwesome } from "@expo/vector-icons";
+import SongItem from "../components/SongItem";
 
+import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
+
+// test data
+import { songs } from "../../data";
 
 const Search = () => {
   const navigation = useNavigation();
-  const [isFocused, setIsFocused] = useState(false);
+  const [isFocused, setIsFocused] = useState(false); // focus TextInput
+  const [searchResult, setSearchResult] = useState([]);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+      {/* Search Bar */}
       <View style={styles.searchBar}>
-        {/* title */}
+        {/* Back Button */}
         <TouchableOpacity
           style={{ paddingHorizontal: 20 }}
           onPress={() => {
@@ -27,7 +35,7 @@ const Search = () => {
         >
           <FontAwesome name="arrow-left" size={24} color="black" />
         </TouchableOpacity>
-        {/* search button */}
+        {/* Search Input */}
         <TextInput
           style={[
             styles.searchInput,
@@ -43,6 +51,23 @@ const Search = () => {
           onBlur={() => setIsFocused(false)}
         />
       </View>
+
+      {/* Search Result */}
+      <FlatList
+        data={songs}
+        renderItem={({ item }) => (
+          <SongItem
+            song={item.song}
+            singer={item.singer}
+            time={item.time}
+            onPressOptionModal={() => {
+              setOptionModalVisible(true);
+              setCurrentItem(item);
+            }}
+          />
+        )}
+        keyExtractor={(item) => item.id}
+      />
     </SafeAreaView>
   );
 };
