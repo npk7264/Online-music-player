@@ -5,6 +5,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Song from "../screens/Song";
 import Artist from "../screens/Artist";
 import SearchBar from "./SearchBar";
+import MiniPlayer from "./MiniPlayer";
 
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
@@ -29,6 +30,8 @@ const TopMenu = () => {
         <Tab.Screen name="Bài hát" component={Song} />
         <Tab.Screen name="Ca sĩ" component={Artist} />
       </Tab.Navigator>
+
+      <MiniPlayer />
     </SafeAreaView>
   );
 };

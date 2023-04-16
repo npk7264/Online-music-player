@@ -6,8 +6,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useState } from "react";
+
 import SongItem from "../components/SongItem.js";
 import OptionModal from "../components/OptionModal.js";
+import MiniPlayer from "../components/MiniPlayer.js";
 
 import { FontAwesome } from "@expo/vector-icons";
 
@@ -45,7 +47,7 @@ const Song = () => {
               marginRight: 10,
             }}
           >
-            Ascending
+            Sắp xếp
           </Text>
           <View>
             <FontAwesome name="sort" size={30} color="#ff8216" />
@@ -69,6 +71,7 @@ const Song = () => {
         )}
         keyExtractor={(item) => item.id}
       />
+      {/* <MiniPlayer /> */}
       <OptionModal
         options={[
           {
