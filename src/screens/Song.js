@@ -75,7 +75,15 @@ const Song = () => {
       <OptionModal
         options={[
           {
+            title: "Play Next",
+            icon: "keyboard-tab",
+            onPress: () => {
+              console.log("play next");
+            },
+          },
+          {
             title: "Add to playlist",
+            icon: "add-circle-outline",
             onPress: () => {
               console.log("add playlist");
             },
