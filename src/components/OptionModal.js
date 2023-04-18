@@ -23,7 +23,7 @@ const OptionModal = ({
             <Modal animationType='slide' transparent visible={visible} statusBarTranslucent>
                 <View style={styles.modal}>
                     <Text style={styles.title} numberOfLines={2}>
-                        {currentItem?.song}
+                        {currentItem?.name}
                     </Text>
                     <View style={styles.optionContainer}>
                         {options.map(optn => {

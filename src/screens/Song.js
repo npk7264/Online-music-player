@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import SongItem from "../components/SongItem.js";
 import OptionModal from "../components/OptionModal.js";
@@ -14,11 +14,33 @@ import MiniPlayer from "../components/MiniPlayer.js";
 import { FontAwesome } from "@expo/vector-icons";
 
 // test data
-import { songs } from "../../data.js";
+//import { songs } from "../../data.js";
+
+import { collection, getDocs } from "firebase/firestore";
+import db from "../components/FirebaseConfig.js";
 
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+  const [songs, setSongs] = useState([]);
+
+  //read data fireStore
+  useEffect(() => {
+    async function fetchData() {
+      let song = [];
+      const querySnapshot = await getDocs(collection(db, "songs"));
+      querySnapshot.forEach((doc) => {
+        const { name, singer } = doc.data()
+        // console.log(`${doc.id} => {${name},${singer}}`);
+        // setSongs([...songs, { id: doc.id, name: name, singer: singer, time: '3:00' }])
+        song.push({ id: doc.id, name: name, singer: singer, time: '3:00' });
+      });
+      setSongs(song)
+    }
+    fetchData();
+  }, [])
+
+
   return (
     <View style={styles.container}>
       <View
@@ -60,7 +82,7 @@ const Song = () => {
         data={songs}
         renderItem={({ item }) => (
           <SongItem
-            song={item.song}
+            song={item.name}
             singer={item.singer}
             time={item.time}
             onPressOptionModal={() => {
