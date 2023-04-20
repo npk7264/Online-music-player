@@ -31,7 +31,7 @@ const TopMenu = () => {
         <Tab.Screen name="Ca sĩ" component={Artist} />
       </Tab.Navigator>
 
-      <MiniPlayer />
+      {/* <MiniPlayer /> */}
     </SafeAreaView>
   );
 };

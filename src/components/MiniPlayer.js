@@ -9,13 +9,7 @@ const MiniPlayer = () => {
 
   return (
     <TouchableOpacity
-      style={{
-        height: 60,
-        paddingHorizontal: 20,
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-      }}
+      style={styles.container}
       onPress={() => {
         navigation.navigate("Player");
       }}
@@ -54,4 +48,15 @@ const MiniPlayer = () => {
 
 export default MiniPlayer;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    height: 60,
+    paddingHorizontal: 20,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    borderColor: '#efefef',
+    borderTopWidth: 1,
+    borderRadius: 10
+  },
+});

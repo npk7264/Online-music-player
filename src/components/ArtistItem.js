@@ -1,29 +1,37 @@
 import React from 'react'
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
-
-const ArtistItem = () => {
+import { Ionicons } from "@expo/vector-icons";
+const ArtistItem = (props) => {
     return (
         <TouchableOpacity style={styles.container}>
-            <View
-                style={{
-                    flex: 1,
-                    flexDirection: "row",
-                    alignItems: "center",
-                }}
-            >
-                {/* Image */}
-                <Image
-                    source={require("../../assets/poster_music.png")}
-                    style={styles.poster}
-                />
+            <View style={styles.content}>
+                <View
+                    style={{
+                        flex: 1,
+                        flexDirection: "row",
+                        alignItems: "center",
+                    }}
+                >
+                    {/* Image */}
+                    <Image
+                        source={require("../../assets/poster_music.png")}
+                        style={styles.poster}
+                    />
 
-                {/* Info */}
-                <View style={{ flex: 1, paddingRight: 10 }}>
-                    <Text style={{ fontSize: 18 }} numberOfLines={1}>
-                        Đàm Vĩnh Hưng
-                    </Text>
-                    <Text style={{ fontSize: 16, color: "gray" }}>20 bài hát</Text>
+                    {/* Info */}
+                    <View style={{ flex: 1, paddingRight: 10 }}>
+                        <Text style={{ fontSize: 18 }} numberOfLines={1}>
+                            {props.name}
+                        </Text>
+                        <Text style={{ fontSize: 16, color: "gray" }}>{props.songs?.length} bài hát</Text>
+                    </View>
                 </View>
+
+                {/* OPTION */}
+                <TouchableOpacity >
+                    <Ionicons name="ellipsis-vertical" size={20} />
+                </TouchableOpacity>
+
             </View>
 
         </TouchableOpacity>
