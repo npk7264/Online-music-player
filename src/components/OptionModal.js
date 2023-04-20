@@ -26,6 +26,7 @@ const OptionModal = ({
             <StatusBar hidden />
             <Modal animationType='slide' transparent visible={visible} statusBarTranslucent>
                 <View style={styles.modal}>
+                    {/* info */}
                     <View style={styles.header}>
                         <Image
                             source={require("../../assets/temp.jpg")}
@@ -35,12 +36,13 @@ const OptionModal = ({
                             {currentItem?.song}
                         </Text>
                     </View>
+                    {/* option */}
                     <View style={styles.optionContainer}>
                         {options.map(optn => {
                             return (
                                 <TouchableWithoutFeedback
                                     key={optn.title}
-                                    onPress={optn.onPress}
+                                    onPress={() => optn.onPress(currentItem)}
                                 >
                                     <View style={styles.function} >
                                         <MaterialIcons

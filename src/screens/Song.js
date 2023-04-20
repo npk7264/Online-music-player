@@ -77,15 +77,15 @@ const Song = () => {
           {
             title: "Play Next",
             icon: "keyboard-tab",
-            onPress: () => {
-              console.log("play next");
+            onPress: (item) => {
+              console.log(`play next ${item.song}`);
             },
           },
           {
             title: "Add to playlist",
             icon: "add-circle-outline",
-            onPress: () => {
-              console.log("add playlist");
+            onPress: (item) => {
+              console.log(`add playlist ${item.song}`);
             },
           },
         ]}
