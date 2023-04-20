@@ -10,7 +10,7 @@ import Player from "./src/screens/Player";
 import Search from "./src/screens/Search";
 import DetailPlaylist from "./src/screens/DetailPlaylist";
 import Chart from "./src/screens/Chart";
-
+import ArtistDetail from "./src/screens/ArtistDetail";
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -21,6 +21,7 @@ export default function App() {
           initialRouteName="BottomMenu"
           screenOptions={{ headerShown: false }}
         >
+          <Stack.Screen name="ArtistDetail" component={ArtistDetail} />
           <Stack.Screen name="BottomMenu" component={BottomMenu} />
           <Stack.Screen name="Player" component={Player} />
           <Stack.Screen name="Search" component={Search} />

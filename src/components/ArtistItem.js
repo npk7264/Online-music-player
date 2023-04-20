@@ -1,9 +1,14 @@
 import React from 'react'
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
-const ArtistItem = (props) => {
+import { useNavigation } from "@react-navigation/native";
+const ArtistItem = ({ name, songs }) => {
+    const navigation = useNavigation();
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity
+            style={styles.container}
+            onPress={() => navigation.navigate('ArtistDetail', { name, songs })}
+        >
             <View style={styles.content}>
                 <View
                     style={{
@@ -21,14 +26,15 @@ const ArtistItem = (props) => {
                     {/* Info */}
                     <View style={{ flex: 1, paddingRight: 10 }}>
                         <Text style={{ fontSize: 18 }} numberOfLines={1}>
-                            {props.name}
+                            {name}
                         </Text>
-                        <Text style={{ fontSize: 16, color: "gray" }}>{props.songs?.length} bài hát</Text>
+                        <Text style={{ fontSize: 16, color: "gray" }}>{songs?.length} bài hát</Text>
                     </View>
                 </View>
 
                 {/* OPTION */}
-                <TouchableOpacity >
+                <TouchableOpacity
+                >
                     <Ionicons name="ellipsis-vertical" size={20} />
                 </TouchableOpacity>
 
