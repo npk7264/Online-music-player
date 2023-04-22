@@ -7,7 +7,7 @@ import Artist from "../screens/Artist";
 import SearchBar from "./SearchBar";
 import MiniPlayer from "./MiniPlayer";
 import Suggested from "./Suggested";
-
+import Albums from "./Albums";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 
@@ -31,6 +31,7 @@ const TopMenu = () => {
         <Tab.Screen name="Khám phá" component={Suggested} />
         <Tab.Screen name="Bài hát" component={Song} />
         <Tab.Screen name="Ca sĩ" component={Artist} />
+        <Tab.Screen name="Albums" component={Albums} />
       </Tab.Navigator>
 
       <MiniPlayer />
