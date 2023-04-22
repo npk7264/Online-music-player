@@ -66,3 +66,49 @@ export const artist = [
   { id: 17, songs: [20], name: "Wiz Khalifa ft. Charlie Puth" },
   { id: 18, songs: [21, 22, 23, 24], name: "Việt Nam" },
 ];
+
+export const albums = [
+  {
+    id: 1,
+    name: 'The Eminem Show',
+    singer: 'Eminem',
+    songs: [1, 2, 3, 4],
+  },
+  {
+    id: 2,
+    name: '1989',
+    singer: 'Taylor Swift',
+    songs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+  },
+  {
+    id: 3,
+    name: 'Folklore',
+    singer: 'Taylor Swift',
+    songs: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+  },
+  {
+    id: 4,
+    name: 'Thriller',
+    singer: 'Michael Jackson',
+    songs: [9, 10, 11, 12, 13],
+  },
+  {
+    id: 5,
+    name: 'Abbey Road',
+    singer: 'The Beatles',
+    songs: [1, 2, 3, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24],
+  },
+  {
+    id: 6,
+    name: 'Purple Rain',
+    singer: 'Prince',
+    songs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,],
+  },
+  {
+    id: 7,
+    name: 'Back in Black',
+    singer: 'AC/DC',
+    songs: [1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 24],
+  },
+
+]
