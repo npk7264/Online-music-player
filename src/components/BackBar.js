@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { FontAwesome } from "@expo/vector-icons";
 
-const BackBar = ({ title }) => {
+const BackBar = ({ title, isSearch }) => {
   const navigation = useNavigation();
   return (
     <View style={styles.backBar}>
@@ -23,9 +23,11 @@ const BackBar = ({ title }) => {
         </Text>
       </View>
       {/* search button */}
-      <TouchableOpacity onPress={() => {}}>
-        <FontAwesome name="search" size={24}></FontAwesome>
-      </TouchableOpacity>
+      {isSearch &&
+        <TouchableOpacity onPress={() => { }}>
+          <FontAwesome name="search" size={24}></FontAwesome>
+        </TouchableOpacity>
+      }
     </View>
   );
 };
