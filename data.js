@@ -1,10 +1,30 @@
 export const songs = [
   { id: 1, song: "Shape of You", singer: "Ed Sheeran", time: "3:54" },
-  { id: 2, song: "Uptown Funk", singer: "Mark Ronson ft. Bruno Mars", time: "4:30" },
+  {
+    id: 2,
+    song: "Uptown Funk",
+    singer: "Mark Ronson ft. Bruno Mars",
+    time: "4:30",
+  },
   { id: 3, song: "Sugar", singer: "Maroon 5", time: "3:56" },
-  { id: 4, song: "Closer", singer: "The Chainsmokers ft. Halsey", time: "4:05" },
-  { id: 5, song: "Girls Like You", singer: "Maroon 5 ft. Cardi B", time: "3:56" },
-  { id: 6, song: "Despacito", singer: "Luis Fonsi ft. Daddy Yankee", time: "4:41" },
+  {
+    id: 4,
+    song: "Closer",
+    singer: "The Chainsmokers ft. Halsey",
+    time: "4:05",
+  },
+  {
+    id: 5,
+    song: "Girls Like You",
+    singer: "Maroon 5 ft. Cardi B",
+    time: "3:56",
+  },
+  {
+    id: 6,
+    song: "Despacito",
+    singer: "Luis Fonsi ft. Daddy Yankee",
+    time: "4:41",
+  },
   { id: 7, song: "Counting Stars", singer: "OneRepublic", time: "4:17" },
   { id: 8, song: "Attention", singer: "Charlie Puth", time: "3:31" },
   { id: 9, song: "Roar", singer: "Katy Perry", time: "3:42" },
@@ -13,12 +33,32 @@ export const songs = [
   { id: 12, song: "Bad Guy", singer: "Billie Eilish", time: "3:14" },
   { id: 13, song: "Love Yourself", singer: "Justin Bieber", time: "3:53" },
   { id: 14, song: "All of Me", singer: "John Legend", time: "4:29" },
-  { id: 15, song: "The Middle", singer: "Zedd, Maren Morris, Grey", time: "3:05" },
+  {
+    id: 15,
+    song: "The Middle",
+    singer: "Zedd, Maren Morris, Grey",
+    time: "3:05",
+  },
   { id: 16, song: "Someone Like You", singer: "Adele", time: "4:45" },
-  { id: 17, song: "Can't Stop the Feeling!", singer: "Justin Timberlake", time: "3:56" },
-  { id: 18, song: "I Will Always Love You", singer: "Whitney Houston", time: "4:31" },
+  {
+    id: 17,
+    song: "Can't Stop the Feeling!",
+    singer: "Justin Timberlake",
+    time: "3:56",
+  },
+  {
+    id: 18,
+    song: "I Will Always Love You",
+    singer: "Whitney Houston",
+    time: "4:31",
+  },
   { id: 19, song: "Radioactive", singer: "Imagine Dragons", time: "3:08" },
-  { id: 20, song: "See You Again", singer: "Wiz Khalifa ft. Charlie Puth", time: "3:58" },
+  {
+    id: 20,
+    song: "See You Again",
+    singer: "Wiz Khalifa ft. Charlie Puth",
+    time: "3:58",
+  },
   {
     id: 21,
     song: "Nang am xa dan",
@@ -45,7 +85,6 @@ export const songs = [
   },
 ];
 
-
 export const artist = [
   { id: 1, songs: [1, 3, 9], name: "Ed Sheeran" },
   { id: 2, songs: [2], name: "Mark Ronson ft. Bruno Mars" },
@@ -70,44 +109,47 @@ export const artist = [
 export const albums = [
   {
     id: 1,
-    name: 'The Eminem Show',
-    singer: 'Eminem',
+    name: "The Eminem Show",
+    singer: "Eminem",
     songs: [1, 2, 3, 4],
   },
   {
     id: 2,
-    name: '1989',
-    singer: 'Taylor Swift',
-    songs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
+    name: "1989",
+    singer: "Taylor Swift",
+    songs: [
+      1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+      22, 23, 24,
+    ],
   },
   {
     id: 3,
-    name: 'Folklore',
-    singer: 'Taylor Swift',
+    name: "Folklore",
+    singer: "Taylor Swift",
     songs: [11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24],
   },
   {
     id: 4,
-    name: 'Thriller',
-    singer: 'Michael Jackson',
+    name: "Thriller",
+    singer: "Michael Jackson",
     songs: [9, 10, 11, 12, 13],
   },
   {
     id: 5,
-    name: 'Abbey Road',
-    singer: 'The Beatles',
+    name: "Abbey Road",
+    singer: "The Beatles",
     songs: [1, 2, 3, 10, 11, 12, 13, 14, 15, 20, 21, 22, 23, 24],
   },
   {
     id: 6,
-    name: 'Purple Rain',
-    singer: 'Prince',
-    songs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,],
+    name: "Purple Rain",
+    singer: "Prince",
+    songs: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13],
   },
   {
     id: 7,
-    name: 'Back in Black',
-    singer: 'AC/DC',
+    name: "Back in Black",
+    singer: "AC/DC",
     songs: [1, 2, 3, 4, 5, 6, 7, 16, 17, 18, 19, 20, 24],
   },
   // {
@@ -116,5 +158,4 @@ export const albums = [
   //   singer: 'Tada',
   //   songs: [21, 22, 23, 24],
   // },
-
-]
+];

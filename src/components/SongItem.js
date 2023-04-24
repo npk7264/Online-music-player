@@ -29,7 +29,9 @@ const SongItem = (props) => {
             <Text style={{ fontSize: 18 }} numberOfLines={1}>
               {props.song}
             </Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>{props.singer}</Text>
+            <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
+              {props.singer}
+            </Text>
           </View>
         </View>
 

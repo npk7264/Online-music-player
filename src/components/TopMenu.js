@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar } from "react-native";
 import React from "react";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { color } from "../constants/color";
 
 import Song from "../screens/Song";
 import Artist from "../screens/Artist";
@@ -8,6 +8,7 @@ import SearchBar from "./SearchBar";
 import MiniPlayer from "./MiniPlayer";
 import Suggested from "./Suggested";
 import Albums from "./Albums";
+
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 
@@ -21,7 +22,7 @@ const TopMenu = () => {
       <Tab.Navigator
         initialRouteName="Bài hát"
         screenOptions={{
-          tabBarActiveTintColor: "#ff8216",
+          tabBarActiveTintColor: color.primary,
           tabBarInactiveTintColor: "#ccc",
           tabBarLabelStyle: styles.label,
           tabBarIndicatorStyle: styles.indicator,
@@ -51,5 +52,5 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textTransform: "none",
   },
-  indicator: { backgroundColor: "#ff8216", height: 3, borderRadius: 25 },
+  indicator: { backgroundColor: color.primary, height: 3, borderRadius: 25 },
 });
