@@ -23,8 +23,7 @@ const Chart = () => {
         data={songs}
         renderItem={({ item }) => (
           <SongItem
-            song={item.song}
-            singer={item.singer}
+            info={item}
             time={item.time}
             onPressOptionModal={() => {
               setOptionModalVisible(true);

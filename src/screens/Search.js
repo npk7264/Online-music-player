@@ -57,9 +57,7 @@ const Search = () => {
         data={songs}
         renderItem={({ item }) => (
           <SongItem
-            song={item.song}
-            singer={item.singer}
-            time={item.time}
+            info={item}
             onPressOptionModal={() => {
               setOptionModalVisible(true);
               setCurrentItem(item);

@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const SongItem = (props) => {
   const [isPlay, setIsPlay] = useState(false);
-  let handlePress = () => {
+  const handlePress = () => {
     setIsPlay(!isPlay);
   };
 
@@ -27,10 +27,10 @@ const SongItem = (props) => {
           {/* Info */}
           <View style={{ flex: 1, paddingRight: 10 }}>
             <Text style={{ fontSize: 18 }} numberOfLines={1}>
-              {props.song}
+              {props.info.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
-              {props.singer}
+              {props.info.singer}
             </Text>
           </View>
         </View>

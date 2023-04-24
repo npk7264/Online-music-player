@@ -5,20 +5,44 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React, { useState } from "react";
+import { useState, useEffect } from "react";
 
 import SongItem from "../components/SongItem.js";
 import OptionModal from "../components/OptionModal.js";
-import MiniPlayer from "../components/MiniPlayer.js";
 
 import { FontAwesome } from "@expo/vector-icons";
 
 // test data
 import { songs } from "../../data.js";
 
+import { auth, db } from "../services/firebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+  const [songs, setSongs] = useState([]);
+
+  const fetchSongs = async () => {
+    const querySnapshot = await getDocs(collection(db, "songs"));
+    const songsArray = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setSongs(songsArray);
+  };
+
+  useEffect(() => {
+    fetchSongs();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View
@@ -60,9 +84,7 @@ const Song = () => {
         data={songs}
         renderItem={({ item }) => (
           <SongItem
-            song={item.song}
-            singer={item.singer}
-            time={item.time}
+            info={item}
             onPressOptionModal={() => {
               setOptionModalVisible(true);
               setCurrentItem(item);
