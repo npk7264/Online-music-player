@@ -29,7 +29,7 @@ const TopMenu = () => {
           tabBarPressColor: "white",
         }}
       >
-        <Tab.Screen name="Khám phá" component={Suggested} />
+        {/* <Tab.Screen name="Khám phá" component={Suggested} /> */}
         <Tab.Screen name="Bài hát" component={Song} />
         <Tab.Screen name="Ca sĩ" component={Artist} />
         <Tab.Screen name="Albums" component={Albums} />
