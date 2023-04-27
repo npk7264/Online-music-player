@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar } from "react-native";
-import React from "react";
+import { useContext } from "react";
 import { color } from "../constants/color";
 
 import Song from "../screens/Song";
@@ -12,12 +12,16 @@ import Albums from "./Albums";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 
+import { AudioContext } from "../context/AudioContext";
+
 const TopMenu = () => {
+  const { soundObj } = useContext(AudioContext);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar></StatusBar>
 
-      <SearchBar title={"MyMusic"} />
+      <SearchBar title={"mymusic"} />
 
       <Tab.Navigator
         initialRouteName="Bài hát"
@@ -35,7 +39,7 @@ const TopMenu = () => {
         <Tab.Screen name="Albums" component={Albums} />
       </Tab.Navigator>
 
-      <MiniPlayer />
+      {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );
 };

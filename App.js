@@ -14,27 +14,31 @@ import DetailPlaylist from "./src/screens/DetailPlaylist";
 import Chart from "./src/screens/Chart";
 import ArtistDetail from "./src/screens/ArtistDetail";
 
+import { AudioProvider } from "./src/context/AudioContext";
+
 const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Login"
-          screenOptions={{ headerShown: false }}
-        >
-          <Stack.Screen name="Login" component={Login} />
-          <Stack.Screen name="Register" component={Register} />
-          <Stack.Screen name="BottomMenu" component={BottomMenu} />
-          <Stack.Screen name="Player" component={Player} />
-          <Stack.Screen name="Search" component={Search} />
-          <Stack.Screen name="ArtistDetail" component={ArtistDetail} />
-          <Stack.Screen name="DetailPlaylist" component={DetailPlaylist} />
-          <Stack.Screen name="Chart" component={Chart} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <AudioProvider>
+      <SafeAreaProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="BottomMenu"
+            screenOptions={{ headerShown: false }}
+          >
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="BottomMenu" component={BottomMenu} />
+            <Stack.Screen name="Player" component={Player} />
+            <Stack.Screen name="Search" component={Search} />
+            <Stack.Screen name="ArtistDetail" component={ArtistDetail} />
+            <Stack.Screen name="DetailPlaylist" component={DetailPlaylist} />
+            <Stack.Screen name="Chart" component={Chart} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </SafeAreaProvider>
+    </AudioProvider>
   );
 }
 

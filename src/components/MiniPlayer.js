@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import React from "react";
+import { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-
 import { Ionicons } from "@expo/vector-icons";
+
+import { AudioContext } from "../context/AudioContext";
 
 const MiniPlayer = () => {
   const navigation = useNavigation();
+  const { currentAudio, isPlaying } = useContext(AudioContext);
 
   return (
     <TouchableOpacity
@@ -31,7 +33,7 @@ const MiniPlayer = () => {
         }}
         numberOfLines={1}
       >
-        Nang am xa dan - Son Tung MTP
+        {currentAudio.name + " - " + currentAudio.singer}
       </Text>
       <TouchableOpacity
         style={{
@@ -40,7 +42,11 @@ const MiniPlayer = () => {
           justifyContent: "center",
         }}
       >
-        <Ionicons name={"play-circle"} size={30} color="#ff973e" />
+        <Ionicons
+          name={isPlaying ? "pause-circle" : "play-circle"}
+          size={30}
+          color="#ff973e"
+        />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -55,8 +61,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    borderColor: '#efefef',
+    borderColor: "#efefef",
     borderTopWidth: 1,
-    borderRadius: 10
+    borderRadius: 10,
   },
 });

@@ -8,9 +8,8 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import React from "react";
-
-// component
+import { useState, useEffect, useContext } from "react";
+import { AudioContext } from "../context/AudioContext";
 import BackBar from "../components/BackBar";
 
 import Slider from "@react-native-community/slider";
@@ -19,11 +18,26 @@ import {
   AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { convertTime, convertValueSlider } from "../utils/helper";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
+  const {
+    isPlaying,
+    playbackObj,
+    currentAudio,
+    playbackPosition,
+    playbackDuration,
+    updateAudioState,
+  } = useContext(AudioContext);
+  const [currentPosition, setCurrentPositon] = useState("00:00");
+
+  useEffect(() => {
+    setCurrentPositon(convertTime(playbackPosition));
+  }, []);
+
   return (
     <SafeAreaView>
       <StatusBar></StatusBar>
@@ -41,11 +55,15 @@ const Player = () => {
             paddingBottom: 5,
           }}
         >
-          <Text style={{ fontSize: 24, fontWeight: 500 }}>Perfect</Text>
+          <Text style={{ fontSize: 24, fontWeight: 500 }}>
+            {currentAudio.name}
+          </Text>
         </View>
         {/* Artist name */}
         <View style={{ paddingBottom: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 400 }}>Ed Sheeran</Text>
+          <Text style={{ fontSize: 20, fontWeight: 400 }}>
+            {currentAudio.singer}
+          </Text>
         </View>
       </View>
 
@@ -54,8 +72,49 @@ const Player = () => {
         style={styles.sliderBar}
         minimumValue={0}
         maximumValue={1}
+        value={convertValueSlider(playbackPosition, playbackDuration)}
         thumbTintColor="#ff8216"
         minimumTrackTintColor="#ff8216"
+        onValueChange={(value) => {
+          setCurrentPositon(convertTime(value * playbackDuration));
+        }}
+        //////////////////
+        onSlidingStart={async () => {
+          if (!isPlaying) return;
+          try {
+            console.log("pause");
+            await playbackObj.setStatusAsync({
+              shouldPlay: false,
+            });
+          } catch (error) {
+            console.log("error inside onSlidingStart callback", error);
+          }
+        }}
+        //////////////////
+        onSlidingComplete={async (value) => {
+          if (playbackObj === null || !isPlaying) {
+            const status = await playbackObj.setPositionAsync(
+              Math.floor(value * playbackDuration)
+            );
+            updateAudioState({
+              soundObj: status,
+              playbackPosition: status.positionMillis,
+            });
+            return;
+          }
+          try {
+            const status = await playbackObj.setPositionAsync(
+              Math.floor(value * playbackDuration)
+            );
+            updateAudioState({
+              soundObj: status,
+              playbackPosition: status.positionMillis,
+            });
+            await playbackObj.playAsync();
+          } catch (error) {
+            console.log("error inside onSlidingComplete callback", error);
+          }
+        }}
       ></Slider>
       <View
         style={{
@@ -64,8 +123,10 @@ const Player = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontWeight: "500" }}>00:00</Text>
-        <Text style={{ fontWeight: "500" }}>2:00</Text>
+        <Text style={{ fontWeight: "500" }}>{currentPosition}</Text>
+        <Text style={{ fontWeight: "500" }}>
+          {convertTime(playbackDuration)}
+        </Text>
       </View>
 
       {/* Like, playlist */}
@@ -100,7 +161,11 @@ const Player = () => {
           <AntDesign name="stepbackward" size={40} color="#333" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
-          <FontAwesome name="play-circle" size={70} color="#ff8216" />
+          <FontAwesome
+            name={isPlaying ? "pause-circle" : "play-circle"}
+            size={70}
+            color="#ff8216"
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
           <AntDesign name="stepforward" size={40} color="#333" />
