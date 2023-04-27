@@ -8,7 +8,7 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import { useContext } from "react";
+import { useState, useEffect, useContext } from "react";
 import { AudioContext } from "../context/AudioContext";
 import BackBar from "../components/BackBar";
 
@@ -18,37 +18,25 @@ import {
   AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
+import { convertTime, convertValueSlider } from "../utils/helper";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
-  const { isPlaying, currentAudio, playbackPosition } =
-    useContext(AudioContext);
+  const {
+    isPlaying,
+    playbackObj,
+    currentAudio,
+    playbackPosition,
+    playbackDuration,
+    updateAudioState,
+  } = useContext(AudioContext);
+  const [currentPosition, setCurrentPositon] = useState("00:00");
 
-  //hàm tính value cho thanh slider
-  const convertValueSlider = () => {
-    if (posTime !== null && contextAudio.audioState.currentDuration !== null)
-      return posTime / contextAudio.audioState.currentDuration;
-    return 0;
-  };
-  // hàm chuyển đổi định dạng thời gian
-  const convertTime = (milliseconds) => {
-    if (milliseconds) {
-      //const hours = Math.floor(milliseconds / 3600000);
-      const minute = Math.floor((milliseconds % 3600000) / 60000);
-      const sec = Math.floor(((milliseconds % 360000) % 60000) / 1000);
-      if (parseInt(minute) < 10 && sec < 10) return `0${minute}:0${sec}`;
-      if (sec == 60)
-        return parseInt(minute) + 1 < 10
-          ? `0${parseInt(minute) + 1}:00`
-          : `${parseInt(minute) + 1}:00`;
-      if (parseInt(minute) < 10) return `0${minute}:${sec}`;
-      if (sec < 10) return `${minute}:0${sec}`;
-      return `${minute}:${sec}`;
-    }
-    return `00:00`;
-  };
+  useEffect(() => {
+    setCurrentPositon(convertTime(playbackPosition));
+  }, []);
 
   return (
     <SafeAreaView>
@@ -84,8 +72,49 @@ const Player = () => {
         style={styles.sliderBar}
         minimumValue={0}
         maximumValue={1}
+        value={convertValueSlider(playbackPosition, playbackDuration)}
         thumbTintColor="#ff8216"
         minimumTrackTintColor="#ff8216"
+        onValueChange={(value) => {
+          setCurrentPositon(convertTime(value * playbackDuration));
+        }}
+        //////////////////
+        onSlidingStart={async () => {
+          if (!isPlaying) return;
+          try {
+            console.log("pause");
+            await playbackObj.setStatusAsync({
+              shouldPlay: false,
+            });
+          } catch (error) {
+            console.log("error inside onSlidingStart callback", error);
+          }
+        }}
+        //////////////////
+        onSlidingComplete={async (value) => {
+          if (playbackObj === null || !isPlaying) {
+            const status = await playbackObj.setPositionAsync(
+              Math.floor(value * playbackDuration)
+            );
+            updateAudioState({
+              soundObj: status,
+              playbackPosition: status.positionMillis,
+            });
+            return;
+          }
+          try {
+            const status = await playbackObj.setPositionAsync(
+              Math.floor(value * playbackDuration)
+            );
+            updateAudioState({
+              soundObj: status,
+              playbackPosition: status.positionMillis,
+            });
+            await playbackObj.playAsync();
+          } catch (error) {
+            console.log("error inside onSlidingComplete callback", error);
+          }
+        }}
       ></Slider>
       <View
         style={{
@@ -94,8 +123,10 @@ const Player = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontWeight: "500" }}>00:00</Text>
-        <Text style={{ fontWeight: "500" }}>2:00</Text>
+        <Text style={{ fontWeight: "500" }}>{currentPosition}</Text>
+        <Text style={{ fontWeight: "500" }}>
+          {convertTime(playbackDuration)}
+        </Text>
       </View>
 
       {/* Like, playlist */}

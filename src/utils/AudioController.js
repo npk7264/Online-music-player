@@ -2,10 +2,10 @@ import { Audio } from "expo-av";
 
 export const play = async (playbackObj, uri) => {
   try {
-    return await playbackObj.loadAsync(
-      { uri },
-      { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
-    );
+    return await playbackObj.loadAsync(uri, {
+      shouldPlay: true,
+      progressUpdateIntervalMillis: 1000,
+    });
   } catch (error) {
     console.log("error inside play helper method", error.message);
   }
@@ -54,6 +54,7 @@ export const selectSong = async (context, audio) => {
         soundObj: status,
         currentAudio: audio,
         isPlaying: true,
+        playbackDuration: status.durationMillis,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       return;
@@ -81,11 +82,12 @@ export const selectSong = async (context, audio) => {
 
     // play other audio
     if (currentAudio.id !== audio.id) {
-      const sound = await playNext(playbackObj, audio.url);
+      const status = await playNext(playbackObj, audio.url);
       await updateAudioState({
-        soundObj: sound,
+        soundObj: status,
         currentAudio: audio,
         isPlaying: true,
+        playbackDuration: status.durationMillis,
       });
       return;
     }

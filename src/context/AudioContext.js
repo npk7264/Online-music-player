@@ -24,7 +24,7 @@ export const AudioProvider = ({ children }) => {
     if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
       updateAudioState({
         playbackPosition: playbackStatus.positionMillis,
-        playbackDuration: playbackStatus.durationMillis,
+        // playbackDuration: playbackStatus.durationMillis,
       });
       console.log(playbackStatus.positionMillis);
     }
