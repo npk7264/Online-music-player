@@ -8,9 +8,8 @@ import {
   Dimensions,
   Image,
 } from "react-native";
-import React from "react";
-
-// component
+import { useContext } from "react";
+import { AudioContext } from "../context/AudioContext";
 import BackBar from "../components/BackBar";
 
 import Slider from "@react-native-community/slider";
@@ -24,6 +23,33 @@ const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
+  const { isPlaying, currentAudio, playbackPosition } =
+    useContext(AudioContext);
+
+  //hàm tính value cho thanh slider
+  const convertValueSlider = () => {
+    if (posTime !== null && contextAudio.audioState.currentDuration !== null)
+      return posTime / contextAudio.audioState.currentDuration;
+    return 0;
+  };
+  // hàm chuyển đổi định dạng thời gian
+  const convertTime = (milliseconds) => {
+    if (milliseconds) {
+      //const hours = Math.floor(milliseconds / 3600000);
+      const minute = Math.floor((milliseconds % 3600000) / 60000);
+      const sec = Math.floor(((milliseconds % 360000) % 60000) / 1000);
+      if (parseInt(minute) < 10 && sec < 10) return `0${minute}:0${sec}`;
+      if (sec == 60)
+        return parseInt(minute) + 1 < 10
+          ? `0${parseInt(minute) + 1}:00`
+          : `${parseInt(minute) + 1}:00`;
+      if (parseInt(minute) < 10) return `0${minute}:${sec}`;
+      if (sec < 10) return `${minute}:0${sec}`;
+      return `${minute}:${sec}`;
+    }
+    return `00:00`;
+  };
+
   return (
     <SafeAreaView>
       <StatusBar></StatusBar>
@@ -41,11 +67,15 @@ const Player = () => {
             paddingBottom: 5,
           }}
         >
-          <Text style={{ fontSize: 24, fontWeight: 500 }}>Perfect</Text>
+          <Text style={{ fontSize: 24, fontWeight: 500 }}>
+            {currentAudio.name}
+          </Text>
         </View>
         {/* Artist name */}
         <View style={{ paddingBottom: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 400 }}>Ed Sheeran</Text>
+          <Text style={{ fontSize: 20, fontWeight: 400 }}>
+            {currentAudio.singer}
+          </Text>
         </View>
       </View>
 
@@ -100,7 +130,11 @@ const Player = () => {
           <AntDesign name="stepbackward" size={40} color="#333" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
-          <FontAwesome name="play-circle" size={70} color="#ff8216" />
+          <FontAwesome
+            name={isPlaying ? "pause-circle" : "play-circle"}
+            size={70}
+            color="#ff8216"
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
           <AntDesign name="stepforward" size={40} color="#333" />

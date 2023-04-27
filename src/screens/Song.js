@@ -28,7 +28,7 @@ import {
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
-  const [songs, setSongs] = useState([]);
+  // const [songs, setSongs] = useState([]);
 
   const fetchSongs = async () => {
     const querySnapshot = await getDocs(collection(db, "songs"));
@@ -39,9 +39,9 @@ const Song = () => {
     setSongs(songsArray);
   };
 
-  useEffect(() => {
-    fetchSongs();
-  }, []);
+  // useEffect(() => {
+  //   fetchSongs();
+  // }, []);
 
   return (
     <View style={styles.container}>

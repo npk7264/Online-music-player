@@ -30,6 +30,8 @@ const Register = () => {
           favorite: [],
           recently: [],
         });
+        alert("Đăng ký tài khoản thành công!");
+        navigation.replace("Login");
       })
       .catch((error) => {
         const errorCode = error.code;

@@ -1,15 +1,25 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import { useState, useContext } from "react";
+import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 
+import { AudioContext } from "../context/AudioContext";
+import { selectSong } from "../utils/AudioController";
+
 const SongItem = (props) => {
+  const contextAudio = useContext(AudioContext);
+
   const [isPlay, setIsPlay] = useState(false);
   const handlePress = () => {
     setIsPlay(!isPlay);
   };
 
+  const audioPress = () => {
+    selectSong(contextAudio, props.info);
+  };
+
   return (
-    <TouchableOpacity style={styles.container} onPress={handlePress}>
+    <TouchableOpacity style={styles.container} onPress={audioPress}>
       <View style={styles.content}>
         <View
           style={{
