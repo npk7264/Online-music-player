@@ -57,6 +57,8 @@ export const selectSong = async (context, audio) => {
         playbackDuration: status.durationMillis,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+      // lưu vào lịch sử nghe
+
       return;
     }
 
@@ -90,6 +92,8 @@ export const selectSong = async (context, audio) => {
         isLooping: false,
         playbackDuration: status.durationMillis,
       });
+      // lưu vào lịch sử nghe
+      
       return;
     }
   } catch (error) {
