@@ -1,10 +1,3 @@
-//hàm tính value cho thanh slider
-export const convertValueSlider = (playbackPosition, playbackDuration) => {
-  if (playbackPosition !== null && playbackDuration !== null)
-    return playbackPosition / playbackDuration;
-  return 0;
-};
-
 // hàm chuyển đổi định dạng thời gian
 export const convertTime = (milliseconds) => {
   if (milliseconds) {

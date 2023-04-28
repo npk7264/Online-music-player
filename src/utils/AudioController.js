@@ -87,6 +87,7 @@ export const selectSong = async (context, audio) => {
         soundObj: status,
         currentAudio: audio,
         isPlaying: true,
+        isLooping: false,
         playbackDuration: status.durationMillis,
       });
       return;

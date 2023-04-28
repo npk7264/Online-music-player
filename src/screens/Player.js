@@ -18,25 +18,46 @@ import {
   AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { convertTime, convertValueSlider } from "../utils/helper";
+import { convertTime } from "../utils/helper";
+import { selectSong } from "../utils/AudioController";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
+  const context = useContext(AudioContext);
   const {
     isPlaying,
+    isLooping,
     playbackObj,
     currentAudio,
     playbackPosition,
     playbackDuration,
     updateAudioState,
-  } = useContext(AudioContext);
+  } = context;
   const [currentPosition, setCurrentPositon] = useState("00:00");
+  const [isRepeat, setRepeat] = useState(isLooping);
+
+  //hàm tính value cho thanh slider
+  const convertValueSlider = () => {
+    if (playbackPosition !== null && playbackDuration !== null) {
+      return playbackPosition / playbackDuration;
+    }
+    return 0;
+  };
+
+  // lặp bài hát
+  const repeat = async (flag) => {
+    const status = await playbackObj.setIsLoopingAsync(flag);
+    updateAudioState({
+      soundObj: status,
+      isLooping: flag,
+    });
+  };
 
   useEffect(() => {
     setCurrentPositon(convertTime(playbackPosition));
-  }, []);
+  }, [convertValueSlider()]);
 
   return (
     <SafeAreaView>
@@ -72,17 +93,15 @@ const Player = () => {
         style={styles.sliderBar}
         minimumValue={0}
         maximumValue={1}
-        value={convertValueSlider(playbackPosition, playbackDuration)}
+        value={convertValueSlider()}
         thumbTintColor="#ff8216"
         minimumTrackTintColor="#ff8216"
         onValueChange={(value) => {
-          setCurrentPositon(convertTime(value * playbackDuration));
+          setCurrentPositon(convertTime(value * context.playbackDuration));
         }}
-        //////////////////
         onSlidingStart={async () => {
           if (!isPlaying) return;
           try {
-            console.log("pause");
             await playbackObj.setStatusAsync({
               shouldPlay: false,
             });
@@ -90,7 +109,6 @@ const Player = () => {
             console.log("error inside onSlidingStart callback", error);
           }
         }}
-        //////////////////
         onSlidingComplete={async (value) => {
           if (playbackObj === null || !isPlaying) {
             const status = await playbackObj.setPositionAsync(
@@ -115,7 +133,7 @@ const Player = () => {
             console.log("error inside onSlidingComplete callback", error);
           }
         }}
-      ></Slider>
+      />
       <View
         style={{
           paddingHorizontal: 25,
@@ -138,8 +156,19 @@ const Player = () => {
           justifyContent: "space-around",
         }}
       >
-        <TouchableOpacity style={styles.controllerItem}>
-          <MaterialCommunityIcons name={"repeat-once"} size={25} color="#333" />
+        <TouchableOpacity
+          style={styles.controllerItem}
+          onPress={() => {
+            const flag = !isRepeat;
+            setRepeat(flag);
+            repeat(flag);
+          }}
+        >
+          <MaterialCommunityIcons
+            name={isRepeat ? "repeat-once" : "repeat"}
+            size={25}
+            color="#333"
+          />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
           <FontAwesome name="heart" size={25} color="#333" />
@@ -160,7 +189,12 @@ const Player = () => {
         <TouchableOpacity style={styles.controllerItem}>
           <AntDesign name="stepbackward" size={40} color="#333" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.controllerItem}>
+        <TouchableOpacity
+          style={styles.controllerItem}
+          onPress={() => {
+            selectSong(context, currentAudio);
+          }}
+        >
           <FontAwesome
             name={isPlaying ? "pause-circle" : "play-circle"}
             size={70}

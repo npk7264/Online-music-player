@@ -24,14 +24,12 @@ export const AudioProvider = ({ children }) => {
     if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
       updateAudioState({
         playbackPosition: playbackStatus.positionMillis,
-        // playbackDuration: playbackStatus.durationMillis,
       });
-      console.log(playbackStatus.positionMillis);
     }
     if (playbackStatus.isLoaded && !playbackStatus.isPlaying) {
-      console.log("Pause!");
+      // console.log("Pause!");
     }
-    if (playbackStatus.didJustFinish) {
+    if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
       console.log("Finish!");
       updateAudioState({
         isPlaying: playbackStatus.isPlaying,
