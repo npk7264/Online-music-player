@@ -6,6 +6,7 @@ export const AudioContext = createContext();
 export const AudioProvider = ({ children }) => {
   // STATE
   const [audioState, setAudioState] = useState({
+    userId: null,
     playbackObj: null,
     soundObj: null,
     currentAudio: {},

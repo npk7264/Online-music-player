@@ -6,15 +6,16 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-
+import { AudioContext } from "../context/AudioContext";
 import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
+  const { updateAudioState } = useContext(AudioContext);
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,6 +24,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
+        updateAudioState({ userId: user.uid });
         navigation.replace("BottomMenu");
       })
       .catch((error) => {
