@@ -1,4 +1,14 @@
 import { Audio } from "expo-av";
+import { auth, db } from "../services/firebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 export const play = async (playbackObj, uri) => {
   try {
@@ -39,6 +49,7 @@ export const playNext = async (playbackObj, uri) => {
 
 export const selectSong = async (context, audio) => {
   const {
+    userId,
     soundObj,
     playbackObj,
     currentAudio,
@@ -58,7 +69,7 @@ export const selectSong = async (context, audio) => {
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       // lưu vào lịch sử nghe
-
+      updateRecent(userId, audio.id);
       return;
     }
 
@@ -93,10 +104,36 @@ export const selectSong = async (context, audio) => {
         playbackDuration: status.durationMillis,
       });
       // lưu vào lịch sử nghe
-      
+      updateRecent(userId, audio.id);
       return;
     }
   } catch (error) {
     console.log("error inside select song method", error.message);
+  }
+};
+
+
+// SAVE RECENT
+const fetchRecent = async (docRef) => {
+  try {
+    const docSnap = await getDoc(docRef);
+    return docSnap.data().recently;
+  } catch (error) {
+    console.log("Fail to fetch recent songs", error);
+  }
+};
+
+const updateRecent = async (userId, audioId) => {
+  const docRef = doc(db, "users/" + userId);
+  let recentList = await fetchRecent(docRef);
+  recentList = recentList.filter((item) => {
+    return item != audioId;
+  });
+  try {
+    await updateDoc(docRef, {
+      recently: [...recentList, audioId],
+    });
+  } catch (e) {
+    alert("Failed to save recent song!", e);
   }
 };

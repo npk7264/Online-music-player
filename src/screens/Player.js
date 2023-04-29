@@ -74,9 +74,9 @@ const Player = () => {
     const docRef = doc(db, "users/" + userId);
     try {
       const docSnap = await getDoc(docRef);
-      console.log(docSnap.data());
+      console.log(docSnap.data().favorite);
       setFavoriteList(docSnap.data().favorite);
-      setLike(docSnap.data().favorite.includes(currentAudio.id.toString()));
+      setLike(docSnap.data().favorite.includes(currentAudio.id));
     } catch (error) {
       console.log("Fail to fetch favorite songs", error);
     }
@@ -84,7 +84,7 @@ const Player = () => {
 
   // save to favorite
   const saveFavorite = async () => {
-    const docRef = doc(db, "users", userId);
+    const docRef = doc(db, "users/" + userId);
     try {
       setFavoriteList([...favoriteList, currentAudio.id]);
       await updateDoc(docRef, {
@@ -97,7 +97,7 @@ const Player = () => {
 
   // remove from favorite
   const removeFavorite = async () => {
-    const docRef = doc(db, "users", userId);
+    const docRef = doc(db, "users/" + userId);
     try {
       const newFavoriteList = favoriteList.filter((item) => {
         return item != currentAudio.id;
