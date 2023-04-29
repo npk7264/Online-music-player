@@ -1,15 +1,6 @@
-import { Audio } from "expo-av";
-import { auth, db } from "../services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  addDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { updateRecent } from "./FirebaseHandler";
 
+// play audio
 export const play = async (playbackObj, uri) => {
   try {
     return await playbackObj.loadAsync(uri, {
@@ -21,14 +12,18 @@ export const play = async (playbackObj, uri) => {
   }
 };
 
+// pause audio
 export const pause = async (playbackObj) => {
   try {
-    return await playbackObj.pauseAsync();
+    return await playbackObj.setStatusAsync({
+      shouldPlay: false,
+    });
   } catch (error) {
     console.log("error inside pause helper method", error.message);
   }
 };
 
+// resume audio
 export const resume = async (playbackObj) => {
   try {
     return await playbackObj.playAsync();
@@ -37,6 +32,7 @@ export const resume = async (playbackObj) => {
   }
 };
 
+// select another audio
 export const playNext = async (playbackObj, uri) => {
   try {
     await playbackObj.stopAsync();
@@ -50,25 +46,29 @@ export const playNext = async (playbackObj, uri) => {
 export const selectSong = async (context, audio) => {
   const {
     userId,
+    songData,
     soundObj,
     playbackObj,
     currentAudio,
+    currentAudioIndex,
     isPlaying,
+    updateState,
     onPlaybackStatusUpdate,
-    updateAudioState,
   } = context;
   try {
-    // play audio first time
+    // playing audio for the first time.
     if (soundObj === null) {
-      const status = await play(playbackObj, audio.url);
-      await updateAudioState({
-        soundObj: status,
+      const status = await play(playbackObj, audio.uri);
+      const index = songData.findIndex(({ id }) => id === audio.id);
+      console.log(index);
+      updateState(context, {
         currentAudio: audio,
+        currentAudioIndex: index,
+        soundObj: status,
         isPlaying: true,
         playbackDuration: status.durationMillis,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-      // lưu vào lịch sử nghe
       updateRecent(userId, audio.id);
       return;
     }
@@ -76,64 +76,78 @@ export const selectSong = async (context, audio) => {
     // pause audio
     if (isPlaying && currentAudio.id === audio.id) {
       const status = await pause(playbackObj);
-      await updateAudioState({
+      return updateState(context, {
         soundObj: status,
         isPlaying: false,
+        playbackPosition: status.positionMillis,
       });
-      return;
     }
 
     // resume audio
     if (!isPlaying && currentAudio.id === audio.id) {
       const status = await resume(playbackObj);
-      await updateAudioState({
-        soundObj: status,
-        isPlaying: true,
-      });
-      return;
+      return updateState(context, { soundObj: status, isPlaying: true });
     }
 
-    // play other audio
+    // select another audio
     if (currentAudio.id !== audio.id) {
-      const status = await playNext(playbackObj, audio.url);
-      await updateAudioState({
-        soundObj: status,
+      const status = await playNext(playbackObj, audio.uri);
+      const index = songData.findIndex(({ id }) => id === audio.id);
+      console.log(index);
+      updateState(context, {
         currentAudio: audio,
+        currentAudioIndex: index,
+        soundObj: status,
         isPlaying: true,
         isLooping: false,
         playbackDuration: status.durationMillis,
       });
-      // lưu vào lịch sử nghe
       updateRecent(userId, audio.id);
       return;
     }
   } catch (error) {
-    console.log("error inside select song method", error.message);
+    console.log("error inside select audio method.", error.message);
   }
 };
 
+export const changeSong = async (context, option) => {
+  const {
+    userId,
+    songData,
+    soundObj,
+    playbackObj,
+    currentAudio,
+    currentAudioIndex,
+    isPlaying,
+    updateState,
+  } = context;
 
-// SAVE RECENT
-const fetchRecent = async (docRef) => {
-  try {
-    const docSnap = await getDoc(docRef);
-    return docSnap.data().recently;
-  } catch (error) {
-    console.log("Fail to fetch recent songs", error);
+  let nextIndex;
+
+  // set next/previous song
+  if (option == "next") {
+    const temp = currentAudioIndex + 1;
+    nextIndex = temp < songData.length ? temp : 0;
+  } else if (option == "previous") {
+    const temp = currentAudioIndex - 1;
+    nextIndex = temp >= 0 ? temp : songData.length - 1;
   }
-};
 
-const updateRecent = async (userId, audioId) => {
-  const docRef = doc(db, "users/" + userId);
-  let recentList = await fetchRecent(docRef);
-  recentList = recentList.filter((item) => {
-    return item != audioId;
-  });
+  // play new song
   try {
-    await updateDoc(docRef, {
-      recently: [...recentList, audioId],
+    const nextAudio = songData[nextIndex];
+    const status = await playNext(playbackObj, nextAudio.uri);
+    updateState(context, {
+      currentAudio: nextAudio,
+      currentAudioIndex: nextIndex,
+      soundObj: status,
+      isPlaying: true,
+      isLooping: false,
+      playbackDuration: status.durationMillis,
     });
+    updateRecent(userId, nextAudio.id);
+    return;
   } catch (e) {
-    alert("Failed to save recent song!", e);
+    console.log("error inside change audio method", e);
   }
 };

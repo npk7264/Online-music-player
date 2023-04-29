@@ -15,7 +15,8 @@ import { auth, db } from "../services/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
 const Login = () => {
-  const { updateAudioState } = useContext(AudioContext);
+  const context = useContext(AudioContext);
+  const { updateState } = context;
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -24,7 +25,7 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        updateAudioState({ userId: user.uid });
+        updateState(context, { userId: user.uid });
         navigation.replace("BottomMenu");
       })
       .catch((error) => {

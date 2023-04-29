@@ -19,7 +19,7 @@ import {
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
 import { convertTime } from "../utils/helper";
-import { selectSong } from "../utils/AudioController";
+import { selectSong, changeSong } from "../utils/AudioController";
 
 import { auth, db } from "../services/firebaseConfig";
 import {
@@ -45,7 +45,7 @@ const Player = () => {
     currentAudio,
     playbackPosition,
     playbackDuration,
-    updateAudioState,
+    updateState,
   } = context;
   const [currentPosition, setCurrentPositon] = useState("00:00");
   const [isRepeat, setRepeat] = useState(isLooping);
@@ -63,7 +63,7 @@ const Player = () => {
   // lặp bài hát
   const repeat = async (flag) => {
     const status = await playbackObj.setIsLoopingAsync(flag);
-    updateAudioState({
+    updateState(context, {
       soundObj: status,
       isLooping: flag,
     });
@@ -116,8 +116,9 @@ const Player = () => {
   }, [convertValueSlider()]);
 
   useEffect(() => {
+    setRepeat(isLooping);
     fetchFavorite();
-  }, []);
+  }, [currentAudio]);
 
   return (
     <SafeAreaView>
@@ -174,7 +175,7 @@ const Player = () => {
             const status = await playbackObj.setPositionAsync(
               Math.floor(value * playbackDuration)
             );
-            updateAudioState({
+            updateState(context, {
               soundObj: status,
               playbackPosition: status.positionMillis,
             });
@@ -184,7 +185,7 @@ const Player = () => {
             const status = await playbackObj.setPositionAsync(
               Math.floor(value * playbackDuration)
             );
-            updateAudioState({
+            updateState(context, {
               soundObj: status,
               playbackPosition: status.positionMillis,
             });
@@ -257,7 +258,12 @@ const Player = () => {
           justifyContent: "space-around",
         }}
       >
-        <TouchableOpacity style={styles.controllerItem}>
+        <TouchableOpacity
+          style={styles.controllerItem}
+          onPress={() => {
+            changeSong(context, "previous");
+          }}
+        >
           <AntDesign name="stepbackward" size={40} color="#333" />
         </TouchableOpacity>
         <TouchableOpacity
@@ -272,7 +278,12 @@ const Player = () => {
             color="#ff8216"
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.controllerItem}>
+        <TouchableOpacity
+          style={styles.controllerItem}
+          onPress={() => {
+            changeSong(context, "next");
+          }}
+        >
           <AntDesign name="stepforward" size={40} color="#333" />
         </TouchableOpacity>
       </View>
