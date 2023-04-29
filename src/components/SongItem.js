@@ -14,12 +14,11 @@ const SongItem = (props) => {
     setIsPlay(!isPlay);
   };
 
-  const audioPress = () => {
-    selectSong(contextAudio, props.info);
-  };
-
   return (
-    <TouchableOpacity style={styles.container} onPress={audioPress}>
+    <TouchableOpacity
+      style={styles.container}
+      onPress={async () => await selectSong(contextAudio, props.info)}
+    >
       <View style={styles.content}>
         <View
           style={{

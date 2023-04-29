@@ -1,60 +1,80 @@
-import { useState, useEffect, createContext } from "react";
+import React, { Component, createContext } from "react";
 import { Audio } from "expo-av";
+import { songs } from "../../data";
+import { changeSong } from "../utils/AudioController";
 
 export const AudioContext = createContext();
+export class AudioProvider extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      userId: "MMp5BVLgmzPfKvaiDKSOrewVVvD3",
+      songData: songs,
+      playbackObj: null,
+      soundObj: null,
+      currentAudio: {},
+      currentAudioIndex: null,
+      isPlaying: false,
+      isLooping: false,
+      playbackPosition: null,
+      playbackDuration: null,
+    };
+  }
 
-export const AudioProvider = ({ children }) => {
-  // STATE
-  const [audioState, setAudioState] = useState({
-    userId: null,
-    playbackObj: null,
-    soundObj: null,
-    currentAudio: {},
-    isPlaying: false,
-    playbackPosition: null,
-    playbackDuration: null,
-  });
-
-  // UPDATE STATE
-  const updateAudioState = (newState = {}) => {
-    setAudioState((prevState) => ({ ...prevState, ...newState }));
-  };
-
-  // STATUS FOLLOW
-  const onPlaybackStatusUpdate = async (playbackStatus) => {
+  onPlaybackStatusUpdate = async (playbackStatus) => {
     if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
-      updateAudioState({
+      this.updateState(this, {
         playbackPosition: playbackStatus.positionMillis,
       });
     }
+
     if (playbackStatus.isLoaded && !playbackStatus.isPlaying) {
-      // console.log("Pause!");
     }
-    if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
-      console.log("Finish!");
-      updateAudioState({
-        isPlaying: playbackStatus.isPlaying,
-      });
+
+    if (playbackStatus.didJustFinish) {
+      console.log("FINISH:", this.state.currentAudio);
+      await changeSong(
+        { ...this.state, updateState: this.updateState },
+        "next"
+      );
     }
   };
 
-  useEffect(() => {
-    if (audioState.playbackObj === null) {
-      updateAudioState({ playbackObj: new Audio.Sound() });
+  componentDidMount() {
+    if (this.state.playbackObj === null) {
+      this.setState({ ...this.state, playbackObj: new Audio.Sound() });
+      console.log("OK");
     }
-  }, []);
+  }
 
-  return (
-    <AudioContext.Provider
-      value={{
-        ...audioState,
-        updateAudioState,
-        onPlaybackStatusUpdate,
-      }}
-    >
-      {children}
-    </AudioContext.Provider>
-  );
-};
+  updateState = (prevState, newState = {}) => {
+    this.setState({ ...prevState, ...newState });
+  };
+
+  render() {
+    const {
+      userId,
+      playbackObj,
+      soundObj,
+      currentAudio,
+      isPlaying,
+      isLooping,
+      playbackPosition,
+      playbackDuration,
+    } = this.state;
+
+    return (
+      <AudioContext.Provider
+        value={{
+          ...this.state,
+          updateState: this.updateState,
+          onPlaybackStatusUpdate: this.onPlaybackStatusUpdate,
+        }}
+      >
+        {this.props.children}
+      </AudioContext.Provider>
+    );
+  }
+}
 
 export default AudioProvider;
