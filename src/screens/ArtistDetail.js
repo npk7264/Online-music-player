@@ -40,9 +40,7 @@ const ArtistDetail = ({ route }) => {
                 data={listSongs}
                 renderItem={({ item }) => (
                     <SongItem
-                        song={item.song}
-                        singer={item.singer}
-                        time={item.time}
+                        info={item}
                         onPressOptionModal={() => {
                             setOptionModalVisible(true);
                             setCurrentItem(item);

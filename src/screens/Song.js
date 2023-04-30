@@ -100,14 +100,14 @@ const Song = () => {
             title: "Play Next",
             icon: "keyboard-tab",
             onPress: (item) => {
-              console.log(`play next ${item.song}`);
+              console.log(`play next ${item.name}`);
             },
           },
           {
             title: "Add to playlist",
             icon: "add-circle-outline",
             onPress: (item) => {
-              console.log(`add playlist ${item.song}`);
+              console.log(`add playlist ${item.name}`);
             },
           },
         ]}

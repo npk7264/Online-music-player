@@ -32,8 +32,8 @@ const OptionModal = ({
                             source={require("../../assets/temp.jpg")}
                             style={styles.poster}
                         />
-                        <Text style={styles.title} numberOfLines={2}>
-                            {currentItem?.song}
+                        <Text style={styles.title} numberOfLines={1}>
+                            {currentItem?.name}
                         </Text>
                     </View>
                     {/* option */}
@@ -50,7 +50,7 @@ const OptionModal = ({
                                             size={30}
                                             color="black"
                                         ></MaterialIcons>
-                                        <Text style={styles.option}>{optn.title}</Text>
+                                        <Text style={styles.option} >{optn.title}</Text>
                                     </View>
                                 </TouchableWithoutFeedback>
                             );
