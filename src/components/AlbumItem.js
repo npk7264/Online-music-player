@@ -1,9 +1,12 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
-
+import { useNavigation } from "@react-navigation/native";
 const AlbumItem = ({ name, songs, singer }) => {
+    const navigation = useNavigation();
     return (
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity
+            style={styles.container}
+            onPress={() => navigation.navigate('AlbumDetail', { name, songs })}>
             {/* Image */}
             <Image
                 source={require("../../assets/poster_music.png")}

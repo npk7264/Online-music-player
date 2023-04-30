@@ -37,13 +37,11 @@ const AlbumDetail = ({ route }) => {
             <View style={styles.line}></View>
 
             {/* list song */}
-            {/* <FlatList
+            <FlatList
                 data={listSongs}
                 renderItem={({ item }) => (
                     <SongItem
-                        song={item.song}
-                        singer={item.singer}
-                        time={item.time}
+                        info={item}
                         onPressOptionModal={() => {
                             setOptionModalVisible(true);
                             setCurrentItem(item);
@@ -51,7 +49,7 @@ const AlbumDetail = ({ route }) => {
                     />
                 )}
                 keyExtractor={(item) => item.id}
-            /> */}
+            />
         </SafeAreaView>
     )
 }
