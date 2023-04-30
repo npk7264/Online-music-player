@@ -13,7 +13,7 @@ import Search from "./src/screens/Search";
 import DetailPlaylist from "./src/screens/DetailPlaylist";
 import Chart from "./src/screens/Chart";
 import ArtistDetail from "./src/screens/ArtistDetail";
-
+import AlbumDetail from "./src/components/AlbumDetail"
 import { AudioProvider } from "./src/context/AudioContext";
 
 const Stack = createStackNavigator();
@@ -33,6 +33,7 @@ export default function App() {
             <Stack.Screen name="Player" component={Player} />
             <Stack.Screen name="Search" component={Search} />
             <Stack.Screen name="ArtistDetail" component={ArtistDetail} />
+            <Stack.Screen name="AlbumDetail" component={AlbumDetail} />
             <Stack.Screen name="DetailPlaylist" component={DetailPlaylist} />
             <Stack.Screen name="Chart" component={Chart} />
           </Stack.Navigator>

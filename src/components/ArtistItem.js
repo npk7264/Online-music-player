@@ -2,7 +2,9 @@ import React from 'react'
 import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
-const ArtistItem = ({ name, songs }) => {
+
+
+const ArtistItem = ({ name, songs, onPressOptionModal }) => {
     const navigation = useNavigation();
     return (
         <TouchableOpacity
@@ -34,6 +36,7 @@ const ArtistItem = ({ name, songs }) => {
 
                 {/* OPTION */}
                 <TouchableOpacity
+                    onPress={onPressOptionModal}
                 >
                     <Ionicons name="ellipsis-vertical" size={20} />
                 </TouchableOpacity>

@@ -5,6 +5,7 @@ import BackBar from '../components/BackBar';
 import { Ionicons } from "@expo/vector-icons";
 import SongItem from '../components/SongItem';
 import { songs } from '../../data';
+import FlatListSong from './FlatListSong';
 
 const AlbumDetail = ({ route }) => {
     const name = route.params.name;
@@ -37,21 +38,9 @@ const AlbumDetail = ({ route }) => {
             <View style={styles.line}></View>
 
             {/* list song */}
-            {/* <FlatList
-                data={listSongs}
-                renderItem={({ item }) => (
-                    <SongItem
-                        song={item.song}
-                        singer={item.singer}
-                        time={item.time}
-                        onPressOptionModal={() => {
-                            setOptionModalVisible(true);
-                            setCurrentItem(item);
-                        }}
-                    />
-                )}
-                keyExtractor={(item) => item.id}
-            /> */}
+            <FlatListSong
+                songs={listSongs}
+            />
         </SafeAreaView>
     )
 }
