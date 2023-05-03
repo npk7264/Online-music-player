@@ -7,23 +7,25 @@ import {
   SafeAreaView,
   FlatList,
 } from "react-native";
-import { useState } from "react";
+import { useState, useContext } from "react";
 
 import SongItem from "../components/SongItem";
 
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
-
+import { ThemeContext } from "../context/ThemeContext";
 // test data
 import { songs } from "../../data";
+import { color } from "../constants/color";
 
 const Search = () => {
+  const { colors, darkMode } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
   const [searchResult, setSearchResult] = useState([]);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "white" }}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       {/* Search Bar */}
       <View style={styles.searchBar}>
         {/* Back Button */}
@@ -33,7 +35,7 @@ const Search = () => {
             navigation.goBack();
           }}
         >
-          <FontAwesome name="arrow-left" size={24} color="black" />
+          <FontAwesome name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
         {/* Search Input */}
         <TextInput
@@ -41,11 +43,13 @@ const Search = () => {
             styles.searchInput,
             {
               borderColor: isFocused ? "#ff8216" : null,
-              backgroundColor: isFocused ? "#fff5ed" : "#f5f5f6",
+              backgroundColor: isFocused ? (darkMode ? '#2a221f' : "#fff5ed") : (darkMode ? "#1f222a" : "#f5f5f6"),
               borderWidth: isFocused ? 1 : 0,
+              color: colors.text
             },
           ]}
           placeholder="Bài hát, nghệ sĩ,..."
+          placeholderTextColor={colors.text}
           autoFocus={true}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}

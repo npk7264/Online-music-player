@@ -1,34 +1,38 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import BackBar from '../components/BackBar';
 
 import { Ionicons } from "@expo/vector-icons";
 import SongItem from '../components/SongItem';
 import { songs } from '../../data';
 import FlatListSong from '../components/FlatListSong';
+
+import { ThemeContext } from '../context/ThemeContext';
+
 const ArtistDetail = ({ route }) => {
+    const { colors } = useContext(ThemeContext);
     const name = route.params.name;
     const idSong = route.params.songs;
     const listSongs = songs.filter(obj => idSong.includes(obj.id));
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <BackBar isSearch={true}></BackBar>
             <View style={styles.header}>
                 {/* info singer */}
                 <Image
                     source={require("../../assets/temp.jpg")}
                     style={styles.poster} />
-                <Text style={styles.singer}>{name}</Text>
+                <Text style={[styles.singer, { color: colors.text }]}>{name}</Text>
                 <Text style={styles.numSong}>{songs.length} bài hát</Text>
                 {/* button */}
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#ff8216' }]}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
                         <Ionicons name='shuffle' size={20} color='white' />
                         <Text style={[styles.buttonText, { color: 'white' }]}>Shuffle</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#fff3e8' }]}>
-                        <Ionicons name='play-circle' size={20} color='#ff8216' />
-                        <Text style={[styles.buttonText, { color: '#ff8216' }]}>Play</Text>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
+                        <Ionicons name='play-circle' size={20} color={colors.primary} />
+                        <Text style={[styles.buttonText, { color: colors.primary }]}>Play</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -96,9 +100,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     line: {
-        width: '90%',
         borderColor: '#efefef',
         borderBottomWidth: 1,
+        marginLeft: 20,
+        marginRight: 20,
         paddingBottom: 25,
     },
 })

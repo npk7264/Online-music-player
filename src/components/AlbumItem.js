@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { useNavigation } from "@react-navigation/native";
+import { ThemeContext } from '../context/ThemeContext';
+
 const AlbumItem = ({ name, songs, singer }) => {
     const navigation = useNavigation();
+    const { colors } = useContext(ThemeContext);
     return (
         <TouchableOpacity
             style={styles.container}
@@ -14,7 +17,7 @@ const AlbumItem = ({ name, songs, singer }) => {
             />
             {/* info */}
             <View style={styles.info}>
-                <Text style={styles.name} >{name}</Text>
+                <Text style={[styles.name, { color: colors.text }]} >{name}</Text>
                 <Text style={styles.singer}>{singer}</Text>
                 <Text style={styles.numSong}>{songs?.length} bài hát</Text>
             </View>

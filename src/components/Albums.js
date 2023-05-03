@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View, FlatList } from 'react-native';
-import React from 'react';
+import React, { useContext } from 'react';
 import AlbumItem from './AlbumItem';
 import { albums } from '../../data';
-
+import { ThemeContext } from '../context/ThemeContext';
 const Albums = () => {
+    const { colors } = useContext(ThemeContext);
     return (
-        <View style={styles.container}>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
             <FlatList
                 data={albums}
                 renderItem={({ item }) => (
@@ -28,6 +29,5 @@ export default Albums;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white',
     },
 });

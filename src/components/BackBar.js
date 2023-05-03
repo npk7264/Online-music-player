@@ -1,13 +1,14 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-
+import { ThemeContext } from "../context/ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
 
 const BackBar = ({ title, isSearch }) => {
   const navigation = useNavigation();
+  const { colors } = useContext(ThemeContext);
   return (
-    <View style={styles.backBar}>
+    <View style={[styles.backBar, { backgroundColor: colors.background }]}>
       {/* title */}
       <View style={styles.container}>
         <TouchableOpacity
@@ -16,7 +17,7 @@ const BackBar = ({ title, isSearch }) => {
             navigation.goBack();
           }}
         >
-          <FontAwesome name="arrow-left" size={24} color="black" />
+          <FontAwesome name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={styles.title} numberOfLines={1}>
           {title}
@@ -25,7 +26,7 @@ const BackBar = ({ title, isSearch }) => {
       {/* search button */}
       {isSearch &&
         <TouchableOpacity onPress={() => { }}>
-          <FontAwesome name="search" size={24}></FontAwesome>
+          <FontAwesome name="search" size={24} color={colors.text}></FontAwesome>
         </TouchableOpacity>
       }
     </View>

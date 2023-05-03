@@ -1,14 +1,16 @@
 import { StyleSheet, Text, View, FlatList } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import ArtistItem from "../components/ArtistItem";
 import { artist } from "../../data";
 import OptionModal from "../components/OptionModal";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Artist = () => {
+  const { colors } = useContext(ThemeContext);
   const [currentSinger, setCurrentSinger] = useState(null);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       {/* artist list */}
       <FlatList
         data={artist}
@@ -55,8 +57,5 @@ export default Artist;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
-    // justifyContent: "center",
-    // alignItems: "center",
   },
 });

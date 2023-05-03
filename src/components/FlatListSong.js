@@ -1,4 +1,4 @@
-import { StyleSheet, FlatList } from 'react-native'
+import { FlatList } from 'react-native'
 import React, { useState } from 'react'
 import OptionModal from './OptionModal'
 import SongItem from './SongItem'
@@ -32,5 +32,3 @@ const FlatListSong = ({ songs }) => {
 }
 
 export default FlatListSong
-
-const styles = StyleSheet.create({})

@@ -1,21 +1,28 @@
 import { StyleSheet } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 
 import { MaterialCommunityIcons, Entypo, Ionicons } from "@expo/vector-icons";
 
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 const Tab = createBottomTabNavigator();
 
+import { ThemeContext } from "../context/ThemeContext";
+
 import TopMenu from "./TopMenu";
 import Playlist from "../screens/Playlist";
 import Chart from "../screens/Chart";
-import Setting from "../screens/Setting";
+import Setting from "../screens/setting/Setting";
 
 const BottomMenu = () => {
+  const { colors } = useContext(ThemeContext);
   return (
     <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{ headerShown: false }}
+      initialRouteName="Cài đặt"
+      screenOptions={{
+        headerShown: false,
+        tabBarStyle: { backgroundColor: colors.background },
+      }}
+
     >
       <Tab.Screen
         name="Home"
