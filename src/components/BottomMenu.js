@@ -9,12 +9,12 @@ const Tab = createBottomTabNavigator();
 import TopMenu from "./TopMenu";
 import Playlist from "../screens/Playlist";
 import Chart from "../screens/Chart";
-import Setting from "../screens/Setting";
+import Setting from "../screens/setting/Setting";
 
 const BottomMenu = () => {
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName="Cài đặt"
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen
