@@ -32,6 +32,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+import { ThemeContext } from "../context/ThemeContext";
+
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
@@ -51,6 +53,8 @@ const Player = () => {
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
   const [favoriteList, setFavoriteList] = useState([]);
+
+  const { colors } = useContext(ThemeContext);
 
   //hàm tính value cho thanh slider
   const convertValueSlider = () => {
@@ -121,7 +125,7 @@ const Player = () => {
   }, [currentAudio]);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{ backgroundColor: colors.background, height: windowHeight }}>
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -137,13 +141,13 @@ const Player = () => {
             paddingBottom: 5,
           }}
         >
-          <Text style={{ fontSize: 24, fontWeight: 500 }}>
+          <Text style={{ fontSize: 24, fontWeight: 500, color: colors.text }}>
             {currentAudio.name}
           </Text>
         </View>
         {/* Artist name */}
         <View style={{ paddingBottom: 10 }}>
-          <Text style={{ fontSize: 20, fontWeight: 400 }}>
+          <Text style={{ fontSize: 20, fontWeight: 400, color: colors.text }}>
             {currentAudio.singer}
           </Text>
         </View>
@@ -202,8 +206,8 @@ const Player = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontWeight: "500" }}>{currentPosition}</Text>
-        <Text style={{ fontWeight: "500" }}>
+        <Text style={{ fontWeight: "500", color: colors.text }}>{currentPosition}</Text>
+        <Text style={{ fontWeight: "500", color: colors.text }}>
           {convertTime(playbackDuration)}
         </Text>
       </View>
@@ -228,7 +232,7 @@ const Player = () => {
           <MaterialCommunityIcons
             name={isRepeat ? "repeat-once" : "repeat"}
             size={25}
-            color="#333"
+            color={colors.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -242,11 +246,11 @@ const Player = () => {
           <FontAwesome
             name={isLike ? "heart" : "heart-o"}
             size={25}
-            color="#333"
+            color={!isLike ? colors.text : 'red'}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
-          <MaterialCommunityIcons name="playlist-plus" size={25} color="#333" />
+          <MaterialCommunityIcons name="playlist-plus" size={25} color={colors.text} />
         </TouchableOpacity>
       </View>
 
@@ -264,7 +268,7 @@ const Player = () => {
             changeSong(context, "previous");
           }}
         >
-          <AntDesign name="stepbackward" size={40} color="#333" />
+          <AntDesign name="stepbackward" size={40} color={colors.text} />
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.controllerItem}
@@ -275,7 +279,7 @@ const Player = () => {
           <FontAwesome
             name={isPlaying ? "pause-circle" : "play-circle"}
             size={70}
-            color="#ff8216"
+            color={colors.primary}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -284,7 +288,7 @@ const Player = () => {
             changeSong(context, "next");
           }}
         >
-          <AntDesign name="stepforward" size={40} color="#333" />
+          <AntDesign name="stepforward" size={40} color={colors.text} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>

@@ -5,10 +5,11 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { AudioContext } from "../context/AudioContext";
 import { selectSong } from "../utils/AudioController";
+import { ThemeContext } from "../context/ThemeContext";
 
 const SongItem = (props) => {
   const contextAudio = useContext(AudioContext);
-
+  const { colors } = useContext(ThemeContext);
   const [isPlay, setIsPlay] = useState(false);
   const handlePress = () => {
     setIsPlay(!isPlay);
@@ -16,7 +17,7 @@ const SongItem = (props) => {
 
   return (
     <TouchableOpacity
-      style={styles.container}
+      style={[styles.container, { backgroundColor: colors.backgorund }]}
       onPress={async () => await selectSong(contextAudio, props.info)}
     >
       <View style={styles.content}>
@@ -35,7 +36,7 @@ const SongItem = (props) => {
 
           {/* Info */}
           <View style={{ flex: 1, paddingRight: 10 }}>
-            <Text style={{ fontSize: 18 }} numberOfLines={1}>
+            <Text style={{ fontSize: 18, color: colors.text }} numberOfLines={1}>
               {props.info.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
@@ -50,11 +51,11 @@ const SongItem = (props) => {
           <Ionicons
             name={!isPlay ? "play-circle" : "pause"}
             size={30}
-            color="#ff973e"
+            color={colors.primary}
           />
           {/* OPTION */}
           <TouchableOpacity onPress={props.onPressOptionModal}>
-            <Ionicons name="ellipsis-vertical" size={20} />
+            <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
           </TouchableOpacity>
         </View>
       </View>
@@ -69,7 +70,6 @@ const styles = StyleSheet.create({
     height: 70,
     paddingVertical: 5,
     paddingHorizontal: 20,
-    backgroundColor: "white",
   },
   content: {
     flex: 1,

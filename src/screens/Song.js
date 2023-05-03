@@ -5,7 +5,7 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 
 import SongItem from "../components/SongItem.js";
 import OptionModal from "../components/OptionModal.js";
@@ -27,9 +27,12 @@ import {
 
 import FlatListSong from "../components/FlatListSong.js";
 
+import { ThemeContext } from "../context/ThemeContext.js";
+
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+  const { colors } = useContext(ThemeContext);
   // const [songs, setSongs] = useState([]);
 
   const fetchSongs = async () => {
@@ -46,7 +49,7 @@ const Song = () => {
   // }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View
         style={{
           height: 50,
@@ -56,7 +59,7 @@ const Song = () => {
         }}
       >
         <View style={{ justifyContent: "center" }}>
-          <Text style={{ fontSize: 18, fontWeight: "500" }}>10 bài hát</Text>
+          <Text style={{ fontSize: 18, fontWeight: "500", color: colors.text }}>10 bài hát</Text>
         </View>
         <TouchableOpacity
           style={{
@@ -69,14 +72,14 @@ const Song = () => {
             style={{
               fontSize: 16,
               fontWeight: "bold",
-              color: "#ff8216",
+              color: colors.primary,
               marginRight: 10,
             }}
           >
             Sắp xếp
           </Text>
           <View>
-            <FontAwesome name="sort" size={30} color="#ff8216" />
+            <FontAwesome name="sort" size={30} color={colors.primary} />
           </View>
         </TouchableOpacity>
       </View>
@@ -93,6 +96,5 @@ export default Song;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
   },
 });

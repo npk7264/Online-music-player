@@ -9,6 +9,8 @@ import MiniPlayer from "./MiniPlayer";
 import Suggested from "./Suggested";
 import Albums from "./Albums";
 
+import { ThemeContext } from "../context/ThemeContext";
+
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 const Tab = createMaterialTopTabNavigator();
 
@@ -16,9 +18,9 @@ import { AudioContext } from "../context/AudioContext";
 
 const TopMenu = () => {
   const { soundObj } = useContext(AudioContext);
-
+  const { colors } = useContext(ThemeContext);
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.backgroundColor }]}>
       <StatusBar></StatusBar>
 
       <SearchBar title={"mymusic"} />
@@ -30,8 +32,10 @@ const TopMenu = () => {
           tabBarInactiveTintColor: "#ccc",
           tabBarLabelStyle: styles.label,
           tabBarIndicatorStyle: styles.indicator,
-          tabBarPressColor: "white",
+          tabBarPressColor: "black",
+          tabBarStyle: { backgroundColor: colors.background },
         }}
+
       >
         {/* <Tab.Screen name="Khám phá" component={Suggested} /> */}
         <Tab.Screen name="Bài hát" component={Song} />
@@ -49,7 +53,6 @@ export default TopMenu;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
   },
   label: {
     fontSize: 14,

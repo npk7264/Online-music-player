@@ -1,17 +1,19 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { ThemeContext } from "../context/ThemeContext";
 
 import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 const SearchBar = ({ title }) => {
   const navigation = useNavigation();
+  const { colors } = useContext(ThemeContext);
   return (
-    <View style={styles.searchBar}>
+    <View style={[styles.searchBar, { backgroundColor: colors.background }]}>
       {/* title */}
       <View style={styles.container}>
-        <FontAwesome5 name="music" size={24} color="#ff8216" />
-        <Text style={styles.title} numberOfLines={1}>
+        <FontAwesome5 name="music" size={24} color={colors.primary} />
+        <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
           {title}
         </Text>
       </View>
@@ -22,7 +24,7 @@ const SearchBar = ({ title }) => {
           navigation.navigate("Search");
         }}
       >
-        <FontAwesome name="search" size={24}></FontAwesome>
+        <FontAwesome name="search" size={24} color={colors.text}></FontAwesome>
       </TouchableOpacity>
     </View>
   );

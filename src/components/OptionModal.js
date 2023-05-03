@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import {
     View,
     StyleSheet,
@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 
 import { MaterialIcons } from "@expo/vector-icons";
+import { ThemeContext } from '../context/ThemeContext';
 
 const OptionModal = ({
     visible,
@@ -20,19 +21,19 @@ const OptionModal = ({
     onPlayPress,
     onPlayListPress,
 }) => {
-
+    const { colors } = useContext(ThemeContext);
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar hidden />
             <Modal animationType='slide' transparent visible={visible} statusBarTranslucent>
-                <View style={styles.modal}>
+                <View style={[styles.modal, { backgroundColor: colors.modal }]}>
                     {/* info */}
                     <View style={styles.header}>
                         <Image
                             source={require("../../assets/temp.jpg")}
                             style={styles.poster}
                         />
-                        <Text style={styles.title} numberOfLines={1}>
+                        <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
                             {currentItem?.name}
                         </Text>
                     </View>
@@ -48,9 +49,9 @@ const OptionModal = ({
                                         <MaterialIcons
                                             name={optn.icon}
                                             size={30}
-                                            color="black"
+                                            color={colors.text}
                                         ></MaterialIcons>
-                                        <Text style={styles.option} >{optn.title}</Text>
+                                        <Text style={[styles.option, { color: colors.text }]} >{optn.title}</Text>
                                     </View>
                                 </TouchableWithoutFeedback>
                             );
@@ -61,7 +62,7 @@ const OptionModal = ({
                     <View style={styles.modalBg} />
                 </TouchableWithoutFeedback>
             </Modal>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 
@@ -77,7 +78,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 20,
         borderTopLeftRadius: 20,
         zIndex: 1000,
-        backgroundColor: 'white',
     },
     header: {
         flex: 1,

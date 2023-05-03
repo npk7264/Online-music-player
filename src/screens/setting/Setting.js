@@ -1,9 +1,11 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, ScrollView, Switch, TouchableOpacity } from "react-native";
-import React, { useState } from "react";
+import React, { useContext } from "react";
 
 import SearchBar from "../../components/SearchBar";
 import { Avatar } from 'react-native-paper';
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+
+import { ThemeContext } from "../../context/ThemeContext";
 
 const SECTIONS = [
   {
@@ -72,17 +74,16 @@ const SECTIONS = [
 ];
 
 const Setting = () => {
-  const [isEnabled, setIsEnabled] = useState(false);
-  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
+  const { colors, darkMode, toggleTheme } = useContext(ThemeContext);
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar></StatusBar>
       <SearchBar title={"Setting"} />
 
       <ScrollView>
         <View style={styles.userInfoSection}>
           <Avatar.Icon size={80} icon="account" />
-          <Text style={styles.userName}>Kien Võ</Text>
+          <Text style={[styles.userName, { color: colors.text }]}>Kien Võ</Text>
         </View>
 
         {SECTIONS.map(({ header, items }) => {
@@ -96,26 +97,26 @@ const Setting = () => {
                     onPress={() => {
                       // handle onPress
                     }}>
-                    <View style={styles.row}>
+                    <View style={[styles.row, { backgroundColor: darkMode ? '#1f222a' : '#f2f2f2' }]}>
                       <View style={styles.rowIcon}>
-                        <Ionicons color="black" name={icon} size={25} />
+                        <Ionicons color={darkMode ? 'white' : "black"} name={(type === 'toggle' && darkMode) ? 'moon' : icon} size={25} />
                       </View>
 
-                      <Text style={styles.rowLabel}>{label}</Text>
+                      <Text style={[styles.rowLabel, { color: colors.text }]}>{label}</Text>
 
                       <View style={styles.rowSpacer} />
 
                       {type === 'toggle' &&
                         <Switch
                           trackColor={{ false: '#767577', true: '#81b0ff' }}
-                          thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                          thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
                           ios_backgroundColor="#3e3e3e"
-                          onValueChange={toggleSwitch}
-                          value={isEnabled} />}
+                          onValueChange={toggleTheme}
+                          value={darkMode} />}
 
                       {(type === 'link' || type === 'modal') && (
                         <FontAwesome5
-                          color="#0c0c0c"
+                          color={darkMode ? 'white' : "black"}
                           name="chevron-right"
                           size={22}
                         />
@@ -128,7 +129,7 @@ const Setting = () => {
           )
         })}
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   );
 };
 
@@ -164,7 +165,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-start',
     height: 50,
-    backgroundColor: '#f2f2f2',
     borderRadius: 8,
     marginBottom: 12,
     paddingLeft: 12,
