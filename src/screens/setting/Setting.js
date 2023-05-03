@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, ScrollView, Switch, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 
 import SearchBar from "../../components/SearchBar";
 import { Avatar } from 'react-native-paper';
@@ -72,6 +72,8 @@ const SECTIONS = [
 ];
 
 const Setting = () => {
+  const [isEnabled, setIsEnabled] = useState(false);
+  const toggleSwitch = () => setIsEnabled(previousState => !previousState);
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar></StatusBar>
@@ -103,7 +105,13 @@ const Setting = () => {
 
                       <View style={styles.rowSpacer} />
 
-                      {type === 'toggle' && <Switch />}
+                      {type === 'toggle' &&
+                        <Switch
+                          trackColor={{ false: '#767577', true: '#81b0ff' }}
+                          thumbColor={isEnabled ? '#f5dd4b' : '#f4f3f4'}
+                          ios_backgroundColor="#3e3e3e"
+                          onValueChange={toggleSwitch}
+                          value={isEnabled} />}
 
                       {(type === 'link' || type === 'modal') && (
                         <FontAwesome5
