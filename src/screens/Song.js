@@ -35,20 +35,6 @@ const Song = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
   const { songData } = useContext(AudioContext);
-  // const [songs, setSongs] = useState([]);
-
-  const fetchSongs = async () => {
-    const querySnapshot = await getDocs(collection(db, "songs"));
-    const songsArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setSongs(songsArray);
-  };
-
-  useEffect(() => {
-    console.log(songData);
-  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

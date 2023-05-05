@@ -2,9 +2,11 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useState, useContext } from "react";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
+import { useNavigation } from "@react-navigation/native";
 
 const PlaylistItem = (props) => {
   const { colors } = useContext(ThemeContext);
+  const navigation = useNavigation();
 
   return (
     <TouchableOpacity
@@ -14,6 +16,11 @@ const PlaylistItem = (props) => {
         paddingVertical: 5,
         paddingHorizontal: 20,
         backgroundColor: colors.background,
+      }}
+      onPress={() => {
+        if (props.type == "Favorite") navigation.navigate("Favorite");
+        else if (props.type == "Recent") navigation.navigate("Recent");
+        else navigation.navigate("DetailPlaylist");
       }}
     >
       <View style={styles.content}>
@@ -45,7 +52,7 @@ const PlaylistItem = (props) => {
             >
               {props.name}
             </Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>10 bai hat</Text>
+            <Text style={{ fontSize: 16, color: "gray" }}>10 bài hát</Text>
           </View>
         </View>
       </View>
