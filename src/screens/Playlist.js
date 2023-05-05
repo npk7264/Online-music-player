@@ -7,16 +7,19 @@ import {
   FlatList,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import { useState, useContext } from "react";
 
 import SearchBar from "../components/SearchBar";
 import PlaylistItem from "../components/PlaylistItem";
 
 import { Feather } from "@expo/vector-icons";
+import { ThemeContext } from "../context/ThemeContext.js";
 
 const Playlist = () => {
+  const { colors } = useContext(ThemeContext);
+
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
 
       <SearchBar title={"Playlist"} />
@@ -37,7 +40,7 @@ const Playlist = () => {
         </View>
         {/* Info */}
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18 }} numberOfLines={1}>
+          <Text style={{ fontSize: 18, color: colors.text }} numberOfLines={1}>
             Tạo danh sách phát mới
           </Text>
         </View>
@@ -53,10 +56,6 @@ const Playlist = () => {
 export default Playlist;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "white",
-  },
   poster: {
     width: 50,
     height: 50,

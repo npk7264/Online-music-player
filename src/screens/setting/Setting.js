@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, SafeAreaView, StatusBar, ScrollView, Switch, To
 import React, { useContext } from "react";
 
 import SearchBar from "../../components/SearchBar";
-import { Avatar } from 'react-native-paper';
+// import { Avatar } from 'react-native-paper';
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { ThemeContext } from "../../context/ThemeContext";
 
@@ -82,7 +82,7 @@ const Setting = () => {
 
       <ScrollView>
         <View style={styles.userInfoSection}>
-          <Avatar.Icon size={80} icon="account" />
+          {/* <Avatar.Icon size={80} icon="account" /> */}
           <Text style={[styles.userName, { color: colors.text }]}>Kien Võ</Text>
         </View>
 
