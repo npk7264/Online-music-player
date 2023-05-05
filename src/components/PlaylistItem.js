@@ -1,10 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
+import { ThemeContext } from "../context/ThemeContext.js";
 
 const PlaylistItem = (props) => {
+  const { colors } = useContext(ThemeContext);
+
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity
+      style={{
+        width: "100%",
+        height: 70,
+        paddingVertical: 5,
+        paddingHorizontal: 20,
+        backgroundColor: colors.background,
+      }}
+    >
       <View style={styles.content}>
         <View
           style={{
@@ -28,7 +39,10 @@ const PlaylistItem = (props) => {
 
           {/* Info */}
           <View style={{ flex: 1 }}>
-            <Text style={{ fontSize: 18 }} numberOfLines={1}>
+            <Text
+              style={{ fontSize: 18, color: colors.text }}
+              numberOfLines={1}
+            >
               {props.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }}>10 bai hat</Text>
@@ -41,13 +55,6 @@ const PlaylistItem = (props) => {
 export default PlaylistItem;
 
 const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-    height: 70,
-    paddingVertical: 5,
-    paddingHorizontal: 20,
-    backgroundColor: "white",
-  },
   content: {
     flex: 1,
     flexDirection: "row",
