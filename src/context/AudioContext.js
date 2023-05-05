@@ -31,7 +31,7 @@ export class AudioProvider extends Component {
     if (playbackStatus.isLoaded && !playbackStatus.isPlaying) {
     }
 
-    if (playbackStatus.didJustFinish) {
+    if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
       console.log("FINISH:", this.state.currentAudio);
       await changeSong(
         { ...this.state, updateState: this.updateState },

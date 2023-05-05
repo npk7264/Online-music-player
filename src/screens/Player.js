@@ -125,7 +125,9 @@ const Player = () => {
   }, [currentAudio]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.background, height: windowHeight }}>
+    <SafeAreaView
+      style={{ backgroundColor: colors.background, height: windowHeight }}
+    >
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -161,6 +163,7 @@ const Player = () => {
         value={convertValueSlider()}
         thumbTintColor="#ff8216"
         minimumTrackTintColor="#ff8216"
+        maximumTrackTintColor={colors.text}
         onValueChange={(value) => {
           setCurrentPositon(convertTime(value * context.playbackDuration));
         }}
@@ -206,7 +209,9 @@ const Player = () => {
           justifyContent: "space-between",
         }}
       >
-        <Text style={{ fontWeight: "500", color: colors.text }}>{currentPosition}</Text>
+        <Text style={{ fontWeight: "500", color: colors.text }}>
+          {currentPosition}
+        </Text>
         <Text style={{ fontWeight: "500", color: colors.text }}>
           {convertTime(playbackDuration)}
         </Text>
@@ -246,11 +251,15 @@ const Player = () => {
           <FontAwesome
             name={isLike ? "heart" : "heart-o"}
             size={25}
-            color={!isLike ? colors.text : 'red'}
+            color={!isLike ? colors.text : colors.primary}
           />
         </TouchableOpacity>
         <TouchableOpacity style={styles.controllerItem}>
-          <MaterialCommunityIcons name="playlist-plus" size={25} color={colors.text} />
+          <MaterialCommunityIcons
+            name="playlist-plus"
+            size={25}
+            color={colors.text}
+          />
         </TouchableOpacity>
       </View>
 
@@ -279,7 +288,7 @@ const Player = () => {
           <FontAwesome
             name={isPlaying ? "pause-circle" : "play-circle"}
             size={70}
-            color={colors.primary}
+            color={colors.text}
           />
         </TouchableOpacity>
         <TouchableOpacity
