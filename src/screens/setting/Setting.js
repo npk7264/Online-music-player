@@ -4,7 +4,6 @@ import React, { useContext } from "react";
 import SearchBar from "../../components/SearchBar";
 // import { Avatar } from 'react-native-paper';
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
-
 import { ThemeContext } from "../../context/ThemeContext";
 
 const SECTIONS = [
@@ -75,6 +74,7 @@ const SECTIONS = [
 
 const Setting = () => {
   const { colors, darkMode, toggleTheme } = useContext(ThemeContext);
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <StatusBar></StatusBar>
