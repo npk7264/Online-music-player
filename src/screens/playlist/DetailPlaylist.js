@@ -5,9 +5,12 @@ import BackBar from "../../components/BackBar";
 import { ThemeContext } from "../../context/ThemeContext";
 import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
+import { useNavigation } from "@react-navigation/native";
+import AddSong from "./AddSong";
 
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
+  const navigation = useNavigation();
   const name = 'hello' //route.params.name;
   const idSong = [1, 3, 5, 7];
   const listSongs = songs.filter(obj => idSong.includes(obj.id));
@@ -36,9 +39,11 @@ const DetailPlaylist = () => {
       {/* line */}
       <View style={styles.line}></View>
 
+      {/* add songs */}
       <View style={[styles.addSong]}>
         <Text style={{ fontSize: 20, color: colors.text }}>Bài hát</Text>
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => navigation.navigate('AddSong')}>
           <FontAwesome name='plus-square' size={30} color={colors.primary} />
         </TouchableOpacity>
       </View>

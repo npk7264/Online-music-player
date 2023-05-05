@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar } from "react-native";
 import { useContext } from "react";
-import { color } from "../constants/color";
 
 import Song from "../screens/Song";
 import Artist from "../screens/Artist";
@@ -28,7 +27,7 @@ const TopMenu = () => {
       <Tab.Navigator
         initialRouteName="Bài hát"
         screenOptions={{
-          tabBarActiveTintColor: color.primary,
+          tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: "#ccc",
           tabBarLabelStyle: styles.label,
           tabBarIndicatorStyle: styles.indicator,

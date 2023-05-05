@@ -3,8 +3,6 @@ import React, { useState, useContext } from "react";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
 
-import DetailPlaylist from "../screens/playlist/DetailPlaylist.js";
-
 import { useNavigation } from "@react-navigation/native";
 
 const PlaylistItem = (props) => {
