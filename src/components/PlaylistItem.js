@@ -3,9 +3,13 @@ import React, { useState, useContext } from "react";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
 
+import DetailPlaylist from "../screens/playlist/DetailPlaylist.js";
+
+import { useNavigation } from "@react-navigation/native";
+
 const PlaylistItem = (props) => {
   const { colors } = useContext(ThemeContext);
-
+  const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={{
@@ -15,6 +19,7 @@ const PlaylistItem = (props) => {
         paddingHorizontal: 20,
         backgroundColor: colors.background,
       }}
+      onPress={() => navigation.navigate('DetailPlaylist')}
     >
       <View style={styles.content}>
         <View
