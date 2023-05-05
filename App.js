@@ -10,7 +10,7 @@ import Register from "./src/screens/Register";
 import BottomMenu from "./src/components/BottomMenu";
 import Player from "./src/screens/Player";
 import Search from "./src/screens/Search";
-import DetailPlaylist from "./src/screens/DetailPlaylist";
+import DetailPlaylist from "./src/screens/playlist/DetailPlaylist";
 import Chart from "./src/screens/Chart";
 import ArtistDetail from "./src/screens/ArtistDetail";
 import AlbumDetail from "./src/components/AlbumDetail"

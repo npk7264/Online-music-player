@@ -1,4 +1,4 @@
-import { FlatList } from 'react-native'
+import { FlatList, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
 import OptionModal from './OptionModal'
 import SongItem from './SongItem'
@@ -7,7 +7,7 @@ const FlatListSong = ({ songs }) => {
     const [optionModalVisible, setOptionModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
     return (
-        <>
+        <SafeAreaView>
             <FlatList
                 data={songs}
                 renderItem={({ item }) => (
@@ -27,7 +27,7 @@ const FlatListSong = ({ songs }) => {
                 onClose={() => setOptionModalVisible(false)}
                 visible={optionModalVisible}
             />
-        </>
+        </SafeAreaView>
     )
 }
 
