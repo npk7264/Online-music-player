@@ -14,8 +14,8 @@ import SongItem from "../components/SongItem";
 import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { ThemeContext } from "../context/ThemeContext";
-// test data
-import { songs } from "../../data";
+import { AudioContext } from "../context/AudioContext";
+
 import { color } from "../constants/color";
 
 const Search = () => {
@@ -23,6 +23,7 @@ const Search = () => {
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
   const [searchResult, setSearchResult] = useState([]);
+  const { songData } = useContext(AudioContext);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -58,7 +59,7 @@ const Search = () => {
 
       {/* Search Result */}
       <FlatList
-        data={songs}
+        data={songData}
         renderItem={({ item }) => (
           <SongItem
             info={item}

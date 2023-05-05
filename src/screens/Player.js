@@ -126,15 +126,12 @@ const Player = () => {
 
   return (
     <SafeAreaView
-      style={{ backgroundColor: colors.background, height: windowHeight }}
+      style={{ backgroundColor: colors.background}}
     >
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>
-        <Image
-          style={styles.thumbnail}
-          source={require("../../assets/temp.jpg")}
-        />
+        <Image style={styles.thumbnail} source={{ uri: currentAudio.image }} />
         {/* Song name */}
         <View
           style={{
@@ -150,7 +147,7 @@ const Player = () => {
         {/* Artist name */}
         <View style={{ paddingBottom: 10 }}>
           <Text style={{ fontSize: 20, fontWeight: 400, color: colors.text }}>
-            {currentAudio.singer}
+            {currentAudio.artists.join(" ft ")}
           </Text>
         </View>
       </View>

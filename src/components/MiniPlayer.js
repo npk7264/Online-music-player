@@ -5,15 +5,16 @@ import { Ionicons } from "@expo/vector-icons";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { selectSong } from "../utils/AudioController";
 
 const MiniPlayer = () => {
   const navigation = useNavigation();
-  const { currentAudio, isPlaying } = useContext(AudioContext);
+  const contextAudio = useContext(AudioContext);
+  const { currentAudio, isPlaying } = contextAudio;
   const { colors } = useContext(ThemeContext);
 
   return (
-    <View
-      style={{ backgroundColor: colors.background }}>
+    <View style={{ backgroundColor: colors.background }}>
       <TouchableOpacity
         style={[styles.container, { borderColor: colors.frame }]}
         onPress={() => {
@@ -27,29 +28,31 @@ const MiniPlayer = () => {
             backgroundColor: "white",
             borderRadius: 15,
           }}
-          source={require("../../assets/poster_music.png")}
+          source={{ uri: currentAudio.image }}
         />
         <Text
           style={{
             marginHorizontal: 10,
             flex: 1,
             fontSize: 16,
-            color: colors.text
+            color: colors.text,
           }}
           numberOfLines={1}
         >
-          {currentAudio.name + " - " + currentAudio.singer}
+          {currentAudio.name + " - " + currentAudio.artists.join(" ft ")}
         </Text>
         <TouchableOpacity
           style={{
             width: 40,
             height: 40,
+            alignItems: "center",
             justifyContent: "center",
           }}
+          onPress={async () => await selectSong(contextAudio, currentAudio)}
         >
           <Ionicons
             name={isPlaying ? "pause-circle" : "play-circle"}
-            size={30}
+            size={40}
             color="#ff973e"
           />
         </TouchableOpacity>

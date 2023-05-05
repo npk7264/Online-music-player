@@ -15,6 +15,9 @@ import Chart from "./src/screens/Chart";
 import ArtistDetail from "./src/screens/ArtistDetail";
 import AlbumDetail from "./src/components/AlbumDetail"
 import AddSong from "./src/screens/playlist/AddSong";
+import Favorite from "./src/screens/Favorite";
+import Recent from "./src/screens/Recent";
+
 
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
@@ -40,6 +43,8 @@ export default function App() {
               <Stack.Screen name="AlbumDetail" component={AlbumDetail} />
               <Stack.Screen name="DetailPlaylist" component={DetailPlaylist} />
               <Stack.Screen name="Chart" component={Chart} />
+              <Stack.Screen name="Favorite" component={Favorite} />
+              <Stack.Screen name="Recent" component={Recent} />
             </Stack.Navigator>
           </NavigationContainer>
         </SafeAreaProvider>
