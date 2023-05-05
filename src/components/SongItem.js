@@ -29,35 +29,35 @@ const SongItem = (props) => {
           }}
         >
           {/* Image */}
-          <Image
-            source={require("../../assets/temp.jpg")}
-            style={styles.poster}
-          />
+          <Image source={{ uri: props.info.image }} style={styles.poster} />
 
           {/* Info */}
           <View style={{ flex: 1, paddingRight: 10 }}>
-            <Text style={{ fontSize: 18, color: colors.text }} numberOfLines={1}>
+            <Text
+              style={{ fontSize: 18, color: colors.text }}
+              numberOfLines={1}
+            >
               {props.info.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
-              {props.info.singer}
+              {props.info.artists.join(" ft ")}
             </Text>
           </View>
         </View>
 
         {/* Button */}
-        <View style={styles.buttonContainter}>
-          {/* PLAY/PAUSE */}
-          <Ionicons
+        {/* <View style={styles.buttonContainter}> */}
+        {/* PLAY/PAUSE */}
+        {/* <Ionicons
             name={!isPlay ? "play-circle" : "pause"}
             size={30}
             color={colors.primary}
-          />
-          {/* OPTION */}
-          <TouchableOpacity onPress={props.onPressOptionModal}>
-            <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
-          </TouchableOpacity>
-        </View>
+          /> */}
+        {/* OPTION */}
+        <TouchableOpacity onPress={props.onPressOptionModal}>
+          <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
+        </TouchableOpacity>
+        {/* </View> */}
       </View>
     </TouchableOpacity>
   );

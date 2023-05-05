@@ -27,12 +27,14 @@ import {
 
 import FlatListSong from "../components/FlatListSong.js";
 
+import { AudioContext } from "../context/AudioContext.js";
 import { ThemeContext } from "../context/ThemeContext.js";
 
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
+  const { songData } = useContext(AudioContext);
   // const [songs, setSongs] = useState([]);
 
   const fetchSongs = async () => {
@@ -44,9 +46,9 @@ const Song = () => {
     setSongs(songsArray);
   };
 
-  // useEffect(() => {
-  //   fetchSongs();
-  // }, []);
+  useEffect(() => {
+    console.log(songData);
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -59,7 +61,9 @@ const Song = () => {
         }}
       >
         <View style={{ justifyContent: "center" }}>
-          <Text style={{ fontSize: 18, fontWeight: "500", color: colors.text }}>10 bài hát</Text>
+          <Text style={{ fontSize: 18, fontWeight: "500", color: colors.text }}>
+            {songData.length} bài hát
+          </Text>
         </View>
         <TouchableOpacity
           style={{
@@ -85,8 +89,7 @@ const Song = () => {
       </View>
 
       {/* Song list */}
-      <FlatListSong
-        songs={songs} />
+      <FlatListSong songs={songData} />
     </View>
   );
 };

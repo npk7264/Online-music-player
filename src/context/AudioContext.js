@@ -2,6 +2,7 @@ import React, { Component, createContext } from "react";
 import { Audio } from "expo-av";
 import { songs } from "../../data";
 import { changeSong } from "../utils/AudioController";
+import { fetchSongs } from "../utils/FirebaseHandler";
 
 export const AudioContext = createContext();
 export class AudioProvider extends Component {
@@ -40,10 +41,14 @@ export class AudioProvider extends Component {
     }
   };
 
-  componentDidMount() {
+  async componentDidMount() {
+    const songs = await fetchSongs();
     if (this.state.playbackObj === null) {
-      this.setState({ ...this.state, playbackObj: new Audio.Sound() });
-      console.log("OK");
+      this.setState({
+        ...this.state,
+        songData: songs,
+        playbackObj: new Audio.Sound(),
+      });
     }
   }
 
