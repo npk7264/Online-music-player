@@ -10,12 +10,14 @@ import Register from "./src/screens/Register";
 import BottomMenu from "./src/components/BottomMenu";
 import Player from "./src/screens/Player";
 import Search from "./src/screens/Search";
-import DetailPlaylist from "./src/screens/DetailPlaylist";
+import DetailPlaylist from "./src/screens/playlist/DetailPlaylist";
 import Chart from "./src/screens/Chart";
 import ArtistDetail from "./src/screens/ArtistDetail";
-import AlbumDetail from "./src/components/AlbumDetail";
+import AlbumDetail from "./src/components/AlbumDetail"
+import AddSong from "./src/screens/playlist/AddSong";
 import Favorite from "./src/screens/Favorite";
 import Recent from "./src/screens/Recent";
+
 
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
@@ -31,6 +33,7 @@ export default function App() {
               initialRouteName="BottomMenu"
               screenOptions={{ headerShown: false }}
             >
+              <Stack.Screen name="AddSong" component={AddSong} />
               <Stack.Screen name="Login" component={Login} />
               <Stack.Screen name="Register" component={Register} />
               <Stack.Screen name="BottomMenu" component={BottomMenu} />

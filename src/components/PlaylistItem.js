@@ -4,10 +4,11 @@ import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { useNavigation } from "@react-navigation/native";
 
+import { useNavigation } from "@react-navigation/native";
+
 const PlaylistItem = (props) => {
   const { colors } = useContext(ThemeContext);
   const navigation = useNavigation();
-
   return (
     <TouchableOpacity
       style={{

@@ -9,7 +9,7 @@ const Tab = createBottomTabNavigator();
 import { ThemeContext } from "../context/ThemeContext";
 
 import TopMenu from "./TopMenu";
-import Playlist from "../screens/Playlist";
+import Playlist from "../screens/playlist/Playlist";
 import Chart from "../screens/Chart";
 import Setting from "../screens/setting/Setting";
 

@@ -9,15 +9,16 @@ import {
 } from "react-native";
 import { useState, useContext } from "react";
 
-import SearchBar from "../components/SearchBar";
-import PlaylistItem from "../components/PlaylistItem";
+import SearchBar from "../../components/SearchBar";
+import PlaylistItem from "../../components/PlaylistItem";
+import AddPlaylist from "./AddPlaylist";
 
 import { Feather } from "@expo/vector-icons";
-import { ThemeContext } from "../context/ThemeContext.js";
+import { ThemeContext } from "../../context/ThemeContext.js";
 
 const Playlist = () => {
   const { colors } = useContext(ThemeContext);
-
+  const [addPlaylist, setAddPlaylist] = useState(false);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
@@ -34,6 +35,7 @@ const Playlist = () => {
           flexDirection: "row",
           alignItems: "center",
         }}
+        onPress={() => setAddPlaylist(true)}
       >
         <View style={styles.poster}>
           <Feather name="plus" size={24} color="white" />
@@ -49,6 +51,11 @@ const Playlist = () => {
       <PlaylistItem type={"Favorite"} name={"Yêu thích"} />
       <PlaylistItem type={"Recent"} name={"Nghe gần đây"} />
       <PlaylistItem name={"New playlist"} />
+
+      <AddPlaylist
+        visible={addPlaylist}
+        onClose={() => setAddPlaylist(false)}
+      />
     </SafeAreaView>
   );
 };

@@ -285,7 +285,7 @@ const Player = () => {
           <FontAwesome
             name={isPlaying ? "pause-circle" : "play-circle"}
             size={70}
-            color={colors.text}
+            color={colors.primary}
           />
         </TouchableOpacity>
         <TouchableOpacity
