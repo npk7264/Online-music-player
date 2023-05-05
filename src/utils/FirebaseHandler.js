@@ -9,6 +9,17 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+// FETCH ALL SONGS
+export const fetchSongs = async () => {
+  const querySnapshot = await getDocs(collection(db, "songs"));
+  const songsArray = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    ...doc.data(),
+  }));
+  console.log(songsArray);
+  return songsArray;
+};
+
 // SAVE RECENT
 export const fetchRecent = async (docRef) => {
   try {
