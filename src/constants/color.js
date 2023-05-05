@@ -7,7 +7,7 @@ export const lightColors = {
   background: '#fff',
   text: '#000',
   frame: '#fff3e8',
-  modal: '#white'
+  modal: 'white'
 };
 
 export const darkColors = {

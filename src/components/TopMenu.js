@@ -18,7 +18,7 @@ import { AudioContext } from "../context/AudioContext";
 
 const TopMenu = () => {
   const { soundObj } = useContext(AudioContext);
-  const { colors } = useContext(ThemeContext);
+  const { colors, darkMode } = useContext(ThemeContext);
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.backgroundColor }]}>
       <StatusBar></StatusBar>
@@ -32,7 +32,7 @@ const TopMenu = () => {
           tabBarInactiveTintColor: "#ccc",
           tabBarLabelStyle: styles.label,
           tabBarIndicatorStyle: styles.indicator,
-          tabBarPressColor: "black",
+          tabBarPressColor: darkMode ? 'black' : 'white',
           tabBarStyle: { backgroundColor: colors.background },
         }}
 
