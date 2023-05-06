@@ -79,7 +79,7 @@ const Player = () => {
     const docRef = doc(db, "users/" + userId);
     try {
       const docSnap = await getDoc(docRef);
-      console.log(docSnap.data().favorite);
+      // console.log(docSnap.data().favorite);
       setFavoriteList(docSnap.data().favorite);
       setLike(docSnap.data().favorite.includes(currentAudio.id));
     } catch (error) {
