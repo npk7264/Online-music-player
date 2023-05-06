@@ -27,6 +27,8 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+import { useIsFocused } from "@react-navigation/native";
+
 const Favorite = () => {
   const { userId, songData, soundObj } = useContext(AudioContext);
   const [favoriteId, setFavoriteId] = useState([]);
@@ -47,9 +49,10 @@ const Favorite = () => {
     .filter((item) => favoriteId.includes(item.id))
     .sort((a, b) => favoriteId.indexOf(a.id) - favoriteId.indexOf(b.id));
 
+  const isFocused = useIsFocused();
   useEffect(() => {
     fetchFavorite(userId);
-  }, []);
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
