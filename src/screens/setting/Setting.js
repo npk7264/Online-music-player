@@ -1,82 +1,96 @@
-import { StyleSheet, Text, View, SafeAreaView, StatusBar, ScrollView, Switch, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  StatusBar,
+  ScrollView,
+  Switch,
+  TouchableOpacity,
+} from "react-native";
 import React, { useContext } from "react";
 
 import SearchBar from "../../components/SearchBar";
+import MiniPlayer from "../../components/MiniPlayer";
 // import { Avatar } from 'react-native-paper';
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext";
 
 const SECTIONS = [
   {
-    header: 'Profile',
+    header: "Profile",
     items: [
       {
-        id: 'changeName',
-        icon: 'person-circle-outline',
-        label: 'Đổi nick name',
-        type: 'modal',
+        id: "changeName",
+        icon: "person-circle-outline",
+        label: "Đổi nick name",
+        type: "modal",
       },
       {
-        id: 'changePassword',
-        icon: 'key-outline',
-        label: 'Đổi mật khẩu',
-        type: 'modal',
+        id: "changePassword",
+        icon: "key-outline",
+        label: "Đổi mật khẩu",
+        type: "modal",
       },
-    ]
+    ],
   },
   {
-    header: 'Preferences',
+    header: "Preferences",
     items: [
       {
-        id: 'notification',
-        icon: 'md-notifications-outline',
-        label: 'Thông báo',
-        type: 'link',
+        id: "notification",
+        icon: "md-notifications-outline",
+        label: "Thông báo",
+        type: "link",
       },
       {
-        id: 'language',
-        icon: 'trail-sign-outline',
-        label: 'Ngôn ngữ',
-        type: 'link',
+        id: "language",
+        icon: "trail-sign-outline",
+        label: "Ngôn ngữ",
+        type: "link",
       },
       {
-        id: 'darkMode',
-        icon: 'sunny-outline',
-        label: 'Dark mode',
-        type: 'toggle',
+        id: "darkMode",
+        icon: "sunny-outline",
+        label: "Dark mode",
+        type: "toggle",
       },
       {
-        id: 'time',
-        icon: 'timer-outline',
-        label: 'Hẹn giờ',
-        type: 'link',
-      }
-    ]
+        id: "time",
+        icon: "timer-outline",
+        label: "Hẹn giờ",
+        type: "link",
+      },
+    ],
   },
   {
-    header: 'App',
+    header: "App",
     items: [
       {
-        id: 'logOut',
-        icon: 'log-out-outline',
-        label: 'Đăng xuất',
-        type: 'button',
+        id: "logOut",
+        icon: "log-out-outline",
+        label: "Đăng xuất",
+        type: "button",
       },
       {
-        id: 'quit',
-        icon: 'md-phone-portrait-outline',
-        label: 'Thoát',
-        type: 'button',
+        id: "quit",
+        icon: "md-phone-portrait-outline",
+        label: "Thoát",
+        type: "button",
       },
-    ]
-  }
+    ],
+  },
 ];
 
 const Setting = () => {
   const { colors, darkMode, toggleTheme } = useContext(ThemeContext);
+  const { soundObj } = useContext(AudioContext);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <StatusBar></StatusBar>
       <SearchBar title={"Setting"} />
 
@@ -96,40 +110,55 @@ const Setting = () => {
                     key={id}
                     onPress={() => {
                       // handle onPress
-                    }}>
-                    <View style={[styles.row, { backgroundColor: darkMode ? '#1f222a' : '#f2f2f2' }]}>
+                    }}
+                  >
+                    <View
+                      style={[
+                        styles.row,
+                        { backgroundColor: darkMode ? "#1f222a" : "#f2f2f2" },
+                      ]}
+                    >
                       <View style={styles.rowIcon}>
-                        <Ionicons color={darkMode ? 'white' : "black"} name={(type === 'toggle' && darkMode) ? 'moon' : icon} size={25} />
+                        <Ionicons
+                          color={darkMode ? "white" : "black"}
+                          name={type === "toggle" && darkMode ? "moon" : icon}
+                          size={25}
+                        />
                       </View>
 
-                      <Text style={[styles.rowLabel, { color: colors.text }]}>{label}</Text>
+                      <Text style={[styles.rowLabel, { color: colors.text }]}>
+                        {label}
+                      </Text>
 
                       <View style={styles.rowSpacer} />
 
-                      {type === 'toggle' &&
+                      {type === "toggle" && (
                         <Switch
-                          trackColor={{ false: '#767577', true: '#81b0ff' }}
-                          thumbColor={darkMode ? '#f5dd4b' : '#f4f3f4'}
+                          trackColor={{ false: "#767577", true: "#81b0ff" }}
+                          thumbColor={darkMode ? "#f5dd4b" : "#f4f3f4"}
                           ios_backgroundColor="#3e3e3e"
                           onValueChange={toggleTheme}
-                          value={darkMode} />}
+                          value={darkMode}
+                        />
+                      )}
 
-                      {(type === 'link' || type === 'modal') && (
+                      {(type === "link" || type === "modal") && (
                         <FontAwesome5
-                          color={darkMode ? 'white' : "black"}
+                          color={darkMode ? "white" : "black"}
                           name="chevron-right"
                           size={22}
                         />
                       )}
                     </View>
                   </TouchableOpacity>
-                )
+                );
               })}
             </View>
-          )
+          );
         })}
       </ScrollView>
-    </SafeAreaView >
+      {soundObj && <MiniPlayer />}
+    </SafeAreaView>
   );
 };
 
@@ -142,12 +171,12 @@ const styles = StyleSheet.create({
   },
   userInfoSection: {
     marginTop: 10,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center",
   },
   userName: {
     fontSize: 30,
-    marginTop: 5
+    marginTop: 5,
   },
   section: {
     paddingHorizontal: 24,
@@ -155,15 +184,15 @@ const styles = StyleSheet.create({
   sectionHeader: {
     paddingVertical: 12,
     fontSize: 12,
-    fontWeight: '600',
-    color: '#9e9e9e',
-    textTransform: 'uppercase',
+    fontWeight: "600",
+    color: "#9e9e9e",
+    textTransform: "uppercase",
     letterSpacing: 1.1,
   },
   row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-start",
     height: 50,
     borderRadius: 8,
     marginBottom: 12,
@@ -175,13 +204,13 @@ const styles = StyleSheet.create({
     height: 32,
     borderRadius: 9999,
     marginRight: 12,
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
   },
   rowLabel: {
     fontSize: 17,
-    color: 'black',
+    color: "black",
   },
   rowSpacer: {
     flexGrow: 1,
