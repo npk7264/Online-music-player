@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -9,7 +9,7 @@ import {
     SafeAreaView,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView,
+    Keyboard,
 } from 'react-native';
 import { ThemeContext } from '../../context/ThemeContext';
 import { db, auth } from "../../services/firebaseConfig"
@@ -22,6 +22,27 @@ const AddPlaylist = ({
     const { colors, darkMode } = useContext(ThemeContext);
     const [isFocused, setIsFocused] = useState(false); // focus TextInput
     const [namePlaylist, setNamePlaylist] = useState('');
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true);
+            },
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false);
+            },
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
     const handleCreatePlaylist = async () => {
         try {
             const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
@@ -40,8 +61,7 @@ const AddPlaylist = ({
         <SafeAreaView style={styles.container}>
             <StatusBar hidden />
             <Modal animationType='slide' transparent visible={visible} statusBarTranslucent>
-
-                <View style={[styles.modal, { backgroundColor: colors.modal }]}>
+                <View style={[styles.modal, { backgroundColor: colors.modal, bottom: isKeyboardVisible ? 250 : 0 }]}>
                     {/* info */}
                     <View style={styles.header}>
                         <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
