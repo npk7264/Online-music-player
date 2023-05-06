@@ -125,7 +125,7 @@ const Player = () => {
   }, [currentAudio]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.background }}>
+    <SafeAreaView style={{ backgroundColor: colors.background, height: '100%' }}>
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>

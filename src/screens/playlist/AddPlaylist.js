@@ -12,6 +12,8 @@ import {
     KeyboardAvoidingView,
 } from 'react-native';
 import { ThemeContext } from '../../context/ThemeContext';
+import { db, auth } from "../../services/firebaseConfig"
+import { collection, addDoc } from "firebase/firestore";
 
 const AddPlaylist = ({
     visible,
@@ -19,6 +21,21 @@ const AddPlaylist = ({
 }) => {
     const { colors, darkMode } = useContext(ThemeContext);
     const [isFocused, setIsFocused] = useState(false); // focus TextInput
+    const [namePlaylist, setNamePlaylist] = useState('');
+    const handleCreatePlaylist = async () => {
+        try {
+            const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
+            const docRef = await addDoc(collection(db, `users/${userId}/playlist`),
+                {
+                    name: namePlaylist,
+                    listSong: []
+                });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            alert("create playlist!", e);
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar hidden />
@@ -42,17 +59,23 @@ const AddPlaylist = ({
                             },
                         ]}
                         placeholder="Tên danh sách phát"
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={'gray'}
                         autoFocus={true}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
+                        onChangeText={(text) => setNamePlaylist(text)}
                     />
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: colors.frame }]}
+                            onPress={onClose}
+                        >
                             <Text style={{ color: colors.primary, fontSize: 18 }}>Hủy</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: colors.primary }]}
+                            onPress={() => handleCreatePlaylist()}>
                             <Text style={{ color: 'white', fontSize: 18 }}>Tạo</Text>
                         </TouchableOpacity>
                     </View>

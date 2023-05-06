@@ -7,6 +7,8 @@ import { color } from '../../constants/color';
 import Favorites from './menuAddSong/Favorites';
 import Songs from './menuAddSong/Songs';
 import Recent from './menuAddSong/Recent';
+
+
 const Tab = createMaterialTopTabNavigator();
 
 const AddSong = () => {
