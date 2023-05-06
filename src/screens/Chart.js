@@ -11,6 +11,7 @@ import { useState, useContext } from "react";
 
 import SearchBar from "../components/SearchBar";
 import SongItem from "../components/SongItem";
+import MiniPlayer from "../components/MiniPlayer";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
@@ -18,7 +19,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const Chart = () => {
-  const { songData } = useContext(AudioContext);
+  const { songData, soundObj } = useContext(AudioContext);
   const [filterTime, setFilterTime] = useState("day");
   const { colors } = useContext(ThemeContext);
 
@@ -92,6 +93,8 @@ const Chart = () => {
         )}
         keyExtractor={(item) => item.id}
       />
+
+      {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );
 };

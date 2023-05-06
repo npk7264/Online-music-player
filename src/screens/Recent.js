@@ -12,6 +12,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 import BackBar from "../components/BackBar";
 import SongItem from "../components/SongItem";
+import MiniPlayer from "../components/MiniPlayer";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
@@ -28,7 +29,7 @@ import {
 } from "firebase/firestore";
 
 const Recent = () => {
-  const { userId, songData } = useContext(AudioContext);
+  const { userId, songData, soundObj } = useContext(AudioContext);
   const [recentId, setRecentId] = useState([]);
   const { colors } = useContext(ThemeContext);
 
@@ -72,6 +73,8 @@ const Recent = () => {
         )}
         keyExtractor={(item) => item.id}
       />
+
+      {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );
 };

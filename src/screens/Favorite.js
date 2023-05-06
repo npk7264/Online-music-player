@@ -11,6 +11,7 @@ import { useState, useContext, useEffect } from "react";
 
 import BackBar from "../components/BackBar";
 import SongItem from "../components/SongItem";
+import MiniPlayer from "../components/MiniPlayer";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
@@ -26,8 +27,10 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
+import { useIsFocused } from "@react-navigation/native";
+
 const Favorite = () => {
-  const { userId, songData } = useContext(AudioContext);
+  const { userId, songData, soundObj } = useContext(AudioContext);
   const [favoriteId, setFavoriteId] = useState([]);
   const { colors } = useContext(ThemeContext);
 
@@ -46,9 +49,10 @@ const Favorite = () => {
     .filter((item) => favoriteId.includes(item.id))
     .sort((a, b) => favoriteId.indexOf(a.id) - favoriteId.indexOf(b.id));
 
+  const isFocused = useIsFocused();
   useEffect(() => {
     fetchFavorite(userId);
-  }, []);
+  }, [isFocused]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -70,6 +74,8 @@ const Favorite = () => {
         )}
         keyExtractor={(item) => item.id}
       />
+
+      {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );
 };

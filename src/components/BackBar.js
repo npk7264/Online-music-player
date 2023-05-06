@@ -19,16 +19,20 @@ const BackBar = ({ title, isSearch }) => {
         >
           <FontAwesome name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.title} numberOfLines={1}>
+        <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
           {title}
         </Text>
       </View>
       {/* search button */}
-      {isSearch &&
-        <TouchableOpacity onPress={() => { }}>
-          <FontAwesome name="search" size={24} color={colors.text}></FontAwesome>
+      {isSearch && (
+        <TouchableOpacity onPress={() => {}}>
+          <FontAwesome
+            name="search"
+            size={24}
+            color={colors.text}
+          ></FontAwesome>
         </TouchableOpacity>
-      }
+      )}
     </View>
   );
 };
@@ -42,7 +46,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     paddingRight: 20,
     paddingVertical: 10,
-    height: 60
+    height: 60,
   },
   container: {
     flexDirection: "row",

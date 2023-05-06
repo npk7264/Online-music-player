@@ -49,7 +49,8 @@ const Player = () => {
     playbackDuration,
     updateState,
   } = context;
-  const [currentPosition, setCurrentPositon] = useState("00:00");
+  const [currentPosition, setCurrentPositon] = useState(0);
+  const [currentTime, setCurrentTime] = useState("00:00");
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
   const [favoriteList, setFavoriteList] = useState([]);
@@ -58,8 +59,8 @@ const Player = () => {
 
   //hàm tính value cho thanh slider
   const convertValueSlider = () => {
-    if (playbackPosition !== null && playbackDuration !== null) {
-      return playbackPosition / playbackDuration;
+    if (currentPosition !== null && playbackDuration !== null) {
+      return currentPosition / playbackDuration;
     }
     return 0;
   };
@@ -78,7 +79,7 @@ const Player = () => {
     const docRef = doc(db, "users/" + userId);
     try {
       const docSnap = await getDoc(docRef);
-      console.log(docSnap.data().favorite);
+      // console.log(docSnap.data().favorite);
       setFavoriteList(docSnap.data().favorite);
       setLike(docSnap.data().favorite.includes(currentAudio.id));
     } catch (error) {
@@ -115,11 +116,22 @@ const Player = () => {
     }
   };
 
+  const onPlaybackStatusUpdate = async (status) => {
+    if (status.isLoaded) {
+      setCurrentPositon(status.positionMillis);
+    }
+    if (status.didJustFinish && !status.isLooping) {
+      console.log("FINISH:", currentAudio);
+      await changeSong(context, "next");
+    }
+  };
+
   useEffect(() => {
-    setCurrentPositon(convertTime(playbackPosition));
+    setCurrentTime(convertTime(currentPosition));
   }, [convertValueSlider()]);
 
   useEffect(() => {
+    playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
     setRepeat(isLooping);
     fetchFavorite();
   }, [currentAudio]);
@@ -160,7 +172,7 @@ const Player = () => {
         minimumTrackTintColor="#ff8216"
         maximumTrackTintColor={colors.text}
         onValueChange={(value) => {
-          setCurrentPositon(convertTime(value * context.playbackDuration));
+          setCurrentTime(convertTime(value * context.playbackDuration));
         }}
         onSlidingStart={async () => {
           if (!isPlaying) return;
@@ -205,7 +217,7 @@ const Player = () => {
         }}
       >
         <Text style={{ fontWeight: "500", color: colors.text }}>
-          {currentPosition}
+          {currentTime}
         </Text>
         <Text style={{ fontWeight: "500", color: colors.text }}>
           {convertTime(playbackDuration)}
