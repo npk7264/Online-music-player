@@ -24,6 +24,7 @@ const AddPlaylist = ({
     const [namePlaylist, setNamePlaylist] = useState('');
     const [isKeyboardVisible, setKeyboardVisible] = useState(false);
 
+    //check keyboard visible
     useEffect(() => {
         const keyboardDidShowListener = Keyboard.addListener(
             'keyboardDidShow',
@@ -43,6 +44,8 @@ const AddPlaylist = ({
             keyboardDidHideListener.remove();
         };
     }, []);
+
+    //add new playlist
     const handleCreatePlaylist = async () => {
         try {
             const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
