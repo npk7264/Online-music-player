@@ -19,7 +19,7 @@ const AddSongItem = (props) => {
                 >
                     {/* Image */}
                     <Image
-                        source={require("../../../assets/temp.jpg")}
+                        source={{ uri: props.info.image }}
                         style={styles.poster}
                     />
 

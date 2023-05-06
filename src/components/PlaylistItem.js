@@ -51,7 +51,7 @@ const PlaylistItem = (props) => {
             >
               {props.name}
             </Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>10 bài hát</Text>
+            <Text style={{ fontSize: 16, color: "gray" }}>{props.numSong} Bài hát</Text>
           </View>
         </View>
       </View>

@@ -18,6 +18,7 @@ import { collection, addDoc } from "firebase/firestore";
 const AddPlaylist = ({
     visible,
     onClose,
+    checkPlaylist,
 }) => {
     const { colors, darkMode } = useContext(ThemeContext);
     const [isFocused, setIsFocused] = useState(false); // focus TextInput
@@ -52,7 +53,8 @@ const AddPlaylist = ({
             const docRef = await addDoc(collection(db, `users/${userId}/playlist`),
                 {
                     name: namePlaylist,
-                    listSong: []
+                    listSong: [],
+                    numSong: 0,
                 });
             console.log("Document written with ID: ", docRef.id);
         } catch (e) {
@@ -98,7 +100,10 @@ const AddPlaylist = ({
                         </TouchableOpacity>
                         <TouchableOpacity
                             style={[styles.button, { backgroundColor: colors.primary }]}
-                            onPress={() => handleCreatePlaylist()}>
+                            onPress={() => {
+                                handleCreatePlaylist();
+                                checkPlaylist()
+                            }}>
                             <Text style={{ color: 'white', fontSize: 18 }}>Tạo</Text>
                         </TouchableOpacity>
                     </View>

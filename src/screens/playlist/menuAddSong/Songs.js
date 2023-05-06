@@ -1,20 +1,47 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import AddSongItem from '../AddSongItem'
+import { StyleSheet, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { ThemeContext } from '../../../context/ThemeContext'
+import FlatListAddSongItem from '../FlatListAddSongItem'
+import { auth, db } from "../../../services/firebaseConfig";
+import {
+    collection,
+    doc,
+    getDoc,
+    getDocs,
+    setDoc,
+    updateDoc,
+} from "firebase/firestore";
 
-
-// test data
-import { songs } from '../../../../data'
-const data = { ...songs[1] };
 
 const Songs = () => {
+    const { colors } = useContext(ThemeContext);
+    const [songData, setSongData] = useState([]);
+
+    // fetch song
+    const fetchSongs = async () => {
+        const querySnapshot = await getDocs(collection(db, "songs"));
+        const songsArray = querySnapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+        }));
+        setSongData(songsArray);
+    };
+
+    useEffect(() => {
+        fetchSongs();
+    }, []);
+
     return (
-        <View>
-            <AddSongItem info={data}></AddSongItem>
+        <View style={[styles.container, { backgroundColor: colors.background }]}>
+            <FlatListAddSongItem data={songData} />
         </View>
     )
 }
 
-export default Songs
+export default Songs;
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+})
