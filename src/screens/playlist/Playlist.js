@@ -14,11 +14,15 @@ import PlaylistItem from "../../components/PlaylistItem";
 import AddPlaylist from "./AddPlaylist";
 
 import { Feather } from "@expo/vector-icons";
+import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext.js";
+import MiniPlayer from "../../components/MiniPlayer";
 
 const Playlist = () => {
   const { colors } = useContext(ThemeContext);
   const [addPlaylist, setAddPlaylist] = useState(false);
+  const { soundObj } = useContext(AudioContext);
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
@@ -56,6 +60,7 @@ const Playlist = () => {
         visible={addPlaylist}
         onClose={() => setAddPlaylist(false)}
       />
+      {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );
 };

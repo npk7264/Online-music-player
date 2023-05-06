@@ -11,6 +11,7 @@ import { useState, useContext, useEffect } from "react";
 
 import BackBar from "../components/BackBar";
 import SongItem from "../components/SongItem";
+import MiniPlayer from "../components/MiniPlayer";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
@@ -27,7 +28,7 @@ import {
 } from "firebase/firestore";
 
 const Favorite = () => {
-  const { userId, songData } = useContext(AudioContext);
+  const { userId, songData, soundObj } = useContext(AudioContext);
   const [favoriteId, setFavoriteId] = useState([]);
   const { colors } = useContext(ThemeContext);
 
@@ -70,6 +71,8 @@ const Favorite = () => {
         )}
         keyExtractor={(item) => item.id}
       />
+
+      {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );
 };
