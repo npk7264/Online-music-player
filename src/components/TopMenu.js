@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar } from "react-native";
 import { useContext } from "react";
-
+import { color } from "../constants/color";
 import Song from "../screens/Song";
 import Artist from "../screens/Artist";
 import SearchBar from "./SearchBar";
