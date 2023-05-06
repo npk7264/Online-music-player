@@ -17,7 +17,7 @@ const BottomMenu = () => {
   const { colors } = useContext(ThemeContext);
   return (
     <Tab.Navigator
-      initialRouteName="Cài đặt"
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
         tabBarStyle: { backgroundColor: colors.background },
