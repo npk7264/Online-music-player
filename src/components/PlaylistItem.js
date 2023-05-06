@@ -4,7 +4,7 @@ import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { useNavigation } from "@react-navigation/native";
 
-const PlaylistItem = (props) => {
+const PlaylistItem = ({ type, name, id, numSong }) => {
   const { colors } = useContext(ThemeContext);
   const navigation = useNavigation();
   return (
@@ -17,9 +17,9 @@ const PlaylistItem = (props) => {
         backgroundColor: colors.background,
       }}
       onPress={() => {
-        if (props.type == "Favorite") navigation.navigate("Favorite");
-        else if (props.type == "Recent") navigation.navigate("Recent");
-        else navigation.navigate("DetailPlaylist");
+        if (type == "Favorite") navigation.navigate("Favorite");
+        else if (type == "Recent") navigation.navigate("Recent");
+        else navigation.navigate("DetailPlaylist", { id });
       }}
     >
       <View style={styles.content}>
@@ -32,13 +32,13 @@ const PlaylistItem = (props) => {
         >
           {/* Image */}
           <View style={styles.poster}>
-            {props.type === "Favorite" && (
+            {type === "Favorite" && (
               <AntDesign name="heart" size={24} color="#ff8216" />
             )}
-            {props.type === "Recent" && (
+            {type === "Recent" && (
               <FontAwesome name="history" size={24} color="#ff8216" />
             )}
-            {props.type !== "Favorite" && props.type !== "Recent" && (
+            {type !== "Favorite" && type !== "Recent" && (
               <MaterialIcons name="queue-music" size={24} color="#ff8216" />
             )}
           </View>
@@ -49,9 +49,9 @@ const PlaylistItem = (props) => {
               style={{ fontSize: 18, color: colors.text }}
               numberOfLines={1}
             >
-              {props.name}
+              {name}
             </Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>{props.numSong} Bài hát</Text>
+            <Text style={{ fontSize: 16, color: "gray" }}>{numSong} Bài hát</Text>
           </View>
         </View>
       </View>
