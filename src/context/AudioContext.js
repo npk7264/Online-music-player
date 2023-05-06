@@ -44,7 +44,7 @@ export class AudioProvider extends Component {
   async componentDidMount() {
     const songs = await fetchSongs();
     if (this.state.playbackObj === null) {
-      this.setState({
+      await this.setState({
         ...this.state,
         songData: songs,
         playbackObj: new Audio.Sound(),
