@@ -43,7 +43,6 @@ const Song = () => {
       id: doc.id,
       ...doc.data(),
     }));
-    console.log(songsArray);
     setSongData(songsArray);
   };
 

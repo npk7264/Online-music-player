@@ -16,7 +16,6 @@ export const fetchSongs = async () => {
     id: doc.id,
     ...doc.data(),
   }));
-  console.log(songsArray);
   return songsArray;
 };
 
@@ -39,7 +38,7 @@ export const updateRecent = async (userId, audioId) => {
   });
   try {
     await updateDoc(docRef, {
-      recently: [...recentList, audioId],
+      recently: [audioId, ...recentList],
     });
   } catch (e) {
     alert("Failed to save recent song!", e);
