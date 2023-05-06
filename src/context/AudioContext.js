@@ -43,6 +43,10 @@ export class AudioProvider extends Component {
 
   async componentDidMount() {
     const songs = await fetchSongs();
+    // PHÁT NỀN
+    await Audio.setAudioModeAsync({
+      staysActiveInBackground: true,
+    });
     if (this.state.playbackObj === null) {
       await this.setState({
         ...this.state,
