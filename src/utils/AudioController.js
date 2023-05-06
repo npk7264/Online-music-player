@@ -3,10 +3,13 @@ import { updateRecent } from "./FirebaseHandler";
 // play audio
 export const play = async (playbackObj, uri) => {
   try {
-    return await playbackObj.loadAsync(uri, {
-      shouldPlay: true,
-      progressUpdateIntervalMillis: 1000,
-    });
+    return await playbackObj.loadAsync(
+      { uri },
+      {
+        shouldPlay: true,
+        progressUpdateIntervalMillis: 1000,
+      }
+    );
   } catch (error) {
     console.log("error inside play helper method", error.message);
   }

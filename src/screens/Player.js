@@ -90,9 +90,9 @@ const Player = () => {
   const saveFavorite = async () => {
     const docRef = doc(db, "users/" + userId);
     try {
-      setFavoriteList([...favoriteList, currentAudio.id]);
+      setFavoriteList([currentAudio.id, ...favoriteList]);
       await updateDoc(docRef, {
-        favorite: [...favoriteList, currentAudio.id],
+        favorite: [currentAudio.id, ...favoriteList],
       });
     } catch (e) {
       alert("Failed to save favorite song!", e);
@@ -125,9 +125,7 @@ const Player = () => {
   }, [currentAudio]);
 
   return (
-    <SafeAreaView
-      style={{ backgroundColor: colors.background}}
-    >
+    <SafeAreaView style={{ backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>

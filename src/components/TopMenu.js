@@ -19,7 +19,9 @@ const TopMenu = () => {
   const { soundObj } = useContext(AudioContext);
   const { colors, darkMode } = useContext(ThemeContext);
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.backgroundColor }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.backgroundColor }]}
+    >
       <StatusBar></StatusBar>
 
       <SearchBar title={"mymusic"} />
@@ -30,11 +32,14 @@ const TopMenu = () => {
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: "#ccc",
           tabBarLabelStyle: styles.label,
-          tabBarIndicatorStyle: styles.indicator,
-          tabBarPressColor: darkMode ? 'black' : 'white',
+          tabBarIndicatorStyle: {
+            backgroundColor: colors.primary,
+            height: 3,
+            borderRadius: 25,
+          },
+          tabBarPressColor: darkMode ? "black" : "white",
           tabBarStyle: { backgroundColor: colors.background },
         }}
-
       >
         {/* <Tab.Screen name="Khám phá" component={Suggested} /> */}
         <Tab.Screen name="Bài hát" component={Song} />
@@ -58,5 +63,4 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textTransform: "none",
   },
-  indicator: { backgroundColor: color.primary, height: 3, borderRadius: 25 },
 });

@@ -34,7 +34,21 @@ const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
-  const { songData } = useContext(AudioContext);
+  const contextAudio = useContext(AudioContext);
+  const [songData, setSongData] = useState([]);
+
+  const fetchSongs = async () => {
+    const querySnapshot = await getDocs(collection(db, "songs"));
+    const songsArray = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+    setSongData(songsArray);
+  };
+
+  useEffect(() => {
+    fetchSongs();
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
