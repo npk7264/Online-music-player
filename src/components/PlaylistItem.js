@@ -1,12 +1,34 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { useNavigation } from "@react-navigation/native";
+import { PlaylistContext } from "../context/PlaylistContext.js";
+import { useIsFocused } from '@react-navigation/native';
+import { auth, db } from "../services/firebaseConfig.js";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
-const PlaylistItem = (props) => {
+const PlaylistItem = ({ type, name, id, numSong }) => {
+  const isFocused = useIsFocused();
   const { colors } = useContext(ThemeContext);
+  const { updatePlaylist, listSong, idPlaylist } = useContext(PlaylistContext);
+  const [numberSong, setNumberSong] = useState(numSong);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (id === idPlaylist) {
+      setNumberSong(listSong.length)
+      console.log('update', id, name)
+    }
+  }, [isFocused])
+
   return (
     <TouchableOpacity
       style={{
@@ -16,10 +38,13 @@ const PlaylistItem = (props) => {
         paddingHorizontal: 20,
         backgroundColor: colors.background,
       }}
-      onPress={() => {
-        if (props.type == "Favorite") navigation.navigate("Favorite");
-        else if (props.type == "Recent") navigation.navigate("Recent");
-        else navigation.navigate("DetailPlaylist");
+      onPress={async () => {
+        if (type == "Favorite") navigation.navigate("Favorite");
+        else if (type == "Recent") navigation.navigate("Recent");
+        else {
+          await updatePlaylist(id);
+          navigation.navigate("DetailPlaylist");
+        }
       }}
     >
       <View style={styles.content}>
@@ -32,13 +57,13 @@ const PlaylistItem = (props) => {
         >
           {/* Image */}
           <View style={styles.poster}>
-            {props.type === "Favorite" && (
+            {type === "Favorite" && (
               <AntDesign name="heart" size={24} color="#ff8216" />
             )}
-            {props.type === "Recent" && (
+            {type === "Recent" && (
               <FontAwesome name="history" size={24} color="#ff8216" />
             )}
-            {props.type !== "Favorite" && props.type !== "Recent" && (
+            {type !== "Favorite" && type !== "Recent" && (
               <MaterialIcons name="queue-music" size={24} color="#ff8216" />
             )}
           </View>
@@ -49,9 +74,9 @@ const PlaylistItem = (props) => {
               style={{ fontSize: 18, color: colors.text }}
               numberOfLines={1}
             >
-              {props.name}
+              {name}
             </Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>10 bài hát</Text>
+            <Text style={{ fontSize: 16, color: "gray" }}>{numberSong} Bài hát</Text>
           </View>
         </View>
       </View>

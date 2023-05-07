@@ -7,6 +7,7 @@ import { color } from '../../constants/color';
 import Favorites from './menuAddSong/Favorites';
 import Songs from './menuAddSong/Songs';
 import Recent from './menuAddSong/Recent';
+
 const Tab = createMaterialTopTabNavigator();
 
 const AddSong = () => {
@@ -24,12 +25,11 @@ const AddSong = () => {
                     tabBarPressColor: darkMode ? 'black' : 'white',
                     tabBarStyle: { backgroundColor: colors.background },
                 }}
-
             >
-                {/* <Tab.Screen name="Khám phá" component={Suggested} /> */}
                 <Tab.Screen name="Bài hát" component={Songs} />
                 <Tab.Screen name="Gần đây" component={Recent} />
                 <Tab.Screen name="Yêu thích" component={Favorites} />
+
             </Tab.Navigator>
         </SafeAreaView>
     )

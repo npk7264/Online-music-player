@@ -2,12 +2,19 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import React, { useState, useContext } from 'react'
 import { FontAwesome } from "@expo/vector-icons";
 import { ThemeContext } from '../../context/ThemeContext';
+import { PlaylistContext } from '../../context/PlaylistContext';
+
 const AddSongItem = (props) => {
     const { colors } = useContext(ThemeContext);
+    const { listSong, handleAddSong } = useContext(PlaylistContext);
     return (
         <TouchableOpacity
             style={[styles.container, { backgroundColor: colors.backgorund }]}
-            onPress={() => console.log('add song to playlist')}
+            onPress={() => {
+                handleAddSong(props.info.id);
+                console.log('add song to playlist')
+            }
+            }
         >
             <View style={styles.content}>
                 <View
@@ -19,7 +26,7 @@ const AddSongItem = (props) => {
                 >
                     {/* Image */}
                     <Image
-                        source={require("../../../assets/temp.jpg")}
+                        source={{ uri: props.info.image }}
                         style={styles.poster}
                     />
 
@@ -38,7 +45,7 @@ const AddSongItem = (props) => {
                 <View style={styles.buttonContainter}>
                     {/* PLAY/PAUSE */}
                     <FontAwesome
-                        name={"check-square-o"}
+                        name={listSong?.includes(props.info.id) ? 'check-square-o' : 'plus-square'}
                         size={30}
                         color={colors.primary}
                     />

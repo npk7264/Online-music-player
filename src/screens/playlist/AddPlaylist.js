@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -9,22 +9,64 @@ import {
     SafeAreaView,
     TextInput,
     TouchableOpacity,
-    KeyboardAvoidingView,
+    Keyboard,
 } from 'react-native';
 import { ThemeContext } from '../../context/ThemeContext';
+import { db, auth } from "../../services/firebaseConfig"
+import { collection, addDoc } from "firebase/firestore";
 
 const AddPlaylist = ({
     visible,
     onClose,
+    checkPlaylist,
 }) => {
     const { colors, darkMode } = useContext(ThemeContext);
     const [isFocused, setIsFocused] = useState(false); // focus TextInput
+    const [namePlaylist, setNamePlaylist] = useState('');
+    const [isKeyboardVisible, setKeyboardVisible] = useState(false);
+
+    //check keyboard visible
+    useEffect(() => {
+        const keyboardDidShowListener = Keyboard.addListener(
+            'keyboardDidShow',
+            () => {
+                setKeyboardVisible(true);
+            },
+        );
+        const keyboardDidHideListener = Keyboard.addListener(
+            'keyboardDidHide',
+            () => {
+                setKeyboardVisible(false);
+            },
+        );
+
+        return () => {
+            keyboardDidShowListener.remove();
+            keyboardDidHideListener.remove();
+        };
+    }, []);
+
+    //add new playlist
+    const handleCreatePlaylist = async () => {
+        try {
+            const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
+            const docRef = await addDoc(collection(db, `users/${userId}/playlist`),
+                {
+                    name: namePlaylist,
+                    listSong: [],
+                    numSong: 0,
+                });
+            console.log("Document written with ID: ", docRef.id);
+        } catch (e) {
+            alert("create playlist!", e);
+        }
+    }
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar hidden />
             <Modal animationType='slide' transparent visible={visible} statusBarTranslucent>
-
-                <View style={[styles.modal, { backgroundColor: colors.modal }]}>
+                <View style={[styles.modal, { backgroundColor: colors.modal, bottom: isKeyboardVisible ? 250 : 0 }]}>
                     {/* info */}
                     <View style={styles.header}>
                         <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
@@ -42,17 +84,26 @@ const AddPlaylist = ({
                             },
                         ]}
                         placeholder="Tên danh sách phát"
-                        placeholderTextColor={colors.text}
+                        placeholderTextColor={'gray'}
                         autoFocus={true}
                         onFocus={() => setIsFocused(true)}
                         onBlur={() => setIsFocused(false)}
+                        onChangeText={(text) => setNamePlaylist(text)}
                     />
 
                     <View style={styles.buttons}>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: colors.frame }]}
+                            onPress={onClose}
+                        >
                             <Text style={{ color: colors.primary, fontSize: 18 }}>Hủy</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
+                        <TouchableOpacity
+                            style={[styles.button, { backgroundColor: colors.primary }]}
+                            onPress={() => {
+                                handleCreatePlaylist();
+                                checkPlaylist()
+                            }}>
                             <Text style={{ color: 'white', fontSize: 18 }}>Tạo</Text>
                         </TouchableOpacity>
                     </View>

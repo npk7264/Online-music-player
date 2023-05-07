@@ -1,19 +1,41 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import BackBar from "../../components/BackBar";
 import { ThemeContext } from "../../context/ThemeContext";
 import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
 import { useNavigation } from "@react-navigation/native";
-import AddSong from "./AddSong";
+
+import { auth, db } from "../../services/firebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
+
+import { PlaylistContext } from '../../context/PlaylistContext';
 
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
+  const { listSong, idPlaylist, updatePlaylist, setListSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
   const navigation = useNavigation();
-  const name = 'hello' //route.params.name;
-  const idSong = [1, 3, 5, 7];
-  const listSongs = songs.filter(obj => idSong.includes(obj.id));
+
+
+  // useEffect(() => {
+  //   const getInitialData = async () => {
+  //     if (Object.keys(playlistData).length > 0) {
+  //       // (setListSong(playlistData.listSong));
+  //       (filterSong());
+  //       console.log(renderSong.length, listSong, playlistData, "context")
+  //     }
+  //   };
+  //   getInitialData();
+  // }, [playlistData]);
+
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
       <BackBar isSearch={true}></BackBar>
@@ -22,8 +44,8 @@ const DetailPlaylist = () => {
         <Image
           source={require("../../../assets/temp.jpg")}
           style={styles.poster} />
-        <Text style={[styles.singer, { color: colors.text }]}>{name}</Text>
-        <Text style={styles.numSong}>{songs.length} bài hát</Text>
+        <Text style={[styles.singer, { color: colors.text }]}>{playlistData?.name}</Text>
+        <Text style={styles.numSong}>{playlistData?.numSong} bài hát</Text>
         {/* button */}
         <View style={styles.buttons}>
           <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
@@ -50,9 +72,11 @@ const DetailPlaylist = () => {
 
 
       {/* list song */}
-      <FlatListSong
-        songs={listSongs}
-      />
+      {renderSong.length > 0 &&
+        <FlatListSong
+          songs={renderSong}
+        />}
+      {console.log(renderSong.length, listSong, idPlaylist, playlistData)}
     </SafeAreaView>
   );
 };
