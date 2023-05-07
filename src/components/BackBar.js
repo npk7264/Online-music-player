@@ -25,7 +25,7 @@ const BackBar = ({ title, isSearch }) => {
       </View>
       {/* search button */}
       {isSearch && (
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => { }}>
           <FontAwesome
             name="search"
             size={24}

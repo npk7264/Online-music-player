@@ -19,44 +19,22 @@ import {
 
 import { PlaylistContext } from '../../context/PlaylistContext';
 
-const DetailPlaylist = ({ route }) => {
+const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
-  const { listSong, idPlaylist, updatePlaylist, playlistData, setListSong } = useContext(PlaylistContext);
-
+  const { listSong, idPlaylist, updatePlaylist, setListSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
   const navigation = useNavigation();
-  const [songData, setSongData] = useState([]);
-  const [listSongs, setListSongs] = useState([]);
-
-  const id = route.params.id;
-  //get song by filter from listSong of playlistData and songData from fireStore 
-  const filterSong = () => {
-    const song = songData?.filter(obj => listSong.includes(obj.id));
-    setListSongs(song);
-  }
 
 
-  const fetchSongs = async () => {
-    const querySnapshot = await getDocs(collection(db, "songs"));
-    const songsArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setSongData(songsArray);
-  };
-
-  useEffect(() => {
-    filterSong();
-    console.log('playlistdetail 2')
-  }, [idPlaylist]);
-
-
-  useEffect(() => {
-    fetchSongs();
-    updatePlaylist(id);
-    filterSong();
-    console.log('playlistdetail')
-  }, [listSong]);
-
+  // useEffect(() => {
+  //   const getInitialData = async () => {
+  //     if (Object.keys(playlistData).length > 0) {
+  //       // (setListSong(playlistData.listSong));
+  //       (filterSong());
+  //       console.log(renderSong.length, listSong, playlistData, "context")
+  //     }
+  //   };
+  //   getInitialData();
+  // }, [playlistData]);
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -94,9 +72,11 @@ const DetailPlaylist = ({ route }) => {
 
 
       {/* list song */}
-      <FlatListSong
-        songs={listSongs}
-      />
+      {renderSong.length > 0 &&
+        <FlatListSong
+          songs={renderSong}
+        />}
+      {console.log(renderSong.length, listSong, idPlaylist, playlistData)}
     </SafeAreaView>
   );
 };
