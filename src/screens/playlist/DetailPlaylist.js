@@ -18,12 +18,12 @@ import {
 } from "firebase/firestore";
 
 import { PlaylistContext } from '../../context/PlaylistContext';
-
+import { useIsFocused } from '@react-navigation/native';
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
   const { listSong, idPlaylist, updatePlaylist, setListSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
   const navigation = useNavigation();
-
+  const isFocused = useIsFocused();
 
   // useEffect(() => {
   //   const getInitialData = async () => {
@@ -35,6 +35,9 @@ const DetailPlaylist = () => {
   //   };
   //   getInitialData();
   // }, [playlistData]);
+  useEffect(() => {
+    filterSong(listSong);
+  }, [isFocused])
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -45,7 +48,7 @@ const DetailPlaylist = () => {
           source={require("../../../assets/temp.jpg")}
           style={styles.poster} />
         <Text style={[styles.singer, { color: colors.text }]}>{playlistData?.name}</Text>
-        <Text style={styles.numSong}>{playlistData?.numSong} bài hát</Text>
+        <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
         {/* button */}
         <View style={styles.buttons}>
           <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
