@@ -7,15 +7,6 @@ import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
 import { useNavigation } from "@react-navigation/native";
 
-import { auth, db } from "../../services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
 
 import { PlaylistContext } from '../../context/PlaylistContext';
 import { useIsFocused } from '@react-navigation/native';
@@ -25,16 +16,6 @@ const DetailPlaylist = () => {
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
-  // useEffect(() => {
-  //   const getInitialData = async () => {
-  //     if (Object.keys(playlistData).length > 0) {
-  //       // (setListSong(playlistData.listSong));
-  //       (filterSong());
-  //       console.log(renderSong.length, listSong, playlistData, "context")
-  //     }
-  //   };
-  //   getInitialData();
-  // }, [playlistData]);
   useEffect(() => {
     filterSong(listSong);
   }, [isFocused])
