@@ -30,7 +30,7 @@ const OptionModal = ({
                     {/* info */}
                     <View style={styles.header}>
                         <Image
-                            source={require("../../assets/temp.jpg")}
+                            source={{ uri: currentItem?.image }}
                             style={styles.poster}
                         />
                         <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
