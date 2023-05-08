@@ -40,7 +40,7 @@ const SongItem = (props) => {
               {props.info.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
-              {props.info.artists}
+              {props.info.artists.join(" ft ")}
             </Text>
           </View>
         </View>
