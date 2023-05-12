@@ -12,19 +12,6 @@ import OptionModal from "../components/OptionModal.js";
 
 import { FontAwesome } from "@expo/vector-icons";
 
-// test data
-import { songs } from "../../data.js";
-
-import { auth, db } from "../services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-
 import FlatListSong from "../components/FlatListSong.js";
 
 import { AudioContext } from "../context/AudioContext.js";
@@ -34,21 +21,7 @@ const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
-  const contextAudio = useContext(AudioContext);
-  const [songData, setSongData] = useState([]);
-
-  const fetchSongs = async () => {
-    const querySnapshot = await getDocs(collection(db, "songs"));
-    const songsArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setSongData(songsArray);
-  };
-
-  useEffect(() => {
-    fetchSongs();
-  }, []);
+  const { songData } = useContext(AudioContext);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

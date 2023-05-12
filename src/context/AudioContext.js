@@ -1,6 +1,5 @@
 import React, { Component, createContext } from "react";
 import { Audio } from "expo-av";
-import { songs } from "../../data";
 import { changeSong } from "../utils/AudioController";
 import { fetchSongs } from "../utils/FirebaseHandler";
 
@@ -10,7 +9,7 @@ export class AudioProvider extends Component {
     super(props);
     this.state = {
       userId: "MMp5BVLgmzPfKvaiDKSOrewVVvD3",
-      songData: songs,
+      songData: [],
       playbackObj: null,
       soundObj: null,
       currentAudio: {},
@@ -48,6 +47,7 @@ export class AudioProvider extends Component {
       staysActiveInBackground: true,
     });
     if (this.state.playbackObj === null) {
+      console.log("OK")
       await this.setState({
         ...this.state,
         songData: songs,
@@ -63,6 +63,7 @@ export class AudioProvider extends Component {
   render() {
     const {
       userId,
+      songData,
       playbackObj,
       soundObj,
       currentAudio,

@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  ScrollView,
 } from "react-native";
 import { useState, useContext, useEffect } from "react";
 
@@ -28,18 +29,18 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-
 const Playlist = () => {
   const { colors } = useContext(ThemeContext);
   const [addPlaylist, setAddPlaylist] = useState(false);
   const { soundObj } = useContext(AudioContext);
 
-
   const [playlistData, setPlaylistData] = useState([]);
 
   const fetchPlaylist = async () => {
-    const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
-    const querySnapshot = await getDocs(collection(db, `users/${userId}/playlist`));
+    const userId = "MMp5BVLgmzPfKvaiDKSOrewVVvD3";
+    const querySnapshot = await getDocs(
+      collection(db, `users/${userId}/playlist`)
+    );
     const playlistArray = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       name: doc.data().name,
@@ -49,8 +50,9 @@ const Playlist = () => {
     setPlaylistData(playlistArray);
   };
 
-
-  const checkPlaylist = () => { fetchPlaylist(); }
+  const checkPlaylist = () => {
+    fetchPlaylist();
+  };
 
   useEffect(() => {
     checkPlaylist();
@@ -62,51 +64,58 @@ const Playlist = () => {
 
       <SearchBar title={"Playlist"} />
 
-      {/* ADD NEW PLAYLIST */}
-      <TouchableOpacity
-        style={{
-          width: "100%",
-          height: 70,
-          paddingVertical: 5,
-          paddingHorizontal: 20,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-        onPress={() => setAddPlaylist(true)}
-      >
-        <View style={styles.poster}>
-          <Feather name="plus" size={24} color="white" />
-        </View>
-        {/* Info */}
+      <ScrollView>
         <View style={{ flex: 1 }}>
-          <Text style={{ fontSize: 18, color: colors.text }} numberOfLines={1}>
-            Tạo danh sách phát mới
-          </Text>
-        </View>
-      </TouchableOpacity>
+          {/* ADD NEW PLAYLIST */}
+          <TouchableOpacity
+            style={{
+              width: "100%",
+              height: 70,
+              paddingVertical: 5,
+              paddingHorizontal: 20,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+            onPress={() => setAddPlaylist(true)}
+          >
+            <View style={styles.poster}>
+              <Feather name="plus" size={24} color="white" />
+            </View>
+            {/* Info */}
+            <View style={{ flex: 1 }}>
+              <Text
+                style={{ fontSize: 18, color: colors.text }}
+                numberOfLines={1}
+              >
+                Tạo danh sách phát mới
+              </Text>
+            </View>
+          </TouchableOpacity>
 
-      <PlaylistItem type={"Favorite"} name={"Yêu thích"} />
-      <PlaylistItem type={"Recent"} name={"Nghe gần đây"} />
+          <PlaylistItem type={"Favorite"} name={"Yêu thích"} />
+          <PlaylistItem type={"Recent"} name={"Nghe gần đây"} />
 
-      <FlatList
-        data={playlistData}
-        renderItem={({ item }) => (
-          <PlaylistItem
-            id={item.id}
-            name={item.name}
-            numSong={item.numSong}
+          <FlatList
+            data={playlistData}
+            renderItem={({ item }) => (
+              <PlaylistItem
+                id={item.id}
+                name={item.name}
+                numSong={item.numSong}
+              />
+            )}
+            nestedScrollEnabled={false}
+            keyExtractor={(item) => item.id}
           />
-        )}
-        keyExtractor={(item) => item.id}
-      />
 
-
-      {/* modal add new playlist */}
-      <AddPlaylist
-        visible={addPlaylist}
-        onClose={() => setAddPlaylist(false)}
-        checkPlaylist={checkPlaylist}
-      />
+          {/* modal add new playlist */}
+          <AddPlaylist
+            visible={addPlaylist}
+            onClose={() => setAddPlaylist(false)}
+            checkPlaylist={checkPlaylist}
+          />
+        </View>
+      </ScrollView>
       {soundObj && <MiniPlayer />}
     </SafeAreaView>
   );

@@ -22,8 +22,13 @@ const Search = () => {
   const { colors, darkMode } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
-  const [searchResult, setSearchResult] = useState([]);
+  const [searchText, setSearchText] = useState("");
   const { songData } = useContext(AudioContext);
+
+  const searchResult = songData.filter((item) => {
+    if (searchText != "")
+      return item.name.toLowerCase().includes(searchText.toLowerCase());
+  });
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -44,9 +49,15 @@ const Search = () => {
             styles.searchInput,
             {
               borderColor: isFocused ? "#ff8216" : null,
-              backgroundColor: isFocused ? (darkMode ? '#2a221f' : "#fff5ed") : (darkMode ? "#1f222a" : "#f5f5f6"),
+              backgroundColor: isFocused
+                ? darkMode
+                  ? "#2a221f"
+                  : "#fff5ed"
+                : darkMode
+                ? "#1f222a"
+                : "#f5f5f6",
               borderWidth: isFocused ? 1 : 0,
-              color: colors.text
+              color: colors.text,
             },
           ]}
           placeholder="Bài hát, nghệ sĩ,..."
@@ -54,12 +65,16 @@ const Search = () => {
           autoFocus={true}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
+          onChangeText={(text) => {
+            setSearchText(text);
+            console.log(text);
+          }}
         />
       </View>
 
       {/* Search Result */}
       <FlatList
-        data={songData}
+        data={searchResult}
         renderItem={({ item }) => (
           <SongItem
             info={item}
