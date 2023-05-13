@@ -5,15 +5,7 @@ import { ThemeContext } from "../context/ThemeContext.js";
 import { useNavigation } from "@react-navigation/native";
 import { PlaylistContext } from "../context/PlaylistContext.js";
 import { useIsFocused } from '@react-navigation/native';
-import { auth, db } from "../services/firebaseConfig.js";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
+
 
 const PlaylistItem = ({ type, name, id, numSong }) => {
   const isFocused = useIsFocused();

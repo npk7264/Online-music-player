@@ -32,15 +32,17 @@ import {
 const Playlist = () => {
   const { colors } = useContext(ThemeContext);
   const [addPlaylist, setAddPlaylist] = useState(false);
-  const { soundObj, currentAudio } = useContext(AudioContext);
+
+  const { userId, currentAudio } = useContext(AudioContext);
 
   const [playlistData, setPlaylistData] = useState([]);
 
   const fetchPlaylist = async () => {
-    const userId = "MMp5BVLgmzPfKvaiDKSOrewVVvD3";
+
     const querySnapshot = await getDocs(
       collection(db, `users/${userId}/playlist`)
     );
+
     const playlistArray = querySnapshot.docs.map((doc) => ({
       id: doc.id,
       name: doc.data().name,

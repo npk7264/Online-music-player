@@ -14,12 +14,15 @@ import {
 import { ThemeContext } from '../../context/ThemeContext';
 import { db, auth } from "../../services/firebaseConfig"
 import { collection, addDoc } from "firebase/firestore";
+import { AudioContext } from '../../context/AudioContext';
+
 
 const AddPlaylist = ({
     visible,
     onClose,
     checkPlaylist,
 }) => {
+    const { userId } = useContext(AudioContext);
     const { colors, darkMode } = useContext(ThemeContext);
     const [isFocused, setIsFocused] = useState(false); // focus TextInput
     const [namePlaylist, setNamePlaylist] = useState('');
@@ -49,7 +52,6 @@ const AddPlaylist = ({
     //add new playlist
     const handleCreatePlaylist = async () => {
         try {
-            const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
             const docRef = await addDoc(collection(db, `users/${userId}/playlist`),
                 {
                     name: namePlaylist,

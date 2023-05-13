@@ -7,34 +7,18 @@ import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
 import { useNavigation } from "@react-navigation/native";
 
-import { auth, db } from "../../services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
 
 import { PlaylistContext } from '../../context/PlaylistContext';
-
+import { useIsFocused } from '@react-navigation/native';
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
   const { listSong, idPlaylist, updatePlaylist, setListSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
   const navigation = useNavigation();
+  const isFocused = useIsFocused();
 
-
-  // useEffect(() => {
-  //   const getInitialData = async () => {
-  //     if (Object.keys(playlistData).length > 0) {
-  //       // (setListSong(playlistData.listSong));
-  //       (filterSong());
-  //       console.log(renderSong.length, listSong, playlistData, "context")
-  //     }
-  //   };
-  //   getInitialData();
-  // }, [playlistData]);
+  useEffect(() => {
+    filterSong(listSong);
+  }, [isFocused])
 
   return (
     <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
@@ -45,7 +29,7 @@ const DetailPlaylist = () => {
           source={require("../../../assets/temp.jpg")}
           style={styles.poster} />
         <Text style={[styles.singer, { color: colors.text }]}>{playlistData?.name}</Text>
-        <Text style={styles.numSong}>{playlistData?.numSong} bài hát</Text>
+        <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
         {/* button */}
         <View style={styles.buttons}>
           <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>

@@ -90,6 +90,7 @@ export class AudioProvider extends Component {
       isLooping,
       playbackPosition,
       playbackDuration,
+      songData,
     } = this.state;
 
     return (

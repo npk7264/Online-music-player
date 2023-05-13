@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import { auth, db } from "../services/firebaseConfig";
 import {
     collection,
@@ -8,16 +8,21 @@ import {
     setDoc,
     updateDoc,
 } from "firebase/firestore";
+import { AudioContext } from './AudioContext';
+
+
 export const PlaylistContext = createContext();
 
-const userId = 'MMp5BVLgmzPfKvaiDKSOrewVVvD3';
 
 export const PlaylistProvider = ({ children }) => {
+    const { userId, songData } = useContext(AudioContext);
+
     const [idPlaylist, setIdPlaylist] = useState('');
     const [songs, setSongs] = useState([]);
     const [playlistData, setPlaylistData] = useState({});
-    const [songData, setSongData] = useState([]);
     const [renderSong, setRenderSong] = useState([]);
+
+
 
     //get song by filter from listSong of playlistData and songData from fireStore 
     const filterSong = (listSong) => {
@@ -51,20 +56,11 @@ export const PlaylistProvider = ({ children }) => {
     }
 
 
-    const fetchSongs = async () => {
-        const querySnapshot = await getDocs(collection(db, "songs"));
-        const songsArray = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-        }));
-        setSongData(songsArray);
-    };
-
     const fetchPlaylist = async (id) => {
         const playlistArray = await getDoc(doc(db, `users/${userId}/playlist/${id}`));
         setPlaylistData({ ...playlistArray.data() });
         console.log('fetch ne');
-        // setListSong([...playlistArray.data().listSong])
+
         setListSong(playlistArray.data().listSong);
         filterSong(playlistArray.data().listSong);
         // console.log(renderSong.length, songs, playlistData)
@@ -83,33 +79,6 @@ export const PlaylistProvider = ({ children }) => {
             alert("Failed to save favorite song!", e);
         }
     };
-
-    // useEffect(() => {
-    //     const getInitialData = async () => {
-    //         if (Object.keys(playlistData).length > 0) {
-    //             await Promise.resolve(setListSong(playlistData.listSong));
-    //             await Promise.resolve(filterSong());
-    //             console.log(renderSong.length, songs, playlistData, "context")
-    //         }
-    //     };
-    //     getInitialData();
-    // }, [playlistData]);
-
-    useEffect(() => {
-        fetchSongs();
-    }, []);
-
-    // useEffect(() => {
-    //     const getInitialData = async () => {
-    //         if (idPlaylist !== '') {
-    //             // setSongs([]);
-    //             // setPlaylistData({});
-    //             fetchPlaylist();
-    //             console.log('fetch playlist')
-    //         }
-    //     };
-    //     getInitialData();
-    // }, [idPlaylist]);
 
     const theme = {
         idPlaylist: idPlaylist,
