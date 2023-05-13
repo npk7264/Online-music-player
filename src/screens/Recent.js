@@ -29,7 +29,7 @@ import {
 } from "firebase/firestore";
 
 const Recent = () => {
-  const { userId, songData, soundObj } = useContext(AudioContext);
+  const { userId, songData, soundObj, currentAudio } = useContext(AudioContext);
   const [recentId, setRecentId] = useState([]);
   const { colors } = useContext(ThemeContext);
 
@@ -74,7 +74,7 @@ const Recent = () => {
         keyExtractor={(item) => item.id}
       />
 
-      {soundObj && <MiniPlayer />}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };

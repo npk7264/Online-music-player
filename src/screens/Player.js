@@ -43,6 +43,7 @@ const Player = () => {
     userId,
     isPlaying,
     isLooping,
+    soundObj,
     playbackObj,
     currentAudio,
     playbackPosition,
@@ -134,10 +135,12 @@ const Player = () => {
     playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
     setRepeat(isLooping);
     fetchFavorite();
-  }, [currentAudio]);
+  }, [currentAudio, soundObj]);
 
   return (
-    <SafeAreaView style={{ backgroundColor: colors.background, height: '100%' }}>
+    <SafeAreaView
+      style={{ backgroundColor: colors.background, height: "100%" }}
+    >
       <StatusBar></StatusBar>
       <BackBar />
       <View style={{ justifyContent: "center", alignItems: "center" }}>

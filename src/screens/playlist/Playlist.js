@@ -32,7 +32,7 @@ import {
 const Playlist = () => {
   const { colors } = useContext(ThemeContext);
   const [addPlaylist, setAddPlaylist] = useState(false);
-  const { soundObj } = useContext(AudioContext);
+  const { soundObj, currentAudio } = useContext(AudioContext);
 
   const [playlistData, setPlaylistData] = useState([]);
 
@@ -57,6 +57,8 @@ const Playlist = () => {
   useEffect(() => {
     checkPlaylist();
   }, []);
+
+  console.log("PLAYLIST render");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -116,7 +118,7 @@ const Playlist = () => {
           />
         </View>
       </ScrollView>
-      {soundObj && <MiniPlayer />}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };

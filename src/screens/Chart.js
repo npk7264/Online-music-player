@@ -19,7 +19,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 
 const Chart = () => {
-  const { songData, soundObj } = useContext(AudioContext);
+  const { songData, soundObj, currentAudio } = useContext(AudioContext);
   const [filterTime, setFilterTime] = useState("day");
   const { colors } = useContext(ThemeContext);
 
@@ -94,7 +94,7 @@ const Chart = () => {
         keyExtractor={(item) => item.id}
       />
 
-      {soundObj && <MiniPlayer />}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };
