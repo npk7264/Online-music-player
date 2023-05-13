@@ -85,7 +85,7 @@ const SECTIONS = [
 
 const Setting = () => {
   const { colors, darkMode, toggleTheme } = useContext(ThemeContext);
-  const { soundObj } = useContext(AudioContext);
+  const { soundObj, currentAudio } = useContext(AudioContext);
 
   return (
     <SafeAreaView
@@ -157,7 +157,7 @@ const Setting = () => {
           );
         })}
       </ScrollView>
-      {soundObj && <MiniPlayer />}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };

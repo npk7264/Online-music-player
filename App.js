@@ -32,7 +32,7 @@ export default function App() {
           <SafeAreaProvider>
             <NavigationContainer>
               <Stack.Navigator
-                initialRouteName="Login"
+                initialRouteName="BottomMenu"
                 screenOptions={{ headerShown: false }}
               >
                 <Stack.Screen name="AddSong" component={AddSong} />
