@@ -16,8 +16,9 @@ const Tab = createMaterialTopTabNavigator();
 import { AudioContext } from "../context/AudioContext";
 
 const TopMenu = () => {
-  const { soundObj } = useContext(AudioContext);
+  const { soundObj, currentAudio } = useContext(AudioContext);
   const { colors, darkMode } = useContext(ThemeContext);
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.backgroundColor }]}
@@ -47,7 +48,7 @@ const TopMenu = () => {
         <Tab.Screen name="Albums" component={Albums} />
       </Tab.Navigator>
 
-      {soundObj && <MiniPlayer />}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };

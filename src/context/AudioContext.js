@@ -1,7 +1,17 @@
 import React, { Component, createContext } from "react";
 import { Audio } from "expo-av";
 import { changeSong } from "../utils/AudioController";
-import { fetchSongs } from "../utils/FirebaseHandler";
+import { fetchSongs, fetchRecent } from "../utils/FirebaseHandler";
+import { auth, db } from "../services/firebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  addDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 export const AudioContext = createContext();
 export class AudioProvider extends Component {
@@ -12,7 +22,7 @@ export class AudioProvider extends Component {
       songData: [],
       playbackObj: null,
       soundObj: null,
-      currentAudio: {},
+      currentAudio: null,
       currentAudioIndex: null,
       isPlaying: false,
       isLooping: false,
@@ -29,6 +39,9 @@ export class AudioProvider extends Component {
     // }
 
     if (playbackStatus.isLoaded && !playbackStatus.isPlaying) {
+      // this.updateState(this, {
+      //   playbackPosition: playbackStatus.positionMillis,
+      // });
     }
 
     if (playbackStatus.didJustFinish && !playbackStatus.isLooping) {
@@ -42,16 +55,22 @@ export class AudioProvider extends Component {
 
   async componentDidMount() {
     const songs = await fetchSongs();
+    const recentList = await fetchRecent(doc(db, "users/" + this.state.userId));
+    const recentestSong =
+      recentList != [] ? songs.find((item) => item.id == recentList[0]) : {};
+
+    console.log(recentestSong);
+
     // PHÁT NỀN
     await Audio.setAudioModeAsync({
       staysActiveInBackground: true,
     });
     if (this.state.playbackObj === null) {
-      console.log("OK")
       await this.setState({
         ...this.state,
         songData: songs,
         playbackObj: new Audio.Sound(),
+        currentAudio: recentestSong,
       });
     }
   }

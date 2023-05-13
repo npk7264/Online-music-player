@@ -30,7 +30,7 @@ import {
 import { useIsFocused } from "@react-navigation/native";
 
 const Favorite = () => {
-  const { userId, songData, soundObj } = useContext(AudioContext);
+  const { userId, songData, soundObj, currentAudio } = useContext(AudioContext);
   const [favoriteId, setFavoriteId] = useState([]);
   const { colors } = useContext(ThemeContext);
 
@@ -75,7 +75,7 @@ const Favorite = () => {
         keyExtractor={(item) => item.id}
       />
 
-      {soundObj && <MiniPlayer />}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };

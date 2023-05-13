@@ -67,7 +67,6 @@ const Search = () => {
           onBlur={() => setIsFocused(false)}
           onChangeText={(text) => {
             setSearchText(text);
-            console.log(text);
           }}
         />
       </View>

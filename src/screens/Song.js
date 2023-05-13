@@ -21,7 +21,8 @@ const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
-  const { songData } = useContext(AudioContext);
+  const context = useContext(AudioContext);
+  const { songData, userId, updateState } = context;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
