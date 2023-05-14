@@ -17,6 +17,8 @@ import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 
 import Icon from "react-native-vector-icons/FontAwesome";
+import { VictoryChart, VictoryBar } from 'victory-native';
+
 
 const Chart = () => {
   const { songData, soundObj, currentAudio } = useContext(AudioContext);
@@ -38,48 +40,23 @@ const Chart = () => {
           backgroundColor: colors.background,
         }}
       >
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "space-evenly" }}
-          onPress={() => {
-            setFilterTime("day");
-          }}
+        {/* <VictoryChart
+          height={300}
+          padding={{ top: 20, bottom: 50, left: 50, right: 50 }}
         >
-          <Text style={{ fontSize: 18, color: colors.text }}>Hôm nay</Text>
-          <Icon
-            name={filterTime === "day" ? "circle" : "circle-o"}
-            size={25}
-            color={colors.primary}
+          <VictoryBar
+            data={songData}
+            x="name"
+            y="view"
+            style={{
+              data: { fill: '#c43a31' },
+              labels: { fontSize: 10 }
+            }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "space-evenly" }}
-          onPress={() => {
-            setFilterTime("month");
-          }}
-        >
-          <Text style={{ fontSize: 18, color: colors.text }}>Trong tháng</Text>
-          <Icon
-            name={filterTime === "month" ? "circle" : "circle-o"}
-            size={25}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "space-evenly" }}
-          onPress={() => {
-            setFilterTime("year");
-          }}
-        >
-          <Text style={{ fontSize: 18, color: colors.text }}>Trong năm</Text>
-          <Icon
-            name={filterTime === "year" ? "circle" : "circle-o"}
-            size={25}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
+        </VictoryChart> */}
       </View>
 
-      <FlatList
+      {/* <FlatList
         data={songData}
         renderItem={({ item }) => (
           <SongItem
@@ -92,9 +69,9 @@ const Chart = () => {
           />
         )}
         keyExtractor={(item) => item.id}
-      />
+      /> */}
 
-      {currentAudio && <MiniPlayer />}
+      {/* {currentAudio && <MiniPlayer />} */}
     </SafeAreaView>
   );
 };
