@@ -75,8 +75,9 @@ const Chart = () => {
             style={{
               tickLabels: {
                 fontSize: 10,
-                color: colors.text
+                fill: colors.text
               },
+
             }}
           />
           {/* <VictoryAxis tickLabelComponent={<SongBarLabel />} /> */}
@@ -102,7 +103,7 @@ const Chart = () => {
         data={songData.sort((a, b) => b.view - a.view)}
         renderItem={({ item, index }) => (
           <View style={styles.rank}>
-            <Text style={index <= 4 ? styles.topRank : styles.numRank}>{index + 1}</Text>
+            <Text style={index <= 4 ? styles.topRank : [styles.numRank, { color: colors.text }]}>{index + 1}</Text>
             <SongItem
               info={item}
               time={item.time}
