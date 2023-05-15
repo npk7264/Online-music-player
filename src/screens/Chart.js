@@ -20,33 +20,37 @@ import { ThemeContext } from "../context/ThemeContext";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { VictoryChart, VictoryBar, VictoryAxis, VictoryTooltip } from 'victory-native';
 import { Image } from 'react-native-svg';
+import OptionModal from "../components/OptionModal";
+import { optionSong } from "../utils/optionModal";
 
-const SongBarLabel = ({ datum }) => {
-  return (
-    <View style={{ alignItems: 'center' }}>
-      <Image
-        // source={{ uri: datum.image }}
-        // style={{ width: 20, height: 20 }}
-        href={{ uri: datum.image }}
-        x={20}
-        y={datum.view}
-        width={20}
-        height={20}
-      />
-      <Text style={{ fontSize: 10 }}>
-        {datum?.name?.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
-      </Text>
-    </View>
 
-  )
-};
+// const SongBarLabel = ({ datum }) => {
+//   return (
+//     <View style={{ alignItems: 'center' }}>
+//       <Image
+//         // source={{ uri: datum.image }}
+//         // style={{ width: 20, height: 20 }}
+//         href={{ uri: datum.image }}
+//         x={20}
+//         y={datum.view}
+//         width={20}
+//         height={20}
+//       />
+//       <Text style={{ fontSize: 10 }}>
+//         {datum?.name?.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
+//       </Text>
+//     </View>
+
+//   )
+// };
 
 
 const Chart = () => {
   const { songData, soundObj, currentAudio } = useContext(AudioContext);
   const [filterTime, setFilterTime] = useState("day");
   const { colors } = useContext(ThemeContext);
-
+  const [optionModalVisible, setOptionModalVisible] = useState(false);
+  const [currentItem, setCurrentItem] = useState(null);
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
@@ -71,17 +75,21 @@ const Chart = () => {
             style={{
               tickLabels: {
                 fontSize: 10,
+                color: colors.text
               },
             }}
           />
-          <VictoryAxis tickLabelComponent={<SongBarLabel />} />
+          {/* <VictoryAxis tickLabelComponent={<SongBarLabel />} /> */}
           <VictoryBar
             data={songData.sort((a, b) => b.view - a.view).slice(0, 5)}
             x={(datum) => datum.name.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
             y="view"
             style={{
               data: { fill: '#c43a31' },
-              labels: { fontSize: 12 }
+              labels: {
+                fontSize: 12,
+                color: colors.text
+              }
             }}
             labels={({ datum }) => datum.name}
             labelComponent={<VictoryTooltip renderInPortal={false} style={{ fontSize: 12 }} />}
@@ -107,8 +115,13 @@ const Chart = () => {
         )}
         keyExtractor={(item) => item.id}
       />
-
-      {/* {currentAudio && <MiniPlayer />} */}
+      <OptionModal
+        options={optionSong}
+        currentItem={currentItem}
+        onClose={() => setOptionModalVisible(false)}
+        visible={optionModalVisible}
+      />
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };
