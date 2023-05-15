@@ -6,7 +6,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
-  Image
+  // Image
 } from "react-native";
 import { useState, useContext } from "react";
 
@@ -19,14 +19,19 @@ import { ThemeContext } from "../context/ThemeContext";
 
 import Icon from "react-native-vector-icons/FontAwesome";
 import { VictoryChart, VictoryBar, VictoryAxis, VictoryTooltip } from 'victory-native';
-// import { Image } from 'react-native-svg';
+import { Image } from 'react-native-svg';
 
 const SongBarLabel = ({ datum }) => {
   return (
     <View style={{ alignItems: 'center' }}>
       <Image
-        source={{ uri: datum.image }}
-        style={{ width: 20, height: 20 }}
+        // source={{ uri: datum.image }}
+        // style={{ width: 20, height: 20 }}
+        href={{ uri: datum.image }}
+        x={20}
+        y={datum.view}
+        width={20}
+        height={20}
       />
       <Text style={{ fontSize: 10 }}>
         {datum?.name?.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
@@ -69,7 +74,7 @@ const Chart = () => {
               },
             }}
           />
-
+          <VictoryAxis tickLabelComponent={<SongBarLabel />} />
           <VictoryBar
             data={songData.sort((a, b) => b.view - a.view).slice(0, 5)}
             x={(datum) => datum.name.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
@@ -87,15 +92,18 @@ const Chart = () => {
 
       <FlatList
         data={songData.sort((a, b) => b.view - a.view)}
-        renderItem={({ item }) => (
-          <SongItem
-            info={item}
-            time={item.time}
-            onPressOptionModal={() => {
-              setOptionModalVisible(true);
-              setCurrentItem(item);
-            }}
-          />
+        renderItem={({ item, index }) => (
+          <View style={styles.rank}>
+            <Text style={index <= 4 ? styles.topRank : styles.numRank}>{index + 1}</Text>
+            <SongItem
+              info={item}
+              time={item.time}
+              onPressOptionModal={() => {
+                setOptionModalVisible(true);
+                setCurrentItem(item);
+              }}
+            />
+          </View>
         )}
         keyExtractor={(item) => item.id}
       />
@@ -107,4 +115,23 @@ const Chart = () => {
 
 export default Chart;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  rank: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  numRank: {
+    marginLeft: 20,
+    marginRight: 5,
+    fontSize: 20,
+  },
+  topRank: {
+    marginLeft: 20,
+    marginRight: 2,
+    fontSize: 25,
+    color: '#c43a31',
+    fontWeight: 900
+  }
+});
