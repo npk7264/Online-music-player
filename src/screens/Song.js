@@ -16,6 +16,7 @@ import FlatListSong from "../components/FlatListSong.js";
 
 import { AudioContext } from "../context/AudioContext.js";
 import { ThemeContext } from "../context/ThemeContext.js";
+import { fetchRecentestSong } from "../utils/FirebaseHandler.js";
 
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
@@ -23,6 +24,10 @@ const Song = () => {
   const { colors } = useContext(ThemeContext);
   const context = useContext(AudioContext);
   const { songData, userId, updateState } = context;
+
+  useEffect(() => {
+    fetchRecentestSong(context);
+  }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

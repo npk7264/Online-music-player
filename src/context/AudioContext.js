@@ -55,11 +55,6 @@ export class AudioProvider extends Component {
 
   async componentDidMount() {
     const songs = await fetchSongs();
-    const recentList = await fetchRecent(doc(db, "users/" + this.state.userId));
-    const recentestSong =
-      recentList != [] ? songs.find((item) => item.id == recentList[0]) : {};
-
-    console.log(recentestSong);
 
     // PHÁT NỀN
     await Audio.setAudioModeAsync({
@@ -70,7 +65,6 @@ export class AudioProvider extends Component {
         ...this.state,
         songData: songs,
         playbackObj: new Audio.Sound(),
-        currentAudio: recentestSong,
       });
     }
   }
@@ -90,7 +84,6 @@ export class AudioProvider extends Component {
       isLooping,
       playbackPosition,
       playbackDuration,
-      songData,
     } = this.state;
 
     return (

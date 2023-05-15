@@ -1,6 +1,9 @@
 import { StatusBar } from "expo-status-bar";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import { auth } from "./src/services/firebaseConfig";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -13,18 +16,32 @@ import Search from "./src/screens/Search";
 import DetailPlaylist from "./src/screens/playlist/DetailPlaylist";
 import Chart from "./src/screens/Chart";
 import ArtistDetail from "./src/screens/ArtistDetail";
-import AlbumDetail from "./src/components/AlbumDetail"
+import AlbumDetail from "./src/components/AlbumDetail";
 import AddSong from "./src/screens/playlist/AddSong";
 import Favorite from "./src/screens/Favorite";
 import Recent from "./src/screens/Recent";
 
-
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
-import { PlaylistProvider } from './src/context/PlaylistContext';
+import { PlaylistProvider } from "./src/context/PlaylistContext";
 const Stack = createStackNavigator();
 
 export default function App() {
+  const [initScreen, setInitScreen] = useState("Login");
+
+  // useEffect(() => {
+  //   const unsubscribe = auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       setInitScreen("BottomMenu");
+  //       console.log(true);
+  //     } else {
+  //       setInitScreen("Login");
+  //       console.log(false);
+  //     }
+  //   });
+  //   return unsubscribe;
+  // }, []);
+
   return (
     <AudioProvider>
       <ThemeProvider>
@@ -32,7 +49,7 @@ export default function App() {
           <SafeAreaProvider>
             <NavigationContainer>
               <Stack.Navigator
-                initialRouteName="BottomMenu"
+                initialRouteName="Login"
                 screenOptions={{ headerShown: false }}
               >
                 <Stack.Screen name="AddSong" component={AddSong} />
@@ -43,7 +60,10 @@ export default function App() {
                 <Stack.Screen name="Search" component={Search} />
                 <Stack.Screen name="ArtistDetail" component={ArtistDetail} />
                 <Stack.Screen name="AlbumDetail" component={AlbumDetail} />
-                <Stack.Screen name="DetailPlaylist" component={DetailPlaylist} />
+                <Stack.Screen
+                  name="DetailPlaylist"
+                  component={DetailPlaylist}
+                />
                 <Stack.Screen name="Chart" component={Chart} />
                 <Stack.Screen name="Favorite" component={Favorite} />
                 <Stack.Screen name="Recent" component={Recent} />
@@ -52,7 +72,7 @@ export default function App() {
           </SafeAreaProvider>
         </PlaylistProvider>
       </ThemeProvider>
-    </AudioProvider >
+    </AudioProvider>
   );
 }
 
