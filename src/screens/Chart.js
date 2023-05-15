@@ -6,6 +6,7 @@ import {
   SafeAreaView,
   FlatList,
   TouchableOpacity,
+  // Image
 } from "react-native";
 import { useState, useContext } from "react";
 
@@ -17,6 +18,29 @@ import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 
 import Icon from "react-native-vector-icons/FontAwesome";
+import { VictoryChart, VictoryBar, VictoryAxis, VictoryTooltip } from 'victory-native';
+import { Image } from 'react-native-svg';
+
+const SongBarLabel = ({ datum }) => {
+  return (
+    <View style={{ alignItems: 'center' }}>
+      <Image
+        // source={{ uri: datum.image }}
+        // style={{ width: 20, height: 20 }}
+        href={{ uri: datum.image }}
+        x={20}
+        y={datum.view}
+        width={20}
+        height={20}
+      />
+      <Text style={{ fontSize: 10 }}>
+        {datum?.name?.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
+      </Text>
+    </View>
+
+  )
+};
+
 
 const Chart = () => {
   const { songData, soundObj, currentAudio } = useContext(AudioContext);
@@ -31,74 +55,83 @@ const Chart = () => {
 
       <View
         style={{
-          paddingHorizontal: 20,
-          height: 60,
+          // paddingHorizontal: 20,
+          // height: 60,
           flexDirection: "row",
           justifyContent: "space-between",
           backgroundColor: colors.background,
         }}
       >
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "space-evenly" }}
-          onPress={() => {
-            setFilterTime("day");
-          }}
+        <VictoryChart
+          height={300}
+          padding={{ top: 20, bottom: 50, left: 40, right: 40 }}
+          domainPadding={20}
         >
-          <Text style={{ fontSize: 18, color: colors.text }}>Hôm nay</Text>
-          <Icon
-            name={filterTime === "day" ? "circle" : "circle-o"}
-            size={25}
-            color={colors.primary}
+          <VictoryAxis
+            style={{
+              tickLabels: {
+                fontSize: 10,
+              },
+            }}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "space-evenly" }}
-          onPress={() => {
-            setFilterTime("month");
-          }}
-        >
-          <Text style={{ fontSize: 18, color: colors.text }}>Trong tháng</Text>
-          <Icon
-            name={filterTime === "month" ? "circle" : "circle-o"}
-            size={25}
-            color={colors.primary}
+          <VictoryAxis tickLabelComponent={<SongBarLabel />} />
+          <VictoryBar
+            data={songData.sort((a, b) => b.view - a.view).slice(0, 5)}
+            x={(datum) => datum.name.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
+            y="view"
+            style={{
+              data: { fill: '#c43a31' },
+              labels: { fontSize: 12 }
+            }}
+            labels={({ datum }) => datum.name}
+            labelComponent={<VictoryTooltip renderInPortal={false} style={{ fontSize: 12 }} />}
+          // labelComponent={<SongBarLabel />}
           />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ alignItems: "center", justifyContent: "space-evenly" }}
-          onPress={() => {
-            setFilterTime("year");
-          }}
-        >
-          <Text style={{ fontSize: 18, color: colors.text }}>Trong năm</Text>
-          <Icon
-            name={filterTime === "year" ? "circle" : "circle-o"}
-            size={25}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
+        </VictoryChart>
       </View>
 
       <FlatList
-        data={songData}
-        renderItem={({ item }) => (
-          <SongItem
-            info={item}
-            time={item.time}
-            onPressOptionModal={() => {
-              setOptionModalVisible(true);
-              setCurrentItem(item);
-            }}
-          />
+        data={songData.sort((a, b) => b.view - a.view)}
+        renderItem={({ item, index }) => (
+          <View style={styles.rank}>
+            <Text style={index <= 4 ? styles.topRank : styles.numRank}>{index + 1}</Text>
+            <SongItem
+              info={item}
+              time={item.time}
+              onPressOptionModal={() => {
+                setOptionModalVisible(true);
+                setCurrentItem(item);
+              }}
+            />
+          </View>
         )}
         keyExtractor={(item) => item.id}
       />
 
-      {currentAudio && <MiniPlayer />}
+      {/* {currentAudio && <MiniPlayer />} */}
     </SafeAreaView>
   );
 };
 
 export default Chart;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  rank: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  numRank: {
+    marginLeft: 20,
+    marginRight: 5,
+    fontSize: 20,
+  },
+  topRank: {
+    marginLeft: 20,
+    marginRight: 2,
+    fontSize: 25,
+    color: '#c43a31',
+    fontWeight: 900
+  }
+});
