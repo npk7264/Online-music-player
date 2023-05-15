@@ -35,17 +35,14 @@ const Login = () => {
       });
   };
 
-  // useEffect(() => {
-  // const unsubscribe = auth.onAuthStateChanged((user) => {
-  //   if (!user) {
-  //     alert("No");
-  //   }
-  //   if (user) {
-  //     navigation.replace("BottomMenu");
-  //   }
-  // });
-  // return unsubscribe;
-  // }, []);
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        navigation.replace("BottomMenu");
+      }
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <SafeAreaView

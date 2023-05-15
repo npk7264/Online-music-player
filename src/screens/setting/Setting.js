@@ -8,7 +8,14 @@ import {
   Switch,
   TouchableOpacity,
 } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigation } from "@react-navigation/native";
+
+import { auth, db } from "../../services/firebaseConfig";
+import { signOut } from "firebase/auth";
+
+import { fetchUser } from "../../utils/FirebaseHandler";
+import { selectSong, pause } from "../../utils/AudioController";
 
 import SearchBar from "../../components/SearchBar";
 import MiniPlayer from "../../components/MiniPlayer";
@@ -85,7 +92,39 @@ const SECTIONS = [
 
 const Setting = () => {
   const { colors, darkMode, toggleTheme } = useContext(ThemeContext);
-  const { soundObj, currentAudio } = useContext(AudioContext);
+  const context = useContext(AudioContext);
+  const {
+    userId,
+    soundObj,
+    currentAudio,
+    playbackObj,
+    isPlaying,
+    updateState,
+  } = context;
+  const [userName, setUserName] = useState(null);
+  const navigation = useNavigation();
+
+  // useEffect(async () => {
+  //   await fetchUser(userId, setUserName);
+  // }, []);
+
+  const dangxuat = () => {
+    signOut(auth)
+      .then(() => {
+        if (isPlaying) selectSong(context, currentAudio);
+        updateState(context, {
+          currentAudio: null,
+          currentAudioIndex: null,
+          isLooping: false,
+          playbackPosition: null,
+          playbackDuration: null,
+        });
+        navigation.navigate("Login");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
   return (
     <SafeAreaView
@@ -97,7 +136,9 @@ const Setting = () => {
       <ScrollView>
         <View style={styles.userInfoSection}>
           {/* <Avatar.Icon size={80} icon="account" /> */}
-          <Text style={[styles.userName, { color: colors.text }]}>Kien Võ</Text>
+          <Text style={[styles.userName, { color: colors.text }]}>
+            User
+          </Text>
         </View>
 
         {SECTIONS.map(({ header, items }) => {
@@ -109,7 +150,7 @@ const Setting = () => {
                   <TouchableOpacity
                     key={id}
                     onPress={() => {
-                      // handle onPress
+                      id == "logOut" ? dangxuat() : alert("");
                     }}
                   >
                     <View
