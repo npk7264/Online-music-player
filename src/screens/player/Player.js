@@ -9,8 +9,8 @@ import {
   Image,
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
-import { AudioContext } from "../context/AudioContext";
-import BackBar from "../components/BackBar";
+import { AudioContext } from "../../context/AudioContext";
+import BackBar from "../../components/BackBar";
 
 import Slider from "@react-native-community/slider";
 import {
@@ -18,10 +18,11 @@ import {
   AntDesign,
   MaterialCommunityIcons,
 } from "@expo/vector-icons";
-import { convertTime } from "../utils/helper";
-import { selectSong, changeSong } from "../utils/AudioController";
+import { convertTime } from "../../utils/helper";
+import { selectSong, changeSong } from "../../utils/AudioController";
+import { useNavigation } from "@react-navigation/native";
 
-import { auth, db } from "../services/firebaseConfig";
+import { auth, db } from "../../services/firebaseConfig";
 import {
   collection,
   doc,
@@ -32,7 +33,7 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-import { ThemeContext } from "../context/ThemeContext";
+import { ThemeContext } from "../../context/ThemeContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -55,6 +56,7 @@ const Player = () => {
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
   const [favoriteList, setFavoriteList] = useState([]);
+  const navigation = useNavigation();
 
   const { colors } = useContext(ThemeContext);
 
@@ -310,6 +312,13 @@ const Player = () => {
           <AntDesign name="stepforward" size={40} color={colors.text} />
         </TouchableOpacity>
       </View>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Lyric");
+        }}
+      ><Text style={{ textAlign: 'center', marginTop: 20, color: colors.text, fontSize: 20 }}>Lyric</Text></TouchableOpacity>
+
     </SafeAreaView>
   );
 };

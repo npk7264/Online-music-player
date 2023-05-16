@@ -24,30 +24,9 @@ import OptionModal from "../components/OptionModal";
 import { optionSong } from "../utils/optionModal";
 
 
-// const SongBarLabel = ({ datum }) => {
-//   return (
-//     <View style={{ alignItems: 'center' }}>
-//       <Image
-//         // source={{ uri: datum.image }}
-//         // style={{ width: 20, height: 20 }}
-//         href={{ uri: datum.image }}
-//         x={20}
-//         y={datum.view}
-//         width={20}
-//         height={20}
-//       />
-//       <Text style={{ fontSize: 10 }}>
-//         {datum?.name?.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
-//       </Text>
-//     </View>
-
-//   )
-// };
-
 
 const Chart = () => {
   const { songData, soundObj, currentAudio } = useContext(AudioContext);
-  const [filterTime, setFilterTime] = useState("day");
   const { colors } = useContext(ThemeContext);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
@@ -55,7 +34,7 @@ const Chart = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
 
-      <SearchBar title={"Nghe nhiều"} />
+      <SearchBar title={"Thịnh hành"} />
 
       <View
         style={{
