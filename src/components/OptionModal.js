@@ -122,6 +122,12 @@ const styles = StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         alignItems: 'center',
+        marginVertical: 5,
+        // backgroundColor: 'red'
+        // borderColor: '#efefef',
+        // borderWidth: 1,
+        // borderRadius: 15,
+        // paddingHorizontal: 10
     },
 });
 

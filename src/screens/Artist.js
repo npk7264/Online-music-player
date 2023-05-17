@@ -5,6 +5,7 @@ import { artist } from "../../data";
 import OptionModal from "../components/OptionModal";
 import { ThemeContext } from "../context/ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
+import { optionSinger } from "../utils/optionModal"
 
 const Artist = () => {
   const { colors } = useContext(ThemeContext);
@@ -67,22 +68,7 @@ const Artist = () => {
       />
 
       <OptionModal
-        options={[
-          {
-            title: "Play Next",
-            icon: "keyboard-tab",
-            onPress: (item) => {
-              console.log(`play next ${item.name}`);
-            },
-          },
-          {
-            title: "Add to playlist",
-            icon: "add-circle-outline",
-            onPress: (item) => {
-              console.log(`add playlist ${item.name}`);
-            },
-          },
-        ]}
+        options={optionSinger}
         currentItem={currentSinger}
         onClose={() => setOptionModalVisible(false)}
         visible={optionModalVisible}
