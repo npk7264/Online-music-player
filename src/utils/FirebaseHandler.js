@@ -69,9 +69,9 @@ export const fetchRecentestSong = async (context) => {
   await Audio.setAudioModeAsync({
     staysActiveInBackground: true,
   });
-  console.log("Recentest", recentestSong);
 
   await updateState(context, {
+    soundObj: null,
     songData: songs,
     currentAudio: recentestSong,
     playbackObj: new Audio.Sound(),
