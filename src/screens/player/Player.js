@@ -141,7 +141,7 @@ const Player = () => {
 
   return (
     <SafeAreaView
-      style={{ backgroundColor: colors.background, height: "100%" }}
+      style={{ backgroundColor: colors.background, flex: 1 }}
     >
       <StatusBar></StatusBar>
       <BackBar />
@@ -313,11 +313,15 @@ const Player = () => {
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Lyric");
-        }}
-      ><Text style={{ textAlign: 'center', marginTop: 20, color: colors.text, fontSize: 20 }}>Lyric</Text></TouchableOpacity>
+      <View style={styles.viewLyric}>
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Lyric");
+          }}
+          style={[styles.buttonLyric, { backgroundColor: colors.primary, }]}
+        ><Text style={{ color: colors.text, fontSize: 20 }}>Lyric</Text></TouchableOpacity>
+      </View>
+
 
     </SafeAreaView>
   );
@@ -343,5 +347,19 @@ const styles = StyleSheet.create({
     width: windowWidth - 20,
     height: 40,
     alignSelf: "center",
+  },
+  viewLyric: {
+    // height: 30,
+    // width: 100,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonLyric: {
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 150,
+    height: 40,
   },
 });

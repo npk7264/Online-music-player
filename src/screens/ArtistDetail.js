@@ -20,7 +20,7 @@ const ArtistDetail = ({ route }) => {
             <View style={styles.header}>
                 {/* info singer */}
                 <Image
-                    source={require("../../assets/temp.jpg")}
+                    source={{ uri: "https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg" }}
                     style={styles.poster} />
                 <Text style={[styles.singer, { color: colors.text }]}>{name}</Text>
                 <Text style={styles.numSong}>{songs.length} bài hát</Text>
