@@ -317,8 +317,18 @@ const Player = () => {
         onPress={() => {
           navigation.navigate("Lyric");
         }}
-      ><Text style={{ textAlign: 'center', marginTop: 20, color: colors.text, fontSize: 20 }}>Lyric</Text></TouchableOpacity>
-
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 20,
+            color: colors.text,
+            fontSize: 20,
+          }}
+        >
+          Lời bài hát
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

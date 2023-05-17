@@ -9,6 +9,7 @@ import {
   // Image
 } from "react-native";
 import { useState, useContext } from "react";
+import { color } from "../constants/color";
 
 import SearchBar from "../components/SearchBar";
 import SongItem from "../components/SongItem";
@@ -65,7 +66,7 @@ const Chart = () => {
             x={(datum) => datum.name.length > 10 ? `${datum.name.slice(0, 10)}...` : datum.name}
             y="view"
             style={{
-              data: { fill: '#c43a31' },
+              data: { fill: colors.primary },
               labels: {
                 fontSize: 12,
                 color: colors.text
@@ -124,7 +125,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 2,
     fontSize: 25,
-    color: '#c43a31',
+    color: color.primary,
     fontWeight: 900
   }
 });

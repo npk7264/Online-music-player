@@ -115,6 +115,7 @@ const Setting = () => {
         updateState(context, {
           currentAudio: null,
           currentAudioIndex: null,
+          isPlaying: false,
           isLooping: false,
           playbackPosition: null,
           playbackDuration: null,
