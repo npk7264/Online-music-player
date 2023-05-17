@@ -22,7 +22,7 @@ const ArtistItem = ({ name, songs, onPressOptionModal }) => {
                 >
                     {/* Image */}
                     <Image
-                        source={require("../../assets/poster_music.png")}
+                        source={{ uri: "https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg" }}
                         style={styles.poster}
                     />
 

@@ -2,7 +2,7 @@ export const songs = [
   {
     id: 1,
     name: "Shape of You",
-    singer: "Ed Sheeran",
+    singer: ["Ed Sheeran"],
     time: "3:54",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop1.mp3"),
@@ -10,7 +10,7 @@ export const songs = [
   {
     id: 2,
     name: "Uptown Funk",
-    singer: "Mark Ronson ft. Bruno Mars",
+    singer: ["Mark Ronson", " Bruno Mars"],
     time: "4:30",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop2.mp3"),
@@ -18,7 +18,7 @@ export const songs = [
   {
     id: 3,
     name: "Sugar",
-    singer: "Maroon 5",
+    singer: ["Maroon 5"],
     time: "3:56",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop3.mp3"),
@@ -26,7 +26,7 @@ export const songs = [
   {
     id: 4,
     name: "Closer",
-    singer: "The Chainsmokers ft. Halsey",
+    singer: ["The Chainsmokers ", "Halsey"],
     time: "4:05",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop4.mp3"),
@@ -34,7 +34,7 @@ export const songs = [
   {
     id: 5,
     name: "Girls Like You",
-    singer: "Maroon 5 ft. Cardi B",
+    singer: ["Maroon 5", " Cardi B"],
     time: "3:56",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop5.mp3"),
@@ -42,24 +42,24 @@ export const songs = [
 ];
 
 export const artist = [
-  { id: 1, songs: [1, 3, 9], name: "Ed Sheeran" },
-  { id: 2, songs: [2], name: "Mark Ronson ft. Bruno Mars" },
-  { id: 3, songs: [4, 5], name: "Maroon 5" },
-  { id: 4, songs: [6], name: "Luis Fonsi ft. Daddy Yankee" },
-  { id: 5, songs: [7], name: "OneRepublic" },
-  { id: 6, songs: [8], name: "Charlie Puth" },
-  { id: 7, songs: [10], name: "Rihanna ft. Mikky Ekko" },
-  { id: 8, songs: [11], name: "Twenty One Pilots" },
-  { id: 9, songs: [12], name: "Billie Eilish" },
-  { id: 10, songs: [13], name: "Justin Bieber" },
-  { id: 11, songs: [14], name: "John Legend" },
-  { id: 12, songs: [15], name: "Zedd, Maren Morris, Grey" },
-  { id: 13, songs: [16], name: "Adele" },
-  { id: 14, songs: [17], name: "Justin Timberlake" },
-  { id: 15, songs: [18], name: "Whitney Houston" },
-  { id: 16, songs: [19], name: "Imagine Dragons" },
-  { id: 17, songs: [20], name: "Wiz Khalifa ft. Charlie Puth" },
-  { id: 18, songs: [21, 22, 23, 24], name: "Việt Nam" },
+  { id: 1, songs: [1, 3, 9], name: "Ed Sheeran", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 2, songs: [2], name: "Mark Ronson ft. Bruno Mars", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 3, songs: [4, 5], name: "Maroon 5", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 4, songs: [6], name: "Luis Fonsi ft. Daddy Yankee", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 5, songs: [7], name: "OneRepublic", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 6, songs: [8], name: "Charlie Puth", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 7, songs: [10], name: "Rihanna ft. Mikky Ekko", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 8, songs: [11], name: "Twenty One Pilots", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 9, songs: [12], name: "Billie Eilish", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 10, songs: [13], name: "Justin Bieber", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 11, songs: [14], name: "John Legend", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 12, songs: [15], name: "Zedd, Maren Morris, Grey", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 13, songs: [16], name: "Adele", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 14, songs: [17], name: "Justin Timberlake", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 15, songs: [18], name: "Whitney Houston", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 16, songs: [19], name: "Imagine Dragons", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 17, songs: [20], name: "Wiz Khalifa ft. Charlie Puth", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
+  { id: 18, songs: [21, 22, 23, 24], name: "Việt Nam", image: 'https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg' },
 ];
 
 export const albums = [
