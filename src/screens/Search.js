@@ -15,7 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/core";
 import { ThemeContext } from "../context/ThemeContext";
 import { AudioContext } from "../context/AudioContext";
-
+import FlatListSong from "../components/FlatListSong"
 import { color } from "../constants/color";
 
 const Search = () => {
@@ -24,6 +24,8 @@ const Search = () => {
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
   const [searchText, setSearchText] = useState("");
   const { songData } = useContext(AudioContext);
+  const [searchType, setSearchType] = useState(0);
+
 
   const searchResult = songData.filter((item) => {
     if (searchText != "")
@@ -54,8 +56,8 @@ const Search = () => {
                   ? "#2a221f"
                   : "#fff5ed"
                 : darkMode
-                ? "#1f222a"
-                : "#f5f5f6",
+                  ? "#1f222a"
+                  : "#f5f5f6",
               borderWidth: isFocused ? 1 : 0,
               color: colors.text,
             },
@@ -71,20 +73,36 @@ const Search = () => {
         />
       </View>
 
+      <View style={[styles.searchType,]}>
+        <TouchableOpacity
+          style={[styles.searchTypeItem,
+          { backgroundColor: searchType === 0 ? colors.primary : colors.background }]}
+          onPress={() => setSearchType(0)}>
+          <Text style={[styles.textType,
+          { color: searchType === 0 ? 'white' : colors.primary }]}>Bài hát</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.searchTypeItem,
+          { backgroundColor: searchType === 1 ? colors.primary : colors.background }]}
+          onPress={() => setSearchType(1)}>
+          <Text style={[styles.textType, { color: searchType === 1 ? 'white' : colors.primary }]}>Ca Sĩ</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.searchTypeItem,
+          { backgroundColor: searchType === 2 ? colors.primary : colors.background }]}
+          onPress={() => setSearchType(2)}
+        >
+          <Text style={[styles.textType, { color: searchType === 2 ? 'white' : colors.primary }]}>Album</Text>
+        </TouchableOpacity>
+      </View>
+
       {/* Search Result */}
-      <FlatList
-        data={searchResult}
-        renderItem={({ item }) => (
-          <SongItem
-            info={item}
-            onPressOptionModal={() => {
-              setOptionModalVisible(true);
-              setCurrentItem(item);
-            }}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      {searchResult != 0 && <FlatListSong songs={searchResult} />}
+      {searchText != "" && searchResult.length === 0 &&
+        <View style={styles.nothingSearch}>
+          <Text style={[styles.textType, { color: colors.text }]}>Không tìm thấy kết quả nào</Text>
+        </View>
+      }
     </SafeAreaView>
   );
 };
@@ -106,5 +124,29 @@ const styles = StyleSheet.create({
     borderRadius: 15,
     paddingHorizontal: 15,
     fontSize: 15,
+  },
+  searchType: {
+    // flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    // backgroundColor: 'red',
+    marginBottom: 10,
+  },
+  searchTypeItem: {
+    borderColor: color.primary,
+    borderWidth: 2,
+    borderRadius: 20,
+    height: 30,
+    width: 100,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  textType: {
+    fontSize: 15,
+  },
+  nothingSearch: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   },
 });
