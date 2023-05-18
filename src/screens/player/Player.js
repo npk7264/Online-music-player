@@ -313,16 +313,23 @@ const Player = () => {
         </TouchableOpacity>
       </View>
 
-      <View style={styles.viewLyric}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("Lyric");
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.navigate("Lyric");
+        }}
+      >
+        <Text
+          style={{
+            textAlign: "center",
+            marginTop: 20,
+            color: colors.text,
+            fontSize: 20,
           }}
-          style={[styles.buttonLyric, { backgroundColor: colors.primary, }]}
-        ><Text style={{ color: colors.text, fontSize: 20 }}>Lyric</Text></TouchableOpacity>
-      </View>
-
-
+        >
+          Lời bài hát
+        </Text>
+      </TouchableOpacity>
     </SafeAreaView>
   );
 };

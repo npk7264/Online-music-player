@@ -23,7 +23,7 @@ const Song = () => {
   const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
   const context = useContext(AudioContext);
-  const { songData, userId, updateState } = context;
+  const { songData, soundObj, userId, updateState } = context;
 
   useEffect(() => {
     fetchRecentestSong(context);
