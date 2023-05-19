@@ -13,6 +13,7 @@ import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import { fetchRecentestSong } from "../utils/FirebaseHandler";
 
 const Login = () => {
   const context = useContext(AudioContext);
@@ -26,6 +27,7 @@ const Login = () => {
       .then((userCredential) => {
         const user = userCredential.user;
         updateState(context, { userId: user.uid });
+        fetchRecentestSong(user.uid, context);
         navigation.replace("BottomMenu");
       })
       .catch((error) => {
@@ -38,6 +40,7 @@ const Login = () => {
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
+        fetchRecentestSong(user.uid, context);
         navigation.replace("BottomMenu");
       }
     });

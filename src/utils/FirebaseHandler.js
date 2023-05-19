@@ -57,8 +57,8 @@ export const fetchUser = async (userId, setUserName) => {
   }
 };
 
-export const fetchRecentestSong = async (context) => {
-  const { userId, songData, updateState } = context;
+export const fetchRecentestSong = async (userId, context) => {
+  const { songData, updateState } = context;
   // console.log(songData)
   const songs = await fetchSongs();
   const recentList = await fetchRecent(doc(db, "users/" + userId));
