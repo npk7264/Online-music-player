@@ -140,12 +140,10 @@ const Player = () => {
   }, [currentAudio, soundObj]);
 
   return (
-    <SafeAreaView
-      style={{ backgroundColor: colors.background, height: "100%" }}
-    >
+    <SafeAreaView style={{ backgroundColor: colors.background, flex: 1 }}>
       <StatusBar></StatusBar>
       <BackBar />
-      <View style={{ justifyContent: "center", alignItems: "center" }}>
+      <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <Image style={styles.thumbnail} source={{ uri: currentAudio.image }} />
         {/* Song name */}
         <View
@@ -167,168 +165,182 @@ const Player = () => {
         </View>
       </View>
 
-      {/* Slider */}
-      <Slider
-        style={styles.sliderBar}
-        minimumValue={0}
-        maximumValue={1}
-        value={convertValueSlider()}
-        thumbTintColor="#ff8216"
-        minimumTrackTintColor="#ff8216"
-        maximumTrackTintColor={colors.text}
-        onValueChange={(value) => {
-          setCurrentTime(convertTime(value * context.playbackDuration));
-        }}
-        onSlidingStart={async () => {
-          if (!isPlaying) return;
-          try {
-            await playbackObj.setStatusAsync({
-              shouldPlay: false,
-            });
-          } catch (error) {
-            console.log("error inside onSlidingStart callback", error);
-          }
-        }}
-        onSlidingComplete={async (value) => {
-          if (playbackObj === null || !isPlaying) {
-            const status = await playbackObj.setPositionAsync(
-              Math.floor(value * playbackDuration)
-            );
-            updateState(context, {
-              soundObj: status,
-              playbackPosition: status.positionMillis,
-            });
-            return;
-          }
-          try {
-            const status = await playbackObj.setPositionAsync(
-              Math.floor(value * playbackDuration)
-            );
-            updateState(context, {
-              soundObj: status,
-              playbackPosition: status.positionMillis,
-            });
-            await playbackObj.playAsync();
-          } catch (error) {
-            console.log("error inside onSlidingComplete callback", error);
-          }
-        }}
-      />
-      <View
-        style={{
-          paddingHorizontal: 25,
-          flexDirection: "row",
-          justifyContent: "space-between",
-        }}
-      >
-        <Text style={{ fontWeight: "500", color: colors.text }}>
-          {currentTime}
-        </Text>
-        <Text style={{ fontWeight: "500", color: colors.text }}>
-          {convertTime(playbackDuration)}
-        </Text>
-      </View>
-
-      {/* Like, playlist */}
-      <View
-        style={{
-          marginTop: 10,
-          paddingHorizontal: 20,
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}
-      >
-        <TouchableOpacity
-          style={styles.controllerItem}
-          onPress={() => {
-            const flag = !isRepeat;
-            setRepeat(flag);
-            repeat(flag);
+      <View style={{ flex: 1, justifyContent: "space-evenly" }}>
+        {/* Slider */}
+        <Slider
+          style={styles.sliderBar}
+          minimumValue={0}
+          maximumValue={1}
+          value={convertValueSlider()}
+          thumbTintColor="#ff8216"
+          minimumTrackTintColor="#ff8216"
+          maximumTrackTintColor={colors.text}
+          onValueChange={(value) => {
+            setCurrentTime(convertTime(value * context.playbackDuration));
           }}
-        >
-          <MaterialCommunityIcons
-            name={isRepeat ? "repeat-once" : "repeat"}
-            size={25}
-            color={colors.text}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controllerItem}
-          onPress={() => {
-            const flag = !isLike;
-            setLike(!isLike);
-            flag ? saveFavorite() : removeFavorite();
+          onSlidingStart={async () => {
+            if (!isPlaying) return;
+            try {
+              await playbackObj.setStatusAsync({
+                shouldPlay: false,
+              });
+            } catch (error) {
+              console.log("error inside onSlidingStart callback", error);
+            }
           }}
-        >
-          <FontAwesome
-            name={isLike ? "heart" : "heart-o"}
-            size={25}
-            color={!isLike ? colors.text : colors.primary}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.controllerItem}>
-          <MaterialCommunityIcons
-            name="playlist-plus"
-            size={25}
-            color={colors.text}
-          />
-        </TouchableOpacity>
-      </View>
-
-      {/* Controller */}
-      <View
-        style={{
-          paddingHorizontal: 20,
-          flexDirection: "row",
-          justifyContent: "space-around",
-        }}
-      >
-        <TouchableOpacity
-          style={styles.controllerItem}
-          onPress={() => {
-            changeSong(context, "previous");
+          onSlidingComplete={async (value) => {
+            if (playbackObj === null || !isPlaying) {
+              const status = await playbackObj.setPositionAsync(
+                Math.floor(value * playbackDuration)
+              );
+              updateState(context, {
+                soundObj: status,
+                playbackPosition: status.positionMillis,
+              });
+              return;
+            }
+            try {
+              const status = await playbackObj.setPositionAsync(
+                Math.floor(value * playbackDuration)
+              );
+              updateState(context, {
+                soundObj: status,
+                playbackPosition: status.positionMillis,
+              });
+              await playbackObj.playAsync();
+            } catch (error) {
+              console.log("error inside onSlidingComplete callback", error);
+            }
           }}
-        >
-          <AntDesign name="stepbackward" size={40} color={colors.text} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controllerItem}
-          onPress={() => {
-            selectSong(context, currentAudio);
-          }}
-        >
-          <FontAwesome
-            name={isPlaying ? "pause-circle" : "play-circle"}
-            size={70}
-            color={colors.primary}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.controllerItem}
-          onPress={() => {
-            changeSong(context, "next");
-          }}
-        >
-          <AntDesign name="stepforward" size={40} color={colors.text} />
-        </TouchableOpacity>
-      </View>
-
-      <TouchableOpacity
-        onPress={() => {
-          navigation.navigate("Lyric");
-        }}
-      >
-        <Text
+        />
+        <View
           style={{
-            textAlign: "center",
-            marginTop: 20,
-            color: colors.text,
-            fontSize: 20,
+            paddingHorizontal: 25,
+            flexDirection: "row",
+            justifyContent: "space-between",
           }}
         >
-          Lời bài hát
-        </Text>
-      </TouchableOpacity>
+          <Text style={{ fontWeight: "500", color: colors.text }}>
+            {currentTime}
+          </Text>
+          <Text style={{ fontWeight: "500", color: colors.text }}>
+            {convertTime(playbackDuration)}
+          </Text>
+        </View>
+
+        {/* Like, playlist */}
+        <View
+          style={{
+            // marginTop: 10,
+            paddingHorizontal: 20,
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              const flag = !isLike;
+              setLike(!isLike);
+              flag ? saveFavorite() : removeFavorite();
+            }}
+          >
+            <FontAwesome
+              name={isLike ? "heart" : "heart-o"}
+              size={25}
+              color={!isLike ? colors.text : colors.primary}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              const flag = !isRepeat;
+              setRepeat(flag);
+              repeat(flag);
+            }}
+          >
+            <MaterialCommunityIcons
+              name={isRepeat ? "repeat-once" : "repeat"}
+              size={25}
+              color={colors.text}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.controllerItem}>
+            <MaterialCommunityIcons
+              name="playlist-plus"
+              size={25}
+              color={colors.text}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              navigation.navigate("Comment");
+            }}
+          >
+            <MaterialCommunityIcons
+              name="comment-text-outline"
+              size={25}
+              color={colors.text}
+            />
+          </TouchableOpacity>
+        </View>
+
+        {/* Controller */}
+        <View
+          style={{
+            paddingHorizontal: 20,
+            flexDirection: "row",
+            justifyContent: "space-around",
+          }}
+        >
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              changeSong(context, "previous");
+            }}
+          >
+            <AntDesign name="stepbackward" size={40} color={colors.text} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              selectSong(context, currentAudio);
+            }}
+          >
+            <FontAwesome
+              name={isPlaying ? "pause-circle" : "play-circle"}
+              size={60}
+              color={colors.primary}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              changeSong(context, "next");
+            }}
+          >
+            <AntDesign name="stepforward" size={40} color={colors.text} />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("Lyric");
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              marginTop: 20,
+              color: colors.text,
+              fontSize: 20,
+            }}
+          >
+            Lời bài hát
+          </Text>
+        </TouchableOpacity>
+      </View>
     </SafeAreaView>
   );
 };
@@ -338,14 +350,14 @@ export default Player;
 const styles = StyleSheet.create({
   thumbnail: {
     marginTop: 20,
-    width: windowWidth - 80,
-    height: windowWidth - 80,
+    width: windowWidth - 160,
+    height: windowWidth - 160,
     backgroundColor: "#ff8216",
     borderRadius: 25,
   },
   controllerItem: {
-    width: 70,
-    height: 70,
+    width: 60,
+    height: 60,
     justifyContent: "center",
     alignItems: "center",
   },

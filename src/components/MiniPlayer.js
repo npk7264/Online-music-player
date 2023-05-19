@@ -13,7 +13,6 @@ const MiniPlayer = () => {
   const navigation = useNavigation();
 
   const memoizedMiniPlayer = useMemo(() => {
-    console.log("render");
 
     return (
       <View style={{ backgroundColor: colors.background }}>

@@ -132,7 +132,7 @@ const Setting = () => {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <StatusBar></StatusBar>
-      <SearchBar title={"Setting"} />
+      <SearchBar title={"Cài đặt"} />
 
       <ScrollView>
         <View style={styles.userInfoSection}>
@@ -176,8 +176,8 @@ const Setting = () => {
 
                       {type === "toggle" && (
                         <Switch
-                          trackColor={{ false: "#767577", true: "#81b0ff" }}
-                          thumbColor={darkMode ? "#f5dd4b" : "#f4f3f4"}
+                          trackColor={{ false: "#767577", true: "#767577" }}
+                          thumbColor={darkMode ? colors.primary : "#f4f3f4"}
                           ios_backgroundColor="#3e3e3e"
                           onValueChange={toggleTheme}
                           value={darkMode}
