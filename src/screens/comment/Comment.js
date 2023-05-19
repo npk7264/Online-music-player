@@ -51,6 +51,8 @@ const Comment = () => {
   }
 
   async function getComments() {
+    setLoaded(false);
+    setList([]);
     const songRef = doc(db, "songs/" + currentAudio.id);
     const commentsRef = collection(songRef, "comments");
     const q = query(commentsRef, orderBy("created_at", "desc"));
@@ -119,6 +121,7 @@ const Comment = () => {
           }}
           value={input}
           placeholder="Bình luận của bạn"
+          placeholderTextColor={colors.text}
           numberOfLines={1}
           onChangeText={(text) => setInput(text)}
         />

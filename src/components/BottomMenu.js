@@ -22,7 +22,6 @@ const BottomMenu = () => {
         headerShown: false,
         tabBarStyle: { backgroundColor: colors.background },
       }}
-
     >
       <Tab.Screen
         name="Home"
@@ -54,6 +53,7 @@ const BottomMenu = () => {
           ),
           tabBarInactiveTintColor: "#ccc",
           tabBarActiveTintColor: "#ff8216",
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -70,6 +70,7 @@ const BottomMenu = () => {
           ),
           tabBarInactiveTintColor: "#ccc",
           tabBarActiveTintColor: "#ff8216",
+          unmountOnBlur: true,
         }}
       />
       <Tab.Screen
@@ -86,6 +87,7 @@ const BottomMenu = () => {
           ),
           tabBarInactiveTintColor: "#ccc",
           tabBarActiveTintColor: "#ff8216",
+          unmountOnBlur: true,
         }}
       />
     </Tab.Navigator>

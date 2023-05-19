@@ -31,10 +31,10 @@ const CommentItem = ({userName, content }) => {
           paddingHorizontal: 10,
         }}
       >
-        <Text style={{ fontSize: 18, fontWeight: "bold", color: colors.text }}>
+        <Text style={{ fontSize: 16, fontWeight: "bold", color: colors.text }}>
           {userName}
         </Text>
-        <Text style={{ fontSize: 18, color: colors.text }}>{content}</Text>
+        <Text style={{ fontSize: 16, color: colors.text }}>{content}</Text>
       </View>
     </View>
   );
