@@ -62,7 +62,7 @@ const Playlist = () => {
     fetchData();
   }, []);
 
-  console.log("PLAYLIST render");
+  // console.log("PLAYLIST render");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>

@@ -18,7 +18,7 @@ export class AudioProvider extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      userId: "MMp5BVLgmzPfKvaiDKSOrewVVvD3",
+      userId: null,
       songData: [],
       playbackObj: null,
       soundObj: null,

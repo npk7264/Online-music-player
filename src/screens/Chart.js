@@ -31,6 +31,9 @@ const Chart = () => {
   const { colors } = useContext(ThemeContext);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+
+  console.log("CHART render");
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>

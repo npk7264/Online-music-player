@@ -9,7 +9,6 @@ const CommentItem = ({userName, content }) => {
     <View
       style={{
         flexDirection: "row",
-        height: 70,
         marginVertical: 5,
         paddingHorizontal: 20,
       }}
@@ -18,7 +17,7 @@ const CommentItem = ({userName, content }) => {
         style={{
           width: 50,
           height: 50,
-          backgroundColor: "#ccc",
+          backgroundColor: colors.primary,
           borderRadius: 50,
           marginRight: 10,
         }}

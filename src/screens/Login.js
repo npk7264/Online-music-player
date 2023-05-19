@@ -26,7 +26,6 @@ const Login = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         const user = userCredential.user;
-        updateState(context, { userId: user.uid });
         fetchRecentestSong(user.uid, context);
         navigation.replace("BottomMenu");
       })
