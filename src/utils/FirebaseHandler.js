@@ -71,6 +71,7 @@ export const fetchRecentestSong = async (userId, context) => {
   });
 
   await updateState(context, {
+    userId: userId,
     soundObj: null,
     songData: songs,
     currentAudio: recentestSong,

@@ -6,6 +6,7 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { useContext, useEffect, useState } from "react";
 import BackBar from "../../components/BackBar";
@@ -16,17 +17,38 @@ import CommentItem from "./CommentItem";
 import { auth, db } from "../../services/firebaseConfig";
 import {
   doc,
+  addDoc,
   getDoc,
   getDocs,
   collection,
   query,
   orderBy,
+  serverTimestamp,
 } from "firebase/firestore";
 const Comment = () => {
   const { colors } = useContext(ThemeContext);
-  const { currentAudio } = useContext(AudioContext);
+  const { currentAudio, userId } = useContext(AudioContext);
 
+  const [loaded, setLoaded] = useState(false);
   const [list, setList] = useState([]);
+  const [input, setInput] = useState("");
+  const [flag, setFlag] = useState(false);
+
+  async function addComment(newComment) {
+    const songRef = doc(db, "songs/" + currentAudio.id);
+    const commentsRef = collection(songRef, "comments");
+    try {
+      const docRef = await addDoc(commentsRef, {
+        userId: userId,
+        content: newComment,
+        created_at: serverTimestamp(),
+      });
+
+      console.log("Comment đã được thêm thành công với ID: ", docRef.id);
+    } catch (error) {
+      console.error("Lỗi khi thêm comment: ", error);
+    }
+  }
 
   async function getComments() {
     const songRef = doc(db, "songs/" + currentAudio.id);
@@ -39,7 +61,7 @@ const Comment = () => {
 
       for (const comment_doc of querySnapshot.docs) {
         const commentData = comment_doc.data();
-        const userRef = doc(db, "users/" + "5zrQaIdHLgZ4EjlgEPYLxN6zzlH2");
+        const userRef = doc(db, "users/" + comment_doc.data().userId);
         const userSnapshot = await getDoc(userRef);
 
         const comment = {
@@ -55,6 +77,7 @@ const Comment = () => {
         comments.push(comment);
       }
       setList(comments);
+      setLoaded(true);
     } catch (error) {
       console.log("Error getting comments: ", error);
     }
@@ -62,20 +85,27 @@ const Comment = () => {
 
   useEffect(() => {
     getComments();
-  }, []);
+  }, [flag, currentAudio]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
       <BackBar />
+      {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
       <FlatList
         data={list}
-        renderItem={({ item }) => <CommentItem userName={item.user.name} content={item.content} />}
+        renderItem={({ item }) => (
+          <CommentItem userName={item.user.name} content={item.content} />
+        )}
         keyExtractor={(item, index) => index}
       />
-
       <View
-        style={{ flexDirection: "row", marginHorizontal: 20, marginBottom: 10 }}
+        style={{
+          flexDirection: "row",
+          marginHorizontal: 20,
+          marginBottom: 10,
+          marginTop: 20,
+        }}
       >
         <TextInput
           style={{
@@ -87,8 +117,10 @@ const Comment = () => {
             borderRadius: 15,
             color: colors.text,
           }}
+          value={input}
           placeholder="Bình luận của bạn"
           numberOfLines={1}
+          onChangeText={(text) => setInput(text)}
         />
         <TouchableOpacity
           style={{
@@ -97,6 +129,11 @@ const Comment = () => {
             marginLeft: 10,
             borderRadius: 15,
             justifyContent: "center",
+          }}
+          onPress={() => {
+            addComment(input);
+            setInput("");
+            setFlag(!flag);
           }}
         >
           <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
