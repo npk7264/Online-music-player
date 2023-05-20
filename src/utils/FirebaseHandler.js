@@ -92,18 +92,20 @@ export const fetchRecentestSong = async (userId, context) => {
     songData: songs,
     currentAudio: recentestSong,
     playbackObj: new Audio.Sound(),
-    recentestPosition: data ? data.songPosition : null,
+    playbackPosition: data.songPosition ? data.songPosition : null,
+    playbackDuration: data.songDuration ? data.songDuration : null,
   });
-  console.log("lastPosition", data.songPosition);
+  // console.log("lastPosition", data.songPosition);
 };
 
 // UPDATE POSITION OF SONG
-export const updateRecentestPositon = async (userId, position) => {
+export const updateRecentestPositon = async (userId, position, duration) => {
   const userRef = doc(db, "users/" + userId);
 
   try {
     await updateDoc(userRef, {
       songPosition: position,
+      songDuration: duration,
     });
   } catch (e) {
     alert("Failed to save recent song!", e);

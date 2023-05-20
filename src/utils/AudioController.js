@@ -1,7 +1,7 @@
 import { updateRecent, updateRecentestPositon } from "./FirebaseHandler";
 
 // play audio
-export const play = async (playbackObj, uri, recentestPosition) => {
+export const play = async (playbackObj, uri, lastPosition) => {
   try {
     // return await playbackObj.loadAsync(
     //   { uri },
@@ -10,7 +10,7 @@ export const play = async (playbackObj, uri, recentestPosition) => {
     //     progressUpdateIntervalMillis: 1000,
     //   }
     // );
-    if (!recentestPosition)
+    if (!lastPosition)
       return await playbackObj.loadAsync(
         { uri },
         { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
@@ -22,7 +22,7 @@ export const play = async (playbackObj, uri, recentestPosition) => {
       { progressUpdateIntervalMillis: 1000 }
     );
 
-    return await playbackObj.playFromPositionAsync(recentestPosition);
+    return await playbackObj.playFromPositionAsync(lastPosition);
   } catch (error) {
     console.log("error inside play helper method", error.message);
   }
@@ -70,12 +70,12 @@ export const selectSong = async (context, audio) => {
     isPlaying,
     updateState,
     onPlaybackStatusUpdate,
-    recentestPosition,
+    playbackPosition,
   } = context;
   try {
     // playing audio for the first time.
     if (soundObj === null) {
-      const status = await play(playbackObj, audio.uri, recentestPosition);
+      const status = await play(playbackObj, audio.uri, playbackPosition);
       const index = songData.findIndex(({ id }) => id === audio.id);
       console.log(index);
       updateState(context, {
@@ -98,7 +98,11 @@ export const selectSong = async (context, audio) => {
         isPlaying: false,
         playbackPosition: status.positionMillis,
       });
-      updateRecentestPositon(userId, status.positionMillis);
+      updateRecentestPositon(
+        userId,
+        status.positionMillis,
+        status.durationMillis
+      );
       return;
     }
 
