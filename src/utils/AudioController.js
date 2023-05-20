@@ -1,15 +1,28 @@
-import { updateRecent } from "./FirebaseHandler";
+import { updateRecent, updateRecentestPositon } from "./FirebaseHandler";
 
 // play audio
-export const play = async (playbackObj, uri) => {
+export const play = async (playbackObj, uri, recentestPosition) => {
   try {
-    return await playbackObj.loadAsync(
+    // return await playbackObj.loadAsync(
+    //   { uri },
+    //   {
+    //     shouldPlay: true,
+    //     progressUpdateIntervalMillis: 1000,
+    //   }
+    // );
+    if (!recentestPosition)
+      return await playbackObj.loadAsync(
+        { uri },
+        { shouldPlay: true, progressUpdateIntervalMillis: 1000 }
+      );
+
+    // but if there is lastPosition then we will play audio from the lastPosition
+    await playbackObj.loadAsync(
       { uri },
-      {
-        shouldPlay: true,
-        progressUpdateIntervalMillis: 1000,
-      }
+      { progressUpdateIntervalMillis: 1000 }
     );
+
+    return await playbackObj.playFromPositionAsync(recentestPosition);
   } catch (error) {
     console.log("error inside play helper method", error.message);
   }
@@ -57,11 +70,12 @@ export const selectSong = async (context, audio) => {
     isPlaying,
     updateState,
     onPlaybackStatusUpdate,
+    recentestPosition,
   } = context;
   try {
     // playing audio for the first time.
     if (soundObj === null) {
-      const status = await play(playbackObj, audio.uri);
+      const status = await play(playbackObj, audio.uri, recentestPosition);
       const index = songData.findIndex(({ id }) => id === audio.id);
       console.log(index);
       updateState(context, {
@@ -79,11 +93,13 @@ export const selectSong = async (context, audio) => {
     // pause audio
     if (isPlaying && currentAudio.id === audio.id) {
       const status = await pause(playbackObj);
-      return updateState(context, {
+      updateState(context, {
         soundObj: status,
         isPlaying: false,
         playbackPosition: status.positionMillis,
       });
+      updateRecentestPositon(userId, status.positionMillis);
+      return;
     }
 
     // resume audio
