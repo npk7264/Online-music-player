@@ -28,6 +28,7 @@ export class AudioProvider extends Component {
       isLooping: false,
       playbackPosition: null,
       playbackDuration: null,
+      recentestPosition: null,
     };
   }
 
@@ -84,6 +85,7 @@ export class AudioProvider extends Component {
       isLooping,
       playbackPosition,
       playbackDuration,
+      recentestPosition,
     } = this.state;
 
     return (

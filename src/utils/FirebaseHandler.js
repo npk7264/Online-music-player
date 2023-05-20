@@ -33,7 +33,7 @@ export const fetchDetailSong = async (docRef) => {
 export const fetchRecent = async (docRef) => {
   try {
     const docSnap = await getDoc(docRef);
-    return docSnap.data().recently;
+    return docSnap.data();
   } catch (error) {
     console.log("Fail to fetch recent songs", error);
   }
@@ -42,8 +42,8 @@ export const fetchRecent = async (docRef) => {
 // UPDATE RECENT
 export const updateRecent = async (userId, audioId) => {
   const userRef = doc(db, "users/" + userId);
-  let recentList = await fetchRecent(userRef);
-  recentList = recentList.filter((item) => {
+  let data = await fetchRecent(userRef);
+  let recentList = data.recently.filter((item) => {
     return item != audioId;
   });
 
@@ -75,9 +75,9 @@ export const fetchUser = async (userId, setUserName) => {
 
 export const fetchRecentestSong = async (userId, context) => {
   const { songData, updateState } = context;
-  // console.log(songData)
   const songs = await fetchSongs();
-  const recentList = await fetchRecent(doc(db, "users/" + userId));
+  const data = await fetchRecent(doc(db, "users/" + userId));
+  let recentList = data.recently;
   const recentestSong =
     recentList != [] ? songs.find((item) => item.id == recentList[0]) : {};
 
@@ -92,5 +92,20 @@ export const fetchRecentestSong = async (userId, context) => {
     songData: songs,
     currentAudio: recentestSong,
     playbackObj: new Audio.Sound(),
+    recentestPosition: data ? data.songPosition : null,
   });
+  console.log("lastPosition", data.songPosition);
+};
+
+// UPDATE POSITION OF SONG
+export const updateRecentestPositon = async (userId, position) => {
+  const userRef = doc(db, "users/" + userId);
+
+  try {
+    await updateDoc(userRef, {
+      songPosition: position,
+    });
+  } catch (e) {
+    alert("Failed to save recent song!", e);
+  }
 };
