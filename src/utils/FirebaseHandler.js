@@ -20,6 +20,15 @@ export const fetchSongs = async () => {
   return songsArray;
 };
 
+export const fetchDetailSong = async (docRef) => {
+  try {
+    const docSnap = await getDoc(docRef);
+    return docSnap.data();
+  } catch (error) {
+    console.log("Fail to fetch detail song", error);
+  }
+};
+
 // SAVE RECENT
 export const fetchRecent = async (docRef) => {
   try {
@@ -32,14 +41,21 @@ export const fetchRecent = async (docRef) => {
 
 // UPDATE RECENT
 export const updateRecent = async (userId, audioId) => {
-  const docRef = doc(db, "users/" + userId);
-  let recentList = await fetchRecent(docRef);
+  const userRef = doc(db, "users/" + userId);
+  let recentList = await fetchRecent(userRef);
   recentList = recentList.filter((item) => {
     return item != audioId;
   });
+
+  const songRef = doc(db, "songs/" + audioId);
+  let songDetail = await fetchDetailSong(songRef);
+
   try {
-    await updateDoc(docRef, {
+    await updateDoc(userRef, {
       recently: [audioId, ...recentList],
+    });
+    await updateDoc(songRef, {
+      view: songDetail.view + 1,
     });
   } catch (e) {
     alert("Failed to save recent song!", e);

@@ -167,163 +167,168 @@ const Player = () => {
 
       <View style={{ flex: 1, justifyContent: "space-evenly" }}>
         {/* Slider */}
-        <Slider
-          style={styles.sliderBar}
-          minimumValue={0}
-          maximumValue={1}
-          value={convertValueSlider()}
-          thumbTintColor="#ff8216"
-          minimumTrackTintColor="#ff8216"
-          maximumTrackTintColor={colors.text}
-          onValueChange={(value) => {
-            setCurrentTime(convertTime(value * context.playbackDuration));
-          }}
-          onSlidingStart={async () => {
-            if (!isPlaying) return;
-            try {
-              await playbackObj.setStatusAsync({
-                shouldPlay: false,
-              });
-            } catch (error) {
-              console.log("error inside onSlidingStart callback", error);
-            }
-          }}
-          onSlidingComplete={async (value) => {
-            if (playbackObj === null || !isPlaying) {
-              const status = await playbackObj.setPositionAsync(
-                Math.floor(value * playbackDuration)
-              );
-              updateState(context, {
-                soundObj: status,
-                playbackPosition: status.positionMillis,
-              });
-              return;
-            }
-            try {
-              const status = await playbackObj.setPositionAsync(
-                Math.floor(value * playbackDuration)
-              );
-              updateState(context, {
-                soundObj: status,
-                playbackPosition: status.positionMillis,
-              });
-              await playbackObj.playAsync();
-            } catch (error) {
-              console.log("error inside onSlidingComplete callback", error);
-            }
-          }}
-        />
-        <View
-          style={{
-            paddingHorizontal: 25,
-            flexDirection: "row",
-            justifyContent: "space-between",
-          }}
-        >
-          <Text style={{ fontWeight: "500", color: colors.text }}>
-            {currentTime}
-          </Text>
-          <Text style={{ fontWeight: "500", color: colors.text }}>
-            {convertTime(playbackDuration)}
-          </Text>
+        <View>
+          <Slider
+            style={styles.sliderBar}
+            minimumValue={0}
+            maximumValue={1}
+            value={convertValueSlider()}
+            thumbTintColor="#ff8216"
+            minimumTrackTintColor="#ff8216"
+            maximumTrackTintColor={colors.text}
+            onValueChange={(value) => {
+              setCurrentTime(convertTime(value * context.playbackDuration));
+            }}
+            onSlidingStart={async () => {
+              if (!isPlaying) return;
+              try {
+                await playbackObj.setStatusAsync({
+                  shouldPlay: false,
+                });
+              } catch (error) {
+                console.log("error inside onSlidingStart callback", error);
+              }
+            }}
+            onSlidingComplete={async (value) => {
+              if (playbackObj === null || !isPlaying) {
+                const status = await playbackObj.setPositionAsync(
+                  Math.floor(value * playbackDuration)
+                );
+                updateState(context, {
+                  soundObj: status,
+                  playbackPosition: status.positionMillis,
+                });
+                return;
+              }
+              try {
+                const status = await playbackObj.setPositionAsync(
+                  Math.floor(value * playbackDuration)
+                );
+                updateState(context, {
+                  soundObj: status,
+                  playbackPosition: status.positionMillis,
+                });
+                await playbackObj.playAsync();
+              } catch (error) {
+                console.log("error inside onSlidingComplete callback", error);
+              }
+            }}
+          />
+          <View
+            style={{
+              paddingHorizontal: 25,
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text style={{ fontWeight: "500", color: colors.text }}>
+              {currentTime}
+            </Text>
+            <Text style={{ fontWeight: "500", color: colors.text }}>
+              {convertTime(playbackDuration)}
+            </Text>
+          </View>
         </View>
 
-        {/* Like, playlist */}
-        <View
-          style={{
-            // marginTop: 10,
-            paddingHorizontal: 20,
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            style={styles.controllerItem}
-            onPress={() => {
-              const flag = !isLike;
-              setLike(!isLike);
-              flag ? saveFavorite() : removeFavorite();
+        <View>
+          {/* Like, playlist */}
+          <View
+            style={{
+              // marginTop: 10,
+              paddingHorizontal: 20,
+              flexDirection: "row",
+              justifyContent: "space-around",
             }}
           >
-            <FontAwesome
-              name={isLike ? "heart" : "heart-o"}
-              size={25}
-              color={!isLike ? colors.text : colors.primary}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.controllerItem}
-            onPress={() => {
-              const flag = !isRepeat;
-              setRepeat(flag);
-              repeat(flag);
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() => {
+                const flag = !isLike;
+                setLike(!isLike);
+                flag ? saveFavorite() : removeFavorite();
+              }}
+            >
+              <FontAwesome
+                name={isLike ? "heart" : "heart-o"}
+                size={25}
+                color={!isLike ? colors.text : colors.primary}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() => {
+                const flag = !isRepeat;
+                setRepeat(flag);
+                repeat(flag);
+              }}
+            >
+              <MaterialCommunityIcons
+                name={isRepeat ? "repeat-once" : "repeat"}
+                size={25}
+                color={colors.text}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.controllerItem}>
+              <MaterialCommunityIcons
+                name="playlist-plus"
+                size={25}
+                color={colors.text}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() => {
+                navigation.navigate("Comment");
+              }}
+            >
+              <MaterialCommunityIcons
+                name="comment-text-outline"
+                size={25}
+                color={colors.text}
+              />
+            </TouchableOpacity>
+          </View>
+
+          {/* Controller */}
+          <View
+            style={{
+              paddingHorizontal: 20,
+              flexDirection: "row",
+              justifyContent: "space-around",
             }}
           >
-            <MaterialCommunityIcons
-              name={isRepeat ? "repeat-once" : "repeat"}
-              size={25}
-              color={colors.text}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.controllerItem}>
-            <MaterialCommunityIcons
-              name="playlist-plus"
-              size={25}
-              color={colors.text}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.controllerItem}
-            onPress={() => {
-              navigation.navigate("Comment");
-            }}
-          >
-            <MaterialCommunityIcons
-              name="comment-text-outline"
-              size={25}
-              color={colors.text}
-            />
-          </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() => {
+                changeSong(context, "previous");
+              }}
+            >
+              <AntDesign name="stepbackward" size={40} color={colors.text} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() => {
+                selectSong(context, currentAudio);
+              }}
+            >
+              <FontAwesome
+                name={isPlaying ? "pause-circle" : "play-circle"}
+                size={60}
+                color={colors.primary}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() => {
+                changeSong(context, "next");
+              }}
+            >
+              <AntDesign name="stepforward" size={40} color={colors.text} />
+            </TouchableOpacity>
+          </View>
         </View>
 
-        {/* Controller */}
-        <View
-          style={{
-            paddingHorizontal: 20,
-            flexDirection: "row",
-            justifyContent: "space-around",
-          }}
-        >
-          <TouchableOpacity
-            style={styles.controllerItem}
-            onPress={() => {
-              changeSong(context, "previous");
-            }}
-          >
-            <AntDesign name="stepbackward" size={40} color={colors.text} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.controllerItem}
-            onPress={() => {
-              selectSong(context, currentAudio);
-            }}
-          >
-            <FontAwesome
-              name={isPlaying ? "pause-circle" : "play-circle"}
-              size={60}
-              color={colors.primary}
-            />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.controllerItem}
-            onPress={() => {
-              changeSong(context, "next");
-            }}
-          >
-            <AntDesign name="stepforward" size={40} color={colors.text} />
-          </TouchableOpacity>
-        </View>
-
+        {/* Lyric */}
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Lyric");
@@ -363,7 +368,7 @@ const styles = StyleSheet.create({
   },
   sliderBar: {
     width: windowWidth - 20,
-    height: 40,
+    height: 30,
     alignSelf: "center",
   },
 });
