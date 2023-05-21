@@ -25,9 +25,9 @@ const Song = () => {
   const context = useContext(AudioContext);
   const { songData, soundObj, userId, updateState } = context;
 
-  useEffect(() => {
-    fetchRecentestSong(context);
-  }, []);
+  // useEffect(() => {
+  //   fetchRecentestSong(userId, context);
+  // }, []);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>

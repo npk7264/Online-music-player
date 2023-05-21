@@ -21,6 +21,7 @@ import AlbumDetail from "./src/components/AlbumDetail";
 import AddSong from "./src/screens/playlist/AddSong";
 import Favorite from "./src/screens/Favorite";
 import Recent from "./src/screens/Recent";
+import Comment from "./src/screens/comment/Comment";
 
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
@@ -62,6 +63,7 @@ export default function App() {
                 <Stack.Screen name="Search" component={Search} />
                 <Stack.Screen name="ArtistDetail" component={ArtistDetail} />
                 <Stack.Screen name="AlbumDetail" component={AlbumDetail} />
+                <Stack.Screen name="Comment" component={Comment} />
                 <Stack.Screen
                   name="DetailPlaylist"
                   component={DetailPlaylist}
