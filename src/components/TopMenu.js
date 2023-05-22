@@ -5,7 +5,7 @@ import Song from "../screens/Song";
 import Artist from "../screens/Artist";
 import SearchBar from "./SearchBar";
 import MiniPlayer from "./MiniPlayer";
-import Suggested from "./Suggested";
+import Suggested from "../screens/suggested/Suggested";
 import Albums from "./Albums";
 
 import { ThemeContext } from "../context/ThemeContext";
@@ -28,7 +28,7 @@ const TopMenu = () => {
       <SearchBar title={"mymusic"} />
 
       <Tab.Navigator
-        initialRouteName="Bài hát"
+        initialRouteName="Khám phá"
         screenOptions={{
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: "#ccc",
@@ -42,7 +42,7 @@ const TopMenu = () => {
           tabBarStyle: { backgroundColor: colors.background },
         }}
       >
-        {/* <Tab.Screen name="Khám phá" component={Suggested} /> */}
+        <Tab.Screen name="Khám phá" component={Suggested} />
         <Tab.Screen name="Bài hát" component={Song} />
         <Tab.Screen name="Ca sĩ" component={Artist} />
         <Tab.Screen name="Albums" component={Albums} />
