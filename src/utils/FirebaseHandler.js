@@ -7,7 +7,10 @@ import {
   setDoc,
   addDoc,
   updateDoc,
+  query,
+  where
 } from "firebase/firestore";
+
 import { Audio } from "expo-av";
 
 // FETCH ALL SONGS
@@ -130,3 +133,67 @@ export const updateRecentestPositon = async (userId, position, duration) => {
     alert("Failed to save recent song!", e);
   }
 };
+
+
+//Fetch all artist
+
+export const fetchAllArtist = async () => {
+  const querySnapshot = await getDocs(collection(db, "artists"));
+  const artistData = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    name: doc.data().name,
+    image: doc.data().image,
+    follower: doc.data().follower
+  }))
+  // console.log(artistData);
+  return artistData;
+}
+
+//Fetch 1 artist
+
+export const fetchOneArtist = async (address) => {
+  const docRef = doc(db, address);
+  const docSnap = await getDoc(docRef);
+  // console.log(docSnap.data(), docSnap.id)
+
+  const singer = {
+    name: docSnap.data().name,
+    follower: docSnap.data().follower,
+    image: docSnap.data().image
+  }
+
+  return singer;
+}
+
+//fetch all song of artist
+export const fetchSongOfArtist = async (idSigner) => {
+
+  const songRef = collection(db, "songs");
+  const q = query(songRef, where("artists", "array-contains", doc(db, `artists/${idSigner}`)));
+  const querySnapshot = await getDocs(q);
+  let songsArray = [];
+  for (const docRef of querySnapshot.docs) {
+    const songData = docRef.data();
+
+    // get singer
+    const signer = await getDoc(songData.artists[0]);
+    //get album
+    const album = await getDoc(songData.album);
+    //object song
+    const song = {
+      id: docRef.id,
+      name: songData.name,
+      uri: songData.url,
+      lyric: songData.lyric,
+      image: songData.image,
+      public: songData.public,
+      singer: signer.data().name,
+      idSinger: signer.id,
+      idAlbum: album.id,
+    }
+    songsArray.push(song);
+
+  }
+  return songsArray;
+
+}

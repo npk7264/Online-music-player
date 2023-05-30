@@ -73,7 +73,7 @@ export const selectSong = async (context, audio) => {
     playbackPosition,
   } = context;
   try {
-    console.log(audio)
+
     // playing audio for the first time.
     if (soundObj === null) {
       const status = await play(playbackObj, audio.uri, playbackPosition);
