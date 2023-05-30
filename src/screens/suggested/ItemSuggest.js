@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Image } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
+import { ThemeContext } from '../../context/ThemeContext'
 
 const ItemSuggest = ({ item }) => {
+    const { colors } = useContext(ThemeContext);
     return (
         <View style={styles.container}>
             <Image source={{ uri: item.image }} style={styles.poster} />
-            <Text style={[styles.text]}>{item.name}</Text>
+            <Text style={[styles.text, { color: colors.text }]}>{item.name}</Text>
         </View>
     )
 }

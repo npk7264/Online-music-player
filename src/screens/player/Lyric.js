@@ -2,18 +2,18 @@ import { StyleSheet, Text, View, SafeAreaView, ScrollView } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import BackBar from '../../components/BackBar';
 import { ThemeContext } from '../../context/ThemeContext';
-
+import { AudioContext } from '../../context/AudioContext';
 
 
 const Lyric = () => {
+    const { currentAudio } = useContext(AudioContext)
     const [fileContent, setFileContent] = useState('');
     const { colors } = useContext(ThemeContext);
     useEffect(() => {
-        const url = 'https://firebasestorage.googleapis.com/v0/b/musicapp-80f91.appspot.com/o/lyrics%2Fpop1.txt?alt=media&token=8cec7d24-fc76-4144-93e6-17845b9f4aa9'; // Đường link đến file txt
 
         const fetchFile = async () => {
             try {
-                const response = await fetch(url);
+                const response = await fetch(currentAudio.lyric);
                 const fileContent = await response.text();
                 setFileContent(fileContent);
             } catch (error) {

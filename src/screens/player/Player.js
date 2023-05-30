@@ -161,7 +161,7 @@ const Player = () => {
         {/* Artist name */}
         <View style={{ paddingBottom: 10 }}>
           <Text style={{ fontSize: 20, fontWeight: 400, color: colors.text }}>
-            {currentAudio.artists.join(" ft ")}
+            {currentAudio.singer}
           </Text>
         </View>
       </View>

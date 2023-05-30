@@ -13,10 +13,29 @@ import { Audio } from "expo-av";
 // FETCH ALL SONGS
 export const fetchSongs = async () => {
   const querySnapshot = await getDocs(collection(db, "songs"));
-  const songsArray = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
+  let songsArray = [];
+  for (const docRef of querySnapshot.docs) {
+    const songData = docRef.data();
+
+    // get singer
+    const signer = await getDoc(songData.artists[0]);
+    //get album
+    const album = await getDoc(songData.album);
+    //object song
+    const song = {
+      id: docRef.id,
+      name: songData.name,
+      uri: songData.url,
+      lyric: songData.lyric,
+      image: songData.image,
+      public: songData.public,
+      singer: signer.data().name,
+      idSinger: signer.id,
+      idAlbum: album.id,
+    }
+    songsArray.push(song);
+
+  }
   return songsArray;
 };
 
