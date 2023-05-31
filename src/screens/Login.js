@@ -15,6 +15,8 @@ import { auth, db } from "../services/firebaseConfig";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { fetchRecentestSong } from "../utils/FirebaseHandler";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Login = () => {
   const context = useContext(AudioContext);
   const { updateState } = context;
@@ -22,10 +24,18 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
+  const LoginFirebase = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
+
         const user = userCredential.user;
+        try {
+          await AsyncStorage.setItem('email', email);
+          await AsyncStorage.setItem('password', password);
+          console.log('save email and password user login');
+        } catch (error) {
+          console.error('Lỗi khi save email and password user login:', error);
+        }
         fetchRecentestSong(user.uid, context);
         navigation.replace("BottomMenu");
       })
@@ -34,16 +44,33 @@ const Login = () => {
         const errorMessage = error.message;
         alert(errorMessage);
       });
+  }
+
+  const handleLogin = () => {
+    LoginFirebase(auth, email, password);
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        fetchRecentestSong(user.uid, context);
-        navigation.replace("BottomMenu");
+    // const unsubscribe = auth.onAuthStateChanged((user) => {
+    //   if (user) {
+    //     fetchRecentestSong(user.uid, context);
+    //     navigation.replace("BottomMenu");
+    //   }
+    // });
+    // return unsubscribe;
+    const signInAuto = async () => {
+      try {
+        const mail = await AsyncStorage.getItem('email');
+        const pass = await AsyncStorage.getItem('password');
+        if (mail !== null && pass !== null) {
+          LoginFirebase(auth, mail, pass);
+          console.log('auto login complete');
+        }
+      } catch (error) {
+        console.error('Lỗi khi signInAuto:', error);
       }
-    });
-    return unsubscribe;
+    }
+    signInAuto();
   }, []);
 
   return (
