@@ -1,16 +1,29 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from "react-native";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import ArtistItem from "../components/ArtistItem";
-import { artist } from "../../data";
+// import { artist } from "../../data";
 import OptionModal from "../components/OptionModal";
 import { ThemeContext } from "../context/ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { optionSinger } from "../utils/optionModal"
-
+import { fetchAllArtist } from "../utils/FirebaseHandler";
 const Artist = () => {
   const { colors } = useContext(ThemeContext);
   const [currentSinger, setCurrentSinger] = useState(null);
+  const [artistData, setArtistData] = useState([]);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
+
+
+  // get all artist firebase
+  useEffect(() => {
+    const fetchData = async () => {
+      const artist_list = await fetchAllArtist();
+      setArtistData(artist_list);
+      // console.log(artist_list)
+    }
+    fetchData();
+  }, [])
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View
@@ -23,7 +36,7 @@ const Artist = () => {
       >
         <View style={{ justifyContent: "center" }}>
           <Text style={{ fontSize: 18, fontWeight: "500", color: colors.text }}>
-            20 ca sĩ
+            {artistData?.length} ca sĩ
           </Text>
         </View>
         <TouchableOpacity
@@ -53,11 +66,13 @@ const Artist = () => {
 
       {/* artist list */}
       <FlatList
-        data={artist}
+        data={artistData}
         renderItem={({ item }) => (
           <ArtistItem
+            id={item.id}
             name={item.name}
-            songs={item.songs}
+            image={item.image}
+            follower={item.follower}
             onPressOptionModal={() => {
               setOptionModalVisible(true);
               setCurrentSinger(item);

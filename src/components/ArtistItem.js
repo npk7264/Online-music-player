@@ -4,13 +4,13 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { ThemeContext } from '../context/ThemeContext';
 
-const ArtistItem = ({ name, songs, onPressOptionModal }) => {
+const ArtistItem = ({ id, name, image, follower, onPressOptionModal }) => {
     const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
     return (
         <TouchableOpacity
             style={[styles.container, { backgroundColor: colors.background }]}
-            onPress={() => navigation.navigate('ArtistDetail', { name, songs })}
+            onPress={() => navigation.navigate('ArtistDetail', { id, name, image, follower })}
         >
             <View style={styles.content}>
                 <View
@@ -22,7 +22,7 @@ const ArtistItem = ({ name, songs, onPressOptionModal }) => {
                 >
                     {/* Image */}
                     <Image
-                        source={{ uri: "https://img.mensxp.com/media/content/2020/Apr/Leading-B-Wood-Singers-Who-Lost-On-Reality-Shows1200_5ea7d3e1ba5f2.jpeg" }}
+                        source={{ uri: image }}
                         style={styles.poster}
                     />
 
@@ -31,7 +31,6 @@ const ArtistItem = ({ name, songs, onPressOptionModal }) => {
                         <Text style={{ fontSize: 18, color: colors.text }} numberOfLines={1}>
                             {name}
                         </Text>
-                        <Text style={{ fontSize: 16, color: "gray" }}>{songs?.length} bài hát</Text>
                     </View>
                 </View>
 

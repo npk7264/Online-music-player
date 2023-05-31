@@ -1,29 +1,56 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import BackBar from '../components/BackBar';
-
+import { fetchOneArtist, fetchSongOfArtist } from '../utils/FirebaseHandler';
 import { Ionicons } from "@expo/vector-icons";
-import SongItem from '../components/SongItem';
-import { songs } from '../../data';
+// import SongItem from '../components/SongItem';
+// import { songs } from '../../data';
 import FlatListSong from '../components/FlatListSong';
 
+import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
 
 const ArtistDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
-    const name = route.params.name;
-    const idSong = route.params.songs;
-    const listSongs = songs.filter(obj => idSong.includes(obj.id));
+    const { songData } = useContext(AudioContext);
+    const [artist, setArtist] = useState({});
+    const [listSong, setListSong] = useState([]);
+
+    const id = route.params.id;
+    const artistName = route.params.name;
+    const artistImage = route.params.image;
+    const follower = route.params.follower;
+
+    //fetch data singer
+    useEffect(() => {
+        // const fetchData = async () => {
+        //     const singer = await fetchOneArtist(`artists/${id}`);
+        //     const songData = await fetchSongOfArtist(id);
+        //     setListSong(songData)
+        //     setArtist(singer);
+        // }
+        // fetchData();
+        setArtist({
+            id,
+            name: artistName,
+            image: artistImage,
+            follower
+        })
+        const songs = songData?.filter(item => item.idSinger === id);
+        setListSong(songs)
+
+    }, [])
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <BackBar isSearch={true}></BackBar>
             <View style={styles.header}>
                 {/* info singer */}
                 <Image
-                    source={require("../../assets/temp.jpg")}
+                    source={{ uri: artist?.image }}
                     style={styles.poster} />
-                <Text style={[styles.singer, { color: colors.text }]}>{name}</Text>
-                <Text style={styles.numSong}>{songs.length} bài hát</Text>
+                <Text style={[styles.singer, { color: colors.text }]}>{artist?.name}</Text>
+                <Text style={styles.numSong}>{artist?.follower} người theo dõi</Text>
                 {/* button */}
                 <View style={styles.buttons}>
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
@@ -41,7 +68,7 @@ const ArtistDetail = ({ route }) => {
 
             {/* list song */}
             <FlatListSong
-                songs={listSongs}
+                songs={listSong}
             />
         </SafeAreaView>
     )

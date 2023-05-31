@@ -24,6 +24,8 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const SECTIONS = [
   {
     header: "Profile",
@@ -110,7 +112,7 @@ const Setting = () => {
 
   const dangxuat = () => {
     signOut(auth)
-      .then(() => {
+      .then(async () => {
         if (isPlaying) selectSong(context, currentAudio);
         updateState(context, {
           currentAudio: null,
@@ -120,6 +122,13 @@ const Setting = () => {
           playbackPosition: null,
           playbackDuration: null,
         });
+        try {
+          await AsyncStorage.removeItem('email');
+          await AsyncStorage.removeItem('password');
+          console.log('setup email and password = null log out');
+        } catch (error) {
+          console.error('Lỗi khi setup email and password user log out: ', error);
+        }
         navigation.navigate("Login");
       })
       .catch((error) => {
@@ -151,7 +160,7 @@ const Setting = () => {
                   <TouchableOpacity
                     key={id}
                     onPress={() => {
-                      id == "logOut" ? dangxuat() : alert("");
+                      id == "logOut" ? dangxuat() : alert(id);
                     }}
                   >
                     <View

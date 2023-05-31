@@ -8,7 +8,7 @@ import {
 } from "react-native";
 import { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
@@ -23,13 +23,21 @@ const Register = () => {
 
   const handleRegister = () => {
     createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
         setDoc(doc(db, "users", user.uid), {
           name: name,
           favorite: [],
           recently: [],
         });
+
+        try {
+          await AsyncStorage.setItem('email', email);
+          await AsyncStorage.setItem('password', password);
+          console.log('save email and password user signup');
+        } catch (error) {
+          console.error('Lỗi khi save email and password user signup:', error);
+        }
         alert("Đăng ký tài khoản thành công!");
         navigation.replace("Login");
       })
@@ -40,7 +48,7 @@ const Register = () => {
       });
   };
 
-  useEffect(() => {}, []);
+  useEffect(() => { }, []);
 
   return (
     <SafeAreaView

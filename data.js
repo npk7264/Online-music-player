@@ -2,7 +2,7 @@ export const songs = [
   {
     id: 1,
     name: "Shape of You",
-    singer: ["Ed Sheeran"],
+    artists: ["Ed Sheeran"],
     time: "3:54",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop1.mp3"),
@@ -10,7 +10,7 @@ export const songs = [
   {
     id: 2,
     name: "Uptown Funk",
-    singer: ["Mark Ronson", " Bruno Mars"],
+    artists: ["Mark Ronson", " Bruno Mars"],
     time: "4:30",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop2.mp3"),
@@ -18,7 +18,7 @@ export const songs = [
   {
     id: 3,
     name: "Sugar",
-    singer: ["Maroon 5"],
+    artists: ["Maroon 5"],
     time: "3:56",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop3.mp3"),
@@ -26,7 +26,7 @@ export const songs = [
   {
     id: 4,
     name: "Closer",
-    singer: ["The Chainsmokers ", "Halsey"],
+    artists: ["The Chainsmokers ", "Halsey"],
     time: "4:05",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop4.mp3"),
@@ -34,7 +34,7 @@ export const songs = [
   {
     id: 5,
     name: "Girls Like You",
-    singer: ["Maroon 5", " Cardi B"],
+    artists: ["Maroon 5", " Cardi B"],
     time: "3:56",
     image: 'https://daily.jstor.org/wp-content/uploads/2023/01/good_times_with_bad_music_1050x700.jpg',
     uri: require("./assets/pop5.mp3"),

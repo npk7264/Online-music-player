@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import { useState, useContext } from "react";
+import { useState, useContext, } from "react";
 import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -40,7 +40,7 @@ const SongItem = (props) => {
               {props.info.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
-              {props.info.artists.join(" ft ")}
+              {props.info.singer}
             </Text>
           </View>
         </View>

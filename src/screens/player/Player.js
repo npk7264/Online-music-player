@@ -140,6 +140,7 @@ const Player = () => {
   }, [currentAudio, soundObj]);
 
   return (
+
     <SafeAreaView style={{ backgroundColor: colors.background, flex: 1 }}>
       <StatusBar></StatusBar>
       <BackBar />
@@ -160,7 +161,7 @@ const Player = () => {
         {/* Artist name */}
         <View style={{ paddingBottom: 10 }}>
           <Text style={{ fontSize: 20, fontWeight: 400, color: colors.text }}>
-            {currentAudio.artists.join(" ft ")}
+            {currentAudio.singer}
           </Text>
         </View>
       </View>
@@ -370,5 +371,19 @@ const styles = StyleSheet.create({
     width: windowWidth - 20,
     height: 30,
     alignSelf: "center",
+  },
+  viewLyric: {
+    // height: 30,
+    // width: 100,
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  buttonLyric: {
+    borderRadius: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 150,
+    height: 40,
   },
 });
