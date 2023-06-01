@@ -1,29 +1,39 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import BackBar from '../components/BackBar';
 
 import { Ionicons } from "@expo/vector-icons";
-import SongItem from '../components/SongItem';
-import { songs } from '../../data';
+
 import FlatListSong from './FlatListSong';
 import { ThemeContext } from '../context/ThemeContext';
+import { AudioContext } from '../context/AudioContext';
 
 const AlbumDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
+    const { songData } = useContext(AudioContext);
+    const [listSong, setListSong] = useState([]);
     const name = route.params.name;
     const singer = route.params.singer;
-    const idSong = route.params.songs;
-    const listSongs = songs.filter(obj => idSong.includes(obj.id));
+    const image = route.params.image;
+    const id = route.params.id;
+    const idSinger = route.params.idSinger;
+
+    useEffect(() => {
+        const songs = songData?.filter(item => item.idAlbum === id);
+        setListSong(songs)
+    }, [])
+
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <BackBar isSearch={true}></BackBar>
             <View style={styles.header}>
                 {/* info singer */}
                 <Image
-                    source={require("../../assets/temp.jpg")}
+                    source={{ uri: image }}
                     style={styles.poster} />
-                <Text style={[styles.singer, { color: colors.text }]}>{name}</Text>
-                <Text style={styles.numSong}>{songs.length} bài hát</Text>
+                <Text style={[styles.nameAlbum, { color: colors.text }]}>{name}</Text>
+                <Text style={styles.singer}> {singer}</Text>
+                <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
                 {/* button */}
                 <View style={styles.buttons}>
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
@@ -41,7 +51,7 @@ const AlbumDetail = ({ route }) => {
 
             {/* list song */}
             <FlatListSong
-                songs={listSongs}
+                songs={listSong}
             />
         </SafeAreaView>
     )
@@ -65,9 +75,14 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 35,
     },
-    singer: {
+    nameAlbum: {
         fontSize: 28,
         fontWeight: '900',
+        marginTop: 10,
+        fontFamily: 'sans-serif',
+    },
+    singer: {
+        fontSize: 20,
         marginTop: 10,
         fontFamily: 'sans-serif',
     },

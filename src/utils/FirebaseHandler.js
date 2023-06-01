@@ -197,3 +197,29 @@ export const fetchSongOfArtist = async (idSigner) => {
   return songsArray;
 
 }
+
+
+//fetch all album
+export const fetchAllAlbum = async () => {
+  const querySnapshot = await getDocs(collection(db, "albums"));
+  let albumData = [];
+  for (const docRef of querySnapshot.docs) {
+    const album = docRef.data();
+
+    // get singer
+    const signer = await getDoc(album.singer);
+    //object song
+    const song = {
+      id: docRef.id,
+      name: album.name,
+      image: album.image,
+      singer: signer.data().name,
+      idSinger: signer.id,
+      public: album.public
+    }
+    albumData.push(song);
+
+  }
+  // console.log(artistData);
+  return albumData;
+}
