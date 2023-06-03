@@ -17,7 +17,7 @@ const SongItem = (props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.container, { backgroundColor: colors.backgorund }]}
+      style={[styles.container, { backgroundColor: colors.background }]}
       onPress={async () => await selectSong(contextAudio, props.info)}
     >
       <View style={styles.content}>

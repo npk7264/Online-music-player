@@ -17,6 +17,7 @@ const Artist = () => {
   // get all artist firebase
   useEffect(() => {
     const fetchData = async () => {
+      console.log('fetch all artist ');
       const artist_list = await fetchAllArtist();
       setArtistData(artist_list);
       // console.log(artist_list)

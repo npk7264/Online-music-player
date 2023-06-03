@@ -8,7 +8,9 @@ import {
   addDoc,
   updateDoc,
   query,
-  where
+  where,
+  orderBy,
+  limit
 } from "firebase/firestore";
 
 import { Audio } from "expo-av";
@@ -222,4 +224,36 @@ export const fetchAllAlbum = async () => {
   }
   // console.log(artistData);
   return albumData;
+}
+
+//fetch top song
+export const fetchTopSong = async () => {
+  const songsRef = collection(db, "songs");
+  const q = query(songsRef, orderBy("view", 'desc'), limit(20));
+  const querySnapshot = await getDocs(q);
+  let songsArray = [];
+  for (const docRef of querySnapshot.docs) {
+    const songData = docRef.data();
+
+    // get singer
+    const signer = await getDoc(songData.artists[0]);
+    //get album
+    const album = await getDoc(songData.album);
+    //object song
+    const song = {
+      id: docRef.id,
+      name: songData.name,
+      uri: songData.url,
+      lyric: songData.lyric,
+      image: songData.image,
+      public: songData.public,
+      singer: signer.data().name,
+      idSinger: signer.id,
+      idAlbum: album.id,
+      view: songData.view
+    }
+    songsArray.push(song);
+  }
+  return songsArray;
+
 }

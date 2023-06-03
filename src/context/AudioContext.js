@@ -54,6 +54,7 @@ export class AudioProvider extends Component {
   };
 
   async componentDidMount() {
+    console.log('to context fetchSong');
     const songs = await fetchSongs();
 
     // PHÁT NỀN
