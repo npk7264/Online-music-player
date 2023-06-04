@@ -52,7 +52,11 @@ const Playlist = () => {
     setLoaded(true);
   };
   const checkPlaylist = () => {
-    fetchPlaylist();
+    const check = async () => {
+      await fetchPlaylist();
+      setAddPlaylist(false);
+    }
+    check();
   };
 
   useEffect(() => {
@@ -119,6 +123,7 @@ const Playlist = () => {
                   name={item.name}
                   numSong={item.numSong}
                 />
+
               );
             }
           }}

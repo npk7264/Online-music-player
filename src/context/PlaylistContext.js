@@ -28,27 +28,28 @@ export const PlaylistProvider = ({ children }) => {
     const filterSong = (listSong) => {
         const song = songData?.filter(obj => listSong.includes(obj.id));
         setRenderSong(song);
-        console.log('filterSong')
+        // console.log('filterSong')
     }
 
-    const updatePlaylist = (id) => {
+    const updatePlaylist = async (id) => {
         setIdPlaylist(id)
-        fetchPlaylist(id);
+        await fetchPlaylist(id);
     }
     const updateListSong = (song) => { setSongs([...songs, song]) }
 
     const setListSong = (list) => {
         setSongs([...list])
-        console.log('set listsong')
+        // console.log('set listsong')
     }
-    const handleAddSong = (idSong) => {
+    const handleAddSong = async (idSong) => {
 
         const index = songs.indexOf(idSong);
         if (index > -1) {
             const newSongs = [...songs];
             newSongs.splice(index, 1);
             setSongs(newSongs);
-            console.log(newSongs)
+            // console.log(newSongs)
+            await DeleteSongToPlaylist(newSongs);
         }
         else {
             AddSongToPlaylist(idSong);
@@ -59,7 +60,7 @@ export const PlaylistProvider = ({ children }) => {
     const fetchPlaylist = async (id) => {
         const playlistArray = await getDoc(doc(db, `users/${userId}/playlist/${id}`));
         setPlaylistData({ ...playlistArray.data() });
-        console.log('fetch ne');
+        // console.log('fetch ne');
 
         setListSong(playlistArray.data().listSong);
         filterSong(playlistArray.data().listSong);
@@ -76,9 +77,22 @@ export const PlaylistProvider = ({ children }) => {
                 numSong: songs.length + 1,
             });
         } catch (e) {
-            alert("Failed to save favorite song!", e);
+            alert("Failed to add to playlist!", e);
         }
     };
+
+    const DeleteSongToPlaylist = async (newListSong) => {
+        const docRef = doc(db, `users/${userId}/playlist/${idPlaylist}`);
+        try {
+            //setSongs([...songs, idSong]);
+            await updateDoc(docRef, {
+                listSong: [...newListSong],
+                numSong: newListSong.length,
+            });
+        } catch (e) {
+            alert("Failed to delete to playlist!", e);
+        }
+    }
 
     const theme = {
         idPlaylist: idPlaylist,

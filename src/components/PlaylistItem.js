@@ -17,7 +17,7 @@ const PlaylistItem = ({ type, name, id, numSong }) => {
   useEffect(() => {
     if (id === idPlaylist) {
       setNumberSong(listSong.length)
-      console.log('update', id, name)
+      // console.log('update', id, name)
     }
   }, [isFocused])
 
