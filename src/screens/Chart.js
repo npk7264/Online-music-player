@@ -44,7 +44,16 @@ const Chart = () => {
 
   async function updataSongData() {
     const songDataHaveUpdateView = await fetchTopSong();
-    setSongs(songDataHaveUpdateView);
+    // console.log(songDataHaveUpdateView)
+    const filteredArray = songDataHaveUpdateView
+      .map(itemB => {
+        const itemA = songData.find(itemA => itemA.id === itemB.id);
+        return itemA ? { ...itemA, view: itemB.view } : null;
+      })
+      .filter(item => item !== null);
+
+    console.log(filteredArray)
+    setSongs(filteredArray);
     setLoaded(true);
   }
 
@@ -125,7 +134,7 @@ const Chart = () => {
             <View style={styles.viewTextRank}>
               <Text
                 style={
-                  index <= 4
+                  index <= 2
                     ? styles.topRank
                     : [styles.numRank, { color: colors.text }]
                 }
@@ -135,7 +144,7 @@ const Chart = () => {
             </View>
             <SongItem
               info={item}
-              time={item.time}
+              // time={item.time}
               onPressOptionModal={() => {
                 setOptionModalVisible(true);
                 setCurrentItem(item);

@@ -1,9 +1,8 @@
 import { StatusBar } from "expo-status-bar";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
-import { auth } from "./src/services/firebaseConfig";
 
 import { createStackNavigator } from "@react-navigation/stack";
 import { NavigationContainer } from "@react-navigation/native";
@@ -26,10 +25,139 @@ import Comment from "./src/screens/comment/Comment";
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { PlaylistProvider } from "./src/context/PlaylistContext";
+
+import { fetchSongs, fetchAllAlbum, fetchAllArtist } from "./src/utils/FirebaseHandler";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SplashScreen from 'expo-splash-screen';
+
+import { auth, db } from "./src/services/firebaseConfig";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+  addDoc,
+  updateDoc,
+  query,
+  where,
+  orderBy,
+  limit
+} from "firebase/firestore";
+
+
 const Stack = createStackNavigator();
+SplashScreen.preventAutoHideAsync();
+
 
 export default function App() {
   const [initScreen, setInitScreen] = useState("Login");
+  const [appIsReady, setAppIsReady] = useState(false);
+  const [songData, setSongData] = useState([]);
+  const [singerData, setSingerData] = useState([]);
+  const [albumData, setAlbumData] = useState([]);
+
+
+  const checkSong = async () => {
+    try {
+      //goi listSong từ AsyncStorage
+      const data = await AsyncStorage.getItem('listSong');
+      const listSong = data ? JSON.parse(data) : null;
+
+      //tạo mảng các id songs từ firestore
+      const querySnapshot = await getDocs(collection(db, "songs"));
+      const songIds = querySnapshot.docs.map((doc) => doc.id);
+
+      //nếu mảng id song gọi từ firestore có thay đổi so với dữ liệu từ storage thì nạp lại data
+      const isContained = listSong !== null ? listSong.every(obj => songIds.includes(obj.id)) : false;
+      // console.log(listSong)
+      if (songIds.length !== listSong?.length || !isContained) {
+        const data = await fetchSongs();
+        setSongData(data);
+        //lưu dữ liệu từ firestore vào AsyncStorage
+        await AsyncStorage.setItem('listSong', JSON.stringify(data));
+      }
+      else
+        setSongData(listSong)
+      console.log('checkSong')
+    } catch (error) {
+      console.error('checkSong:', error);
+    }
+  }
+
+  const checkSinger = async () => {
+    try {
+      //goi listSinger từ AsyncStorage
+      const data = await AsyncStorage.getItem('listSinger');
+      const listSinger = data ? JSON.parse(data) : null;
+
+      //tạo mảng các id singer từ firestore
+      const querySnapshot = await getDocs(collection(db, "artists"));
+      const singerIds = querySnapshot.docs.map((doc) => doc.id);
+
+      //nếu mảng id song gọi từ firestore có thay đổi so với dữ liệu từ storage thì nạp lại data
+      const isContained = listSinger !== null ? listSinger.every(obj => singerIds.includes(obj.id)) : false;
+      if (singerIds.length !== listSinger?.length || !isContained) {
+        const data = await fetchAllArtist();
+        setSingerData(data);
+        // console.log(data);
+        //lưu dữ liệu từ firestore vào AsyncStorage
+        await AsyncStorage.setItem('listSinger', JSON.stringify(data));
+      }
+      else
+        setSingerData(listSinger);
+      console.log('checkSinger');
+    } catch (error) {
+      console.error('checkSinger:', error);
+    }
+  }
+
+  const checkAlbum = async () => {
+    try {
+      //goi listAlbum từ AsyncStorage
+      const data = await AsyncStorage.getItem('listAlbum');
+      const listAlbum = data ? JSON.parse(data) : null;
+
+      //tạo mảng các id album từ firestore
+      const querySnapshot = await getDocs(collection(db, "albums"));
+      const albumIds = querySnapshot.docs.map((doc) => doc.id);
+
+      //nếu mảng id song gọi từ firestore có thay đổi so với dữ liệu từ storage thì nạp lại data
+      const isContained = listAlbum !== null ? listAlbum.every(obj => albumIds.includes(obj.id)) : false;
+      if (albumIds.length !== listAlbum?.length || !isContained) {
+        const data = await fetchAllAlbum();
+        setAlbumData(data);
+        //lưu dữ liệu từ firestore vào AsyncStorage
+        await AsyncStorage.setItem('listAlbum', JSON.stringify(data));
+      }
+      else
+        setAlbumData(listAlbum);
+      console.log('checkAlbum');
+    } catch (error) {
+      console.error('checkAlbum:', error);
+    }
+  }
+
+
+  useEffect(() => {
+    async function prepare() {
+      try {
+        await checkSong();
+        await checkSinger();
+        await checkAlbum();
+
+      } catch (e) {
+        console.warn('prepare data', e);
+      } finally {
+        // Tell the application to render
+        console.log('set app is ready true')
+        setAppIsReady(true);
+      }
+    }
+
+    prepare();
+  }, []);
 
   // useEffect(() => {
   //   const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -44,11 +172,23 @@ export default function App() {
   //   return unsubscribe;
   // }, []);
 
+
+  const onLayoutRootView = useCallback(async () => {
+    if (appIsReady) {
+      await SplashScreen.hideAsync();
+    }
+  }, [appIsReady]);
+
+  if (!appIsReady) {
+    return null;
+  }
+
   return (
-    <AudioProvider>
+    <AudioProvider songData={songData} albumData={albumData} singerData={singerData} >
+      {/* {console.log(songData)} */}
       <ThemeProvider>
         <PlaylistProvider>
-          <SafeAreaProvider>
+          <SafeAreaProvider onLayout={onLayoutRootView}>
             <NavigationContainer>
               <Stack.Navigator
                 initialRouteName="Login"
@@ -76,7 +216,7 @@ export default function App() {
           </SafeAreaProvider>
         </PlaylistProvider>
       </ThemeProvider>
-    </AudioProvider>
+    </AudioProvider >
   );
 }
 

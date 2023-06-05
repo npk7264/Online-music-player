@@ -19,7 +19,9 @@ export class AudioProvider extends Component {
     super(props);
     this.state = {
       userId: null,
-      songData: [],
+      songData: props.songData || [],
+      singerData: props.singerData || [],
+      albumData: props.albumData || [],
       playbackObj: null,
       soundObj: null,
       currentAudio: null,
@@ -54,8 +56,8 @@ export class AudioProvider extends Component {
   };
 
   async componentDidMount() {
-    console.log('to context fetchSong');
-    const songs = await fetchSongs();
+    // console.log('to context fetchSong');
+    // const songs = await fetchSongs();
 
     // PHÁT NỀN
     await Audio.setAudioModeAsync({
@@ -64,7 +66,7 @@ export class AudioProvider extends Component {
     if (this.state.playbackObj === null) {
       await this.setState({
         ...this.state,
-        songData: songs,
+        // songData: songs,
         playbackObj: new Audio.Sound(),
       });
     }
@@ -78,6 +80,8 @@ export class AudioProvider extends Component {
     const {
       userId,
       songData,
+      singerData,
+      albumData,
       playbackObj,
       soundObj,
       currentAudio,
