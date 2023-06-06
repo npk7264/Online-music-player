@@ -29,7 +29,7 @@ import {
 import { Image } from "react-native-svg";
 import OptionModal from "../components/OptionModal";
 import { optionSong } from "../utils/optionModal";
-import { fetchSongs } from "../utils/FirebaseHandler";
+import { fetchTopSong } from "../utils/FirebaseHandler";
 
 const Chart = () => {
   const context = useContext(AudioContext);
@@ -40,11 +40,20 @@ const Chart = () => {
   const [songs, setSongs] = useState([]);
   const [loaded, setLoaded] = useState(false);
 
-  console.log("CHART render");
+  // console.log("CHART render");
 
   async function updataSongData() {
-    const songDataHaveUpdateView = await fetchSongs();
-    setSongs(songDataHaveUpdateView);
+    const songDataHaveUpdateView = await fetchTopSong();
+    // console.log(songDataHaveUpdateView)
+    const filteredArray = songDataHaveUpdateView
+      .map(itemB => {
+        const itemA = songData.find(itemA => itemA.id === itemB.id);
+        return itemA ? { ...itemA, view: itemB.view } : null;
+      })
+      .filter(item => item !== null);
+
+    console.log(filteredArray)
+    setSongs(filteredArray);
     setLoaded(true);
   }
 
@@ -65,7 +74,7 @@ const Chart = () => {
 
       <SearchBar title={"Thịnh hành"} />
 
-      {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
+      {!loaded && <View style={styles.container}><ActivityIndicator size="large" color={colors.primary} /></View>}
       {loaded && (
         <View
           style={{
@@ -91,7 +100,7 @@ const Chart = () => {
             />
             {/* <VictoryAxis tickLabelComponent={<SongBarLabel />} /> */}
             <VictoryBar
-              data={songs.sort((a, b) => b.view - a.view).slice(0, 5)}
+              data={songs.slice(0, 5)}
               x={(datum) =>
                 datum.name.length > 10
                   ? `${datum.name.slice(0, 10)}...`
@@ -112,28 +121,30 @@ const Chart = () => {
                   style={{ fontSize: 12 }}
                 />
               }
-              // labelComponent={<SongBarLabel />}
+            // labelComponent={<SongBarLabel />}
             />
           </VictoryChart>
         </View>
       )}
 
       <FlatList
-        data={songs.sort((a, b) => b.view - a.view)}
+        data={songs}
         renderItem={({ item, index }) => (
           <View style={styles.rank}>
-            <Text
-              style={
-                index <= 4
-                  ? styles.topRank
-                  : [styles.numRank, { color: colors.text }]
-              }
-            >
-              {index + 1}
-            </Text>
+            <View style={styles.viewTextRank}>
+              <Text
+                style={
+                  index <= 2
+                    ? styles.topRank
+                    : [styles.numRank, { color: colors.text }]
+                }
+              >
+                {index + 1}
+              </Text>
+            </View>
             <SongItem
               info={item}
-              time={item.time}
+              // time={item.time}
               onPressOptionModal={() => {
                 setOptionModalVisible(true);
                 setCurrentItem(item);
@@ -157,20 +168,31 @@ const Chart = () => {
 export default Chart;
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
   rank: {
     flex: 1,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
   },
+  viewTextRank: {
+    width: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+    // backgroundColor: 'red',
+  },
   numRank: {
-    marginLeft: 20,
-    marginRight: 5,
+    marginLeft: 15,
+    // marginRight: 5,
     fontSize: 20,
   },
   topRank: {
-    marginLeft: 20,
-    marginRight: 2,
+    marginLeft: 15,
+    // marginRight: 2,
     fontSize: 25,
     color: color.primary,
     fontWeight: 900,

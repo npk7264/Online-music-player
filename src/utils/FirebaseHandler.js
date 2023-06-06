@@ -8,10 +8,15 @@ import {
   addDoc,
   updateDoc,
   query,
-  where
+  where,
+  orderBy,
+  limit
 } from "firebase/firestore";
 
 import { Audio } from "expo-av";
+
+
+
 
 // FETCH ALL SONGS
 export const fetchSongs = async () => {
@@ -28,13 +33,13 @@ export const fetchSongs = async () => {
     const song = {
       id: docRef.id,
       name: songData.name,
-      uri: songData.url,
-      lyric: songData.lyric,
       image: songData.image,
       public: songData.public,
       singer: signer.data().name,
       idSinger: signer.id,
       idAlbum: album.id,
+      uri: songData.url,
+      lyric: songData.lyric,
     }
     songsArray.push(song);
 
@@ -97,11 +102,11 @@ export const fetchUser = async (userId, setUserName) => {
 
 export const fetchRecentestSong = async (userId, context) => {
   const { songData, updateState } = context;
-  const songs = await fetchSongs();
+  // const songs = await fetchSongs();
   const data = await fetchRecent(doc(db, "users/" + userId));
   let recentList = data.recently;
   const recentestSong =
-    recentList != [] ? songs.find((item) => item.id == recentList[0]) : {};
+    recentList != [] ? songData.find((item) => item.id == recentList[0]) : {};
 
   // PHÁT NỀN
   await Audio.setAudioModeAsync({
@@ -111,7 +116,7 @@ export const fetchRecentestSong = async (userId, context) => {
   await updateState(context, {
     userId: userId,
     soundObj: null,
-    songData: songs,
+    // songData: songs,
     currentAudio: recentestSong,
     playbackObj: new Audio.Sound(),
     playbackPosition: data.songPosition ? data.songPosition : null,
@@ -197,3 +202,54 @@ export const fetchSongOfArtist = async (idSigner) => {
   return songsArray;
 
 }
+
+
+//fetch all album
+export const fetchAllAlbum = async () => {
+  const querySnapshot = await getDocs(collection(db, "albums"));
+  let albumData = [];
+  for (const docRef of querySnapshot.docs) {
+    const album = docRef.data();
+
+    // get singer
+    const signer = await getDoc(album.singer);
+    //object song
+    const song = {
+      id: docRef.id,
+      name: album.name,
+      image: album.image,
+      singer: signer.data().name,
+      idSinger: signer.id,
+      public: album.public
+    }
+    albumData.push(song);
+
+  }
+  // console.log(artistData);
+  return albumData;
+}
+
+//fetch top song
+export const fetchTopSong = async () => {
+  const songsRef = collection(db, "songs");
+  const q = query(songsRef, orderBy("view", 'desc'), limit(10));
+  const querySnapshot = await getDocs(q);
+  let songsArray = [];
+  for (const docRef of querySnapshot.docs) {
+    const songData = docRef.data();
+
+    // // get singer
+    // const signer = await getDoc(songData.artists[0]);
+    // //get album
+    // const album = await getDoc(songData.album);
+    //object song
+    const song = {
+      id: docRef.id,
+      view: songData.view
+    }
+    songsArray.push(song);
+  }
+  return songsArray;
+
+}
+

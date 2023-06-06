@@ -3,23 +3,22 @@ import React, { useContext } from 'react'
 import { useNavigation } from "@react-navigation/native";
 import { ThemeContext } from '../context/ThemeContext';
 
-const AlbumItem = ({ name, songs, singer }) => {
+const AlbumItem = ({ name, singer, id, image, idSinger }) => {
     const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() => navigation.navigate('AlbumDetail', { name, songs })}>
+            onPress={() => navigation.navigate('AlbumDetail', { name, singer, id, image, idSinger })}>
             {/* Image */}
             <Image
-                source={require("../../assets/poster_music.png")}
+                source={{ uri: image }}
                 style={styles.poster}
             />
             {/* info */}
             <View style={styles.info}>
                 <Text style={[styles.name, { color: colors.text }]} >{name}</Text>
                 <Text style={styles.singer}>{singer}</Text>
-                <Text style={styles.numSong}>{songs?.length} bài hát</Text>
             </View>
         </TouchableOpacity>
     )

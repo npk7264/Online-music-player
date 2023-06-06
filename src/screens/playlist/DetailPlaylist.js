@@ -60,7 +60,7 @@ const DetailPlaylist = () => {
         <FlatListSong
           songs={renderSong}
         />}
-      {console.log(renderSong.length, listSong, idPlaylist, playlistData)}
+      {/* {console.log(renderSong.length, listSong, idPlaylist, playlistData)} */}
     </SafeAreaView>
   );
 };

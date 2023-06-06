@@ -161,6 +161,7 @@ const Setting = () => {
                     key={id}
                     onPress={() => {
                       id == "logOut" ? dangxuat() : alert(id);
+                      id == "darkMode" ? toggleTheme() : alert(id)
                     }}
                   >
                     <View
