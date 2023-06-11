@@ -27,25 +27,10 @@ import { ThemeProvider } from "./src/context/ThemeContext";
 import { PlaylistProvider } from "./src/context/PlaylistContext";
 import { DataProvider } from "./src/context/DataContext";
 
-import { fetchSongs, fetchAllAlbum, fetchAllArtist, loadSongs } from "./src/utils/FirebaseHandler";
+import { loadSinger, loadSongs, loadAlbum } from "./src/utils/FirebaseHandler";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as SplashScreen from 'expo-splash-screen';
 
-import { auth, db } from "./src/services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  addDoc,
-  updateDoc,
-  query,
-  where,
-  orderBy,
-  limit
-} from "firebase/firestore";
 
 
 const Stack = createStackNavigator();
@@ -59,101 +44,22 @@ export default function App() {
   const [singerData, setSingerData] = useState([]);
   const [albumData, setAlbumData] = useState([]);
   const [lastVisibleSong, setLastVisibleSong] = useState(null);
-
-  // const checkSong = async () => {
-  //   try {
-  //     //goi listSong từ AsyncStorage
-  //     const data = await AsyncStorage.getItem('listSong');
-  //     const listSong = data ? JSON.parse(data) : null;
-
-  //     //tạo mảng các id songs từ firestore
-  //     const querySnapshot = await getDocs(collection(db, "songs"));
-  //     const songIds = querySnapshot.docs.map((doc) => doc.id);
-
-  //     //nếu mảng id song gọi từ firestore có thay đổi so với dữ liệu từ storage thì nạp lại data
-  //     const isContained = listSong !== null ? listSong.every(obj => songIds.includes(obj.id)) : false;
-  //     // console.log(listSong)
-  //     if (songIds.length !== listSong?.length || !isContained) {
-  //       const data = await fetchSongs();
-  //       setSongData(data);
-  //       //lưu dữ liệu từ firestore vào AsyncStorage
-  //       await AsyncStorage.setItem('listSong', JSON.stringify(data));
-  //     }
-  //     else
-  //       setSongData(listSong)
-  //     console.log('checkSong')
-  //   } catch (error) {
-  //     console.error('checkSong:', error);
-  //   }
-  // }
-
-  // const checkSinger = async () => {
-  //   try {
-  //     //goi listSinger từ AsyncStorage
-  //     const data = await AsyncStorage.getItem('listSinger');
-  //     const listSinger = data ? JSON.parse(data) : null;
-
-  //     //tạo mảng các id singer từ firestore
-  //     const querySnapshot = await getDocs(collection(db, "artists"));
-  //     const singerIds = querySnapshot.docs.map((doc) => doc.id);
-
-  //     //nếu mảng id song gọi từ firestore có thay đổi so với dữ liệu từ storage thì nạp lại data
-  //     const isContained = listSinger !== null ? listSinger.every(obj => singerIds.includes(obj.id)) : false;
-  //     if (singerIds.length !== listSinger?.length || !isContained) {
-  //       const data = await fetchAllArtist();
-  //       setSingerData(data);
-  //       // console.log(data);
-  //       //lưu dữ liệu từ firestore vào AsyncStorage
-  //       await AsyncStorage.setItem('listSinger', JSON.stringify(data));
-  //     }
-  //     else
-  //       setSingerData(listSinger);
-  //     console.log('checkSinger');
-  //   } catch (error) {
-  //     console.error('checkSinger:', error);
-  //   }
-  // }
-
-  // const checkAlbum = async () => {
-  //   try {
-  //     //goi listAlbum từ AsyncStorage
-  //     const data = await AsyncStorage.getItem('listAlbum');
-  //     const listAlbum = data ? JSON.parse(data) : null;
-
-  //     //tạo mảng các id album từ firestore
-  //     const querySnapshot = await getDocs(collection(db, "albums"));
-  //     const albumIds = querySnapshot.docs.map((doc) => doc.id);
-
-  //     //nếu mảng id song gọi từ firestore có thay đổi so với dữ liệu từ storage thì nạp lại data
-  //     const isContained = listAlbum !== null ? listAlbum.every(obj => albumIds.includes(obj.id)) : false;
-  //     if (albumIds.length !== listAlbum?.length || !isContained) {
-  //       const data = await fetchAllAlbum();
-  //       setAlbumData(data);
-  //       //lưu dữ liệu từ firestore vào AsyncStorage
-  //       await AsyncStorage.setItem('listAlbum', JSON.stringify(data));
-  //     }
-  //     else
-  //       setAlbumData(listAlbum);
-  //     console.log('checkAlbum');
-  //   } catch (error) {
-  //     console.error('checkAlbum:', error);
-  //   }
-  // }
-
+  const [lastVisibleSinger, setLastVisibleSinger] = useState(null);
+  const [lastVisibleAlbum, setLastVisibleAlbum] = useState(null);
 
   useEffect(() => {
     async function prepare() {
       try {
-        // await checkSong();
-        // await checkSinger();
-        // await checkAlbum();
         const [data, lastVisible] = await loadSongs(songData, 10, lastVisibleSong);
         setSongData(data);
-        setLastVisibleSong(lastVisible)
-        // console.log(data[0])
-        const data2 = await fetchAllArtist();
+        setLastVisibleSong(lastVisible);
+
+        const [data2, lastVisible2] = await loadSinger(singerData, 5, lastVisibleSinger);
         setSingerData(data2);
-        const data3 = await fetchAllAlbum();
+        setLastVisibleSinger(lastVisible2);
+
+        const [data3, lastVisible3] = await loadAlbum(albumData, 10, lastVisibleAlbum);
+        setLastVisibleAlbum(lastVisible3);
         setAlbumData(data3);
 
       } catch (e) {
@@ -193,7 +99,7 @@ export default function App() {
   }
 
   return (
-    <DataProvider songData={songData} albumData={albumData} singerData={singerData} lastSong={lastVisibleSong}>
+    <DataProvider songData={songData} albumData={albumData} singerData={singerData} lastSong={lastVisibleSong} lastSinger={lastVisibleSinger} lastAlbum={lastVisibleAlbum}>
       <AudioProvider>
         {/* {console.log(songData)} */}
         <ThemeProvider>

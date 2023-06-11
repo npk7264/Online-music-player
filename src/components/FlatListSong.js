@@ -3,9 +3,14 @@ import React, { useState } from "react";
 import OptionModal from "./OptionModal";
 import SongItem from "./SongItem";
 import { optionSong } from "../utils/optionModal";
-const FlatListSong = ({ songs, ListFooterComponent }) => {
+const FlatListSong = ({ songs, RenderMoreData, loadAll, handleLoadMore }) => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
+
+  const renderMoreData = () => {
+    return <RenderMoreData loadAll={loadAll} handleLoadMore={handleLoadMore} />;
+  };
+
   return (
     <>
       <FlatList
@@ -19,7 +24,7 @@ const FlatListSong = ({ songs, ListFooterComponent }) => {
             }}
           />
         )}
-        ListFooterComponent={ListFooterComponent}
+        ListFooterComponent={renderMoreData}
         keyExtractor={(item) => item.id}
       />
       <OptionModal

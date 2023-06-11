@@ -66,6 +66,58 @@ export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
   // console.log([songsArray, lastVisible])
   return [songsArray, lastVisible];
 }
+//fetch limit singer
+export const loadSinger = async (listSinger, limitSinger, lastVisibleSinger) => {
+  const singerCollection = collection(db, 'artists');
+  let q = null;
+  if (listSinger.length > 0)
+    q = query(singerCollection, orderBy('follower', 'desc'), startAfter(lastVisibleSinger), limit(limitSinger));
+  else
+    q = query(singerCollection, orderBy('follower', 'desc'), limit(limitSinger));
+
+  const querySnapshot = await getDocs(q);
+
+  const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+  const singerArray = querySnapshot.docs.map((doc) => ({
+    id: doc.id,
+    name: doc.data().name,
+    image: doc.data().image,
+    follower: doc.data().follower
+  }))
+  return [singerArray, lastVisible];
+}
+
+//fetch limit album
+export const loadAlbum = async (listAlbum, limitAlbum, lastVisibleAlbum) => {
+  const albumCollection = collection(db, 'albums');
+  let q = null;
+  if (listAlbum.length > 0)
+    q = query(albumCollection, orderBy('public', 'desc'), startAfter(lastVisibleAlbum), limit(limitAlbum));
+  else
+    q = query(albumCollection, orderBy('public', 'desc'), limit(limitAlbum));
+  const querySnapshot = await getDocs(q);
+  const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+  let albumData = [];
+  for (const docRef of querySnapshot.docs) {
+    const album = docRef.data();
+
+    // get singer
+    const signer = await getDoc(album.singer);
+    //object song
+    const song = {
+      id: docRef.id,
+      name: album.name,
+      image: album.image,
+      singer: signer.data().name,
+      idSinger: signer.id,
+      public: album.public
+    }
+    albumData.push(song);
+  }
+
+  return [albumData, lastVisible];
+}
 
 export const fetchDetailSong = async (docRef) => {
   try {
@@ -252,7 +304,7 @@ export const fetchAllAlbum = async () => {
 //fetch top song
 export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");
-  const q = query(songsRef, orderBy("view", 'desc'), limit(10));
+  const q = query(songsRef, orderBy("view", 'desc'), orderBy("public", 'desc'), limit(10));
   const querySnapshot = await getDocs(q);
   const songsArray = querySnapshot.docs.map((docRef) => ({
     id: docRef.id,

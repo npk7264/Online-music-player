@@ -1,35 +1,28 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import ArtistItem from "../components/ArtistItem";
-// import { artist } from "../../data";
 import OptionModal from "../components/OptionModal";
 import { ThemeContext } from "../context/ThemeContext";
-import { AudioContext } from "../context/AudioContext";
+// import { AudioContext } from "../context/AudioContext";
+import { DataContext } from "../context/DataContext";
 import { FontAwesome } from "@expo/vector-icons";
 import { optionSinger } from "../utils/optionModal"
-import { fetchAllArtist } from "../utils/FirebaseHandler";
+import MoreData from "../components/MoreData";
+
 const Artist = () => {
   const { colors } = useContext(ThemeContext);
-  const { singerData } = useContext(AudioContext);
+  // const { singerData } = useContext(AudioContext);
+  const { listSinger, loadedAllSinger, handleLoadMoreSinger } = useContext(DataContext);
   const [currentSinger, setCurrentSinger] = useState(null);
-  // const [artistData, setArtistData] = useState([]);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
 
-
-  // // get all artist firebase
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     console.log('fetch all artist ');
-  //     const artist_list = await fetchAllArtist();
-  //     setArtistData(artist_list);
-  //     // console.log(artist_list)
-  //   }
-  //   fetchData();
-  // }, [])
+  const renderMoreData = () => {
+    return <MoreData loadAll={loadedAllSinger} handleLoadMore={handleLoadMoreSinger} />
+  }
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View
+      {/* <View
         style={{
           height: 50,
           paddingHorizontal: 20,
@@ -63,13 +56,11 @@ const Artist = () => {
             <FontAwesome name="sort" size={30} color={colors.primary} />
           </View>
         </TouchableOpacity>
-      </View>
-
-
+      </View> */}
 
       {/* artist list */}
       <FlatList
-        data={singerData}
+        data={listSinger}
         renderItem={({ item }) => (
           <ArtistItem
             id={item.id}
@@ -82,6 +73,7 @@ const Artist = () => {
             }}
           />
         )}
+        ListFooterComponent={renderMoreData}
         keyExtractor={(item) => item.id}
       />
 
