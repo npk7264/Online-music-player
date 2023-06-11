@@ -40,7 +40,7 @@ const MiniPlayer = () => {
             }}
             numberOfLines={1}
           >
-            {currentAudio.name + " - " + currentAudio.singer}
+            {currentAudio.name + " - " + currentAudio.singer.name}
           </Text>
           <TouchableOpacity
             style={{

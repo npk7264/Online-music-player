@@ -10,42 +10,62 @@ import {
   query,
   where,
   orderBy,
-  limit
+  limit,
+  startAfter
 } from "firebase/firestore";
 
 import { Audio } from "expo-av";
 
 
 
-
 // FETCH ALL SONGS
 export const fetchSongs = async () => {
   const querySnapshot = await getDocs(collection(db, "songs"));
-  let songsArray = [];
-  for (const docRef of querySnapshot.docs) {
-    const songData = docRef.data();
+  const songsArray = querySnapshot.docs.map((docRef) => ({
+    id: docRef.id,
+    name: docRef.data().name,
+    image: docRef.data().image,
+    public: docRef.data().public,
+    singer: docRef.data().artists[0],
+    album: docRef.data().album,
+    uri: docRef.data().url,
+    lyric: docRef.data().lyric,
+  }));
 
-    // get singer
-    const signer = await getDoc(songData.artists[0]);
-    //get album
-    const album = await getDoc(songData.album);
-    //object song
-    const song = {
-      id: docRef.id,
-      name: songData.name,
-      image: songData.image,
-      public: songData.public,
-      singer: signer.data().name,
-      idSinger: signer.id,
-      idAlbum: album.id,
-      uri: songData.url,
-      lyric: songData.lyric,
-    }
-    songsArray.push(song);
-
-  }
   return songsArray;
 };
+
+//Fetch limit song
+export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
+  // const limitSong = 10;
+  const songsCollection = collection(db, "songs");
+  let q = null;
+  // console.log(listSong.length)
+  if (listSong.length > 0) {
+    // const lastVisibleSong = listSong[listSong.length - 1];
+    // console.log(lastVisibleSong);
+    q = query(songsCollection, orderBy('view', 'desc'), orderBy('public', 'desc'), startAfter(lastVisibleSong), limit(limitSong))
+  }
+  else
+    q = query(songsCollection, orderBy('view', 'desc'), orderBy('public', 'desc'), limit(limitSong));
+
+  const querySnapshot = await getDocs(q);
+
+  const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
+
+  const songsArray = querySnapshot.docs.map((docRef) => ({
+    id: docRef.id,
+    name: docRef.data().name,
+    image: docRef.data().image,
+    public: docRef.data().public,
+    singer: docRef.data().artists[0],
+    album: docRef.data().album,
+    uri: docRef.data().url,
+    lyric: docRef.data().lyric,
+  }));
+  // console.log([songsArray, lastVisible])
+  return [songsArray, lastVisible];
+}
 
 export const fetchDetailSong = async (docRef) => {
   try {
@@ -234,21 +254,17 @@ export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");
   const q = query(songsRef, orderBy("view", 'desc'), limit(10));
   const querySnapshot = await getDocs(q);
-  let songsArray = [];
-  for (const docRef of querySnapshot.docs) {
-    const songData = docRef.data();
-
-    // // get singer
-    // const signer = await getDoc(songData.artists[0]);
-    // //get album
-    // const album = await getDoc(songData.album);
-    //object song
-    const song = {
-      id: docRef.id,
-      view: songData.view
-    }
-    songsArray.push(song);
-  }
+  const songsArray = querySnapshot.docs.map((docRef) => ({
+    id: docRef.id,
+    name: docRef.data().name,
+    image: docRef.data().image,
+    public: docRef.data().public,
+    singer: docRef.data().artists[0],
+    album: docRef.data().album,
+    uri: docRef.data().url,
+    lyric: docRef.data().lyric,
+    view: docRef.data().view
+  }));
   return songsArray;
 
 }

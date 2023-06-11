@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import OptionModal from "./OptionModal";
 import SongItem from "./SongItem";
 import { optionSong } from "../utils/optionModal";
-const FlatListSong = ({ songs }) => {
+const FlatListSong = ({ songs, ListFooterComponent }) => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   return (
@@ -19,6 +19,7 @@ const FlatListSong = ({ songs }) => {
             }}
           />
         )}
+        ListFooterComponent={ListFooterComponent}
         keyExtractor={(item) => item.id}
       />
       <OptionModal

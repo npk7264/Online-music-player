@@ -40,7 +40,8 @@ const SongItem = (props) => {
               {props.info.name}
             </Text>
             <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
-              {props.info.singer}
+              {props.info.singer?.name}
+              {/* {console.log(props.info.singer)} */}
             </Text>
           </View>
         </View>

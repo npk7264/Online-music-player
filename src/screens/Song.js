@@ -16,6 +16,7 @@ import FlatListSong from "../components/FlatListSong.js";
 
 import { AudioContext } from "../context/AudioContext.js";
 import { ThemeContext } from "../context/ThemeContext.js";
+import { DataContext } from "../context/DataContext.js";
 import { fetchRecentestSong } from "../utils/FirebaseHandler.js";
 
 const Song = () => {
@@ -24,14 +25,27 @@ const Song = () => {
   const { colors } = useContext(ThemeContext);
   const context = useContext(AudioContext);
   const { songData, soundObj, userId, updateState } = context;
+  const { listSong, loadedAllSongs, handleLoadMoreSong } = useContext(DataContext);
 
   // useEffect(() => {
   //   fetchRecentestSong(userId, context);
   // }, []);
 
+  const renderLoadMoreButton = () => {
+    if (!loadedAllSongs) {
+      return (
+        <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMoreSong}>
+          <Text style={styles.loadMoreButtonText}>Xem thêm</Text>
+        </TouchableOpacity>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View
+      {/* <View
         style={{
           height: 50,
           paddingHorizontal: 20,
@@ -65,10 +79,10 @@ const Song = () => {
             <FontAwesome name="sort" size={30} color={colors.primary} />
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Song list */}
-      <FlatListSong songs={songData} />
+      <FlatListSong songs={listSong} ListFooterComponent={renderLoadMoreButton} />
     </View>
   );
 };
@@ -78,5 +92,14 @@ export default Song;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  loadMoreButton: {
+    marginVertical: 16,
+    alignItems: 'center',
+  },
+  loadMoreButtonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'blue',
   },
 });
