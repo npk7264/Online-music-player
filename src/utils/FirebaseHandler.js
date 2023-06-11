@@ -26,7 +26,7 @@ export const fetchSongs = async () => {
     name: docRef.data().name,
     image: docRef.data().image,
     public: docRef.data().public,
-    singer: docRef.data().artists[0],
+    singer: docRef.data().artists,
     album: docRef.data().album,
     uri: docRef.data().url,
     lyric: docRef.data().lyric,
@@ -58,7 +58,7 @@ export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
     name: docRef.data().name,
     image: docRef.data().image,
     public: docRef.data().public,
-    singer: docRef.data().artists[0],
+    singer: docRef.data().artists,
     album: docRef.data().album,
     uri: docRef.data().url,
     lyric: docRef.data().lyric,
@@ -227,7 +227,6 @@ export const fetchAllArtist = async () => {
 }
 
 //Fetch 1 artist
-
 export const fetchOneArtist = async (address) => {
   const docRef = doc(db, address);
   const docSnap = await getDoc(docRef);
@@ -238,39 +237,35 @@ export const fetchOneArtist = async (address) => {
     follower: docSnap.data().follower,
     image: docSnap.data().image
   }
-
   return singer;
+}
+
+export const fetchFollowArtist = async (address) => {
+  const docRef = doc(db, address);
+  const docSnap = await getDoc(docRef);
+  // console.log(docSnap.data(), docSnap.id)
+
+  return docSnap.data().follower;
 }
 
 //fetch all song of artist
 export const fetchSongOfArtist = async (idSigner) => {
 
   const songRef = collection(db, "songs");
-  const q = query(songRef, where("artists", "array-contains", doc(db, `artists/${idSigner}`)));
+  const q = query(songRef, where("artists.id", "==", idSigner));
   const querySnapshot = await getDocs(q);
-  let songsArray = [];
-  for (const docRef of querySnapshot.docs) {
-    const songData = docRef.data();
-
-    // get singer
-    const signer = await getDoc(songData.artists[0]);
-    //get album
-    const album = await getDoc(songData.album);
-    //object song
-    const song = {
-      id: docRef.id,
-      name: songData.name,
-      uri: songData.url,
-      lyric: songData.lyric,
-      image: songData.image,
-      public: songData.public,
-      singer: signer.data().name,
-      idSinger: signer.id,
-      idAlbum: album.id,
-    }
-    songsArray.push(song);
-
-  }
+  const songsArray = querySnapshot.docs.map((docRef) => ({
+    id: docRef.id,
+    name: docRef.data().name,
+    image: docRef.data().image,
+    // public: docRef.data().public,
+    singer: docRef.data().artists,
+    album: docRef.data().album,
+    uri: docRef.data().url,
+    lyric: docRef.data().lyric,
+    // view: docRef.data().view
+  }));
+  // console.log(songsArray);
   return songsArray;
 
 }
@@ -311,7 +306,7 @@ export const fetchTopSong = async () => {
     name: docRef.data().name,
     image: docRef.data().image,
     public: docRef.data().public,
-    singer: docRef.data().artists[0],
+    singer: docRef.data().artists,
     album: docRef.data().album,
     uri: docRef.data().url,
     lyric: docRef.data().lyric,
