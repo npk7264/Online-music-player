@@ -27,7 +27,7 @@ const SongItem = (props) => {
       style={[styles.container, { backgroundColor: colors.background }]}
       onPress={async () => {
         await selectSong(contextAudio, props.info, props.data)
-        navigation.navigate("Player");
+        // navigation.navigate("Player");
       }
       }
     >
