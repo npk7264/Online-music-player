@@ -32,42 +32,44 @@ export const PlaylistProvider = ({ children }) => {
         // const song = songData?.filter(obj => listSong.includes(obj.id));
         // setRenderSong(song);
         // console.log('filterSong')
-        try {
-            const songsRef = collection(db, "songs");
-            const q = query(songsRef, where(documentId(), "in", listSong));
+        if (listSong.length > 0)
+            try {
+                const songsRef = collection(db, "songs");
+                const q = query(songsRef, where(documentId(), "in", listSong));
 
-            const querySnapshot = await getDocs(q);
+                const querySnapshot = await getDocs(q);
 
-            const songsArray = await Promise.all(
-                querySnapshot.docs.map((docRef) => {
-                    const songData = {
-                        id: docRef.id,
-                        name: docRef.data().name,
-                        image: docRef.data().image,
-                        public: docRef.data().public,
-                        singer: docRef.data().artists,
-                        album: docRef.data().album,
-                        uri: docRef.data().url,
-                        lyric: docRef.data().lyric,
-                        view: docRef.data().view
-                    }
-                    return songData;
+                const songsArray = await Promise.all(
+                    querySnapshot.docs.map((docRef) => {
+                        const songData = {
+                            id: docRef.id,
+                            name: docRef.data().name,
+                            image: docRef.data().image,
+                            public: docRef.data().public,
+                            singer: docRef.data().artists,
+                            album: docRef.data().album,
+                            uri: docRef.data().url,
+                            lyric: docRef.data().lyric,
+                            view: docRef.data().view
+                        }
+                        return songData;
+                    })
+                );
+                const sortedSongs = songsArray.sort((a, b) => {
+                    const indexA = listSong.indexOf(a.id);
+                    const indexB = listSong.indexOf(b.id);
+                    return indexA - indexB;
                 })
-            );
-            const sortedSongs = songsArray.sort((a, b) => {
-                const indexA = listSong.indexOf(a.id);
-                const indexB = listSong.indexOf(b.id);
-                return indexA - indexB;
-            })
-            setRenderSong(sortedSongs);
-            // console.log(songsArray);
-        } catch (error) {
-            console.log("Fail to fetch playlist songs", error);
-        }
+                setRenderSong(sortedSongs);
+                // console.log(songsArray);
+            } catch (error) {
+                console.log("Fail to fetch playlist songs", error);
+            }
     }
 
     const updatePlaylist = async (id) => {
         setIdPlaylist(id)
+        setRenderSong([]);
         await fetchPlaylist(id);
     }
     const updateListSong = (song) => { setSongs([...songs, song]) }
