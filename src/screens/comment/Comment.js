@@ -73,9 +73,9 @@ const Comment = () => {
           user: {
             id: userSnapshot.id,
             name: userSnapshot.data().name,
+            avatar: userSnapshot.data().avatar,
           },
         };
-
         comments.push(comment);
       }
       setList(comments);
@@ -97,7 +97,11 @@ const Comment = () => {
       <FlatList
         data={list}
         renderItem={({ item }) => (
-          <CommentItem userName={item.user.name} content={item.content} />
+          <CommentItem
+            userName={item.user.name}
+            content={item.content}
+            avatar={item.user.avatar}
+          />
         )}
         keyExtractor={(item, index) => index}
       />

@@ -34,7 +34,8 @@
     "react-native-web": "~0.18.10",
     "victory": "^36.6.10",
     "victory-native": "^36.6.10",
-    "expo-splash-screen": "~0.18.2"
+    "expo-splash-screen": "~0.18.2",
+    "expo-image-picker": "~14.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

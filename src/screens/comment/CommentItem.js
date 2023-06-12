@@ -1,8 +1,8 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import { useState, useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 
-const CommentItem = ({userName, content }) => {
+const CommentItem = ({ userName, content, avatar }) => {
   const { colors } = useContext(ThemeContext);
 
   return (
@@ -13,15 +13,18 @@ const CommentItem = ({userName, content }) => {
         paddingHorizontal: 20,
       }}
     >
-      <View
+      <Image
+        source={{ uri: avatar }}
         style={{
           width: 50,
           height: 50,
           backgroundColor: colors.primary,
           borderRadius: 50,
+          borderWidth: 2,
+          borderColor: "#e9edf0",
           marginRight: 10,
         }}
-      ></View>
+      />
       <View
         style={{
           flex: 1,

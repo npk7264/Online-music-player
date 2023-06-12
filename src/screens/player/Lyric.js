@@ -25,7 +25,7 @@ const Lyric = () => {
     }, []);
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-            <BackBar title={'Lyric'}></BackBar>
+            <BackBar title={'Lời bài hát'}></BackBar>
             <ScrollView>
                 <View style={[styles.borderLyric, { backgroundColor: colors.frame }]}>
                     <Text style={[styles.text, { color: colors.text }]}>{fileContent}</Text>
