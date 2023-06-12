@@ -7,6 +7,9 @@ import {
     getDocs,
     setDoc,
     updateDoc,
+    query,
+    where,
+    documentId
 } from "firebase/firestore";
 import { AudioContext } from './AudioContext';
 
@@ -25,10 +28,42 @@ export const PlaylistProvider = ({ children }) => {
 
 
     //get song by filter from listSong of playlistData and songData from fireStore 
-    const filterSong = (listSong) => {
-        const song = songData?.filter(obj => listSong.includes(obj.id));
-        setRenderSong(song);
+    const filterSong = async (listSong) => {
+        // const song = songData?.filter(obj => listSong.includes(obj.id));
+        // setRenderSong(song);
         // console.log('filterSong')
+        try {
+            const songsRef = collection(db, "songs");
+            const q = query(songsRef, where(documentId(), "in", listSong));
+
+            const querySnapshot = await getDocs(q);
+
+            const songsArray = await Promise.all(
+                querySnapshot.docs.map((docRef) => {
+                    const songData = {
+                        id: docRef.id,
+                        name: docRef.data().name,
+                        image: docRef.data().image,
+                        public: docRef.data().public,
+                        singer: docRef.data().artists,
+                        album: docRef.data().album,
+                        uri: docRef.data().url,
+                        lyric: docRef.data().lyric,
+                        view: docRef.data().view
+                    }
+                    return songData;
+                })
+            );
+            const sortedSongs = songsArray.sort((a, b) => {
+                const indexA = listSong.indexOf(a.id);
+                const indexB = listSong.indexOf(b.id);
+                return indexA - indexB;
+            })
+            setRenderSong(sortedSongs);
+            // console.log(songsArray);
+        } catch (error) {
+            console.log("Fail to fetch playlist songs", error);
+        }
     }
 
     const updatePlaylist = async (id) => {

@@ -11,12 +11,11 @@ import { useState, useContext, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
 
 import BackBar from "../components/BackBar";
-import SongItem from "../components/SongItem";
 import MiniPlayer from "../components/MiniPlayer";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
-
+import FlatListSong from "../components/FlatListSong";
 import { auth, db } from "../services/firebaseConfig";
 import {
   collection,
@@ -26,31 +25,58 @@ import {
   setDoc,
   addDoc,
   updateDoc,
+  query,
+  where,
+  documentId
 } from "firebase/firestore";
 
 const Recent = () => {
   const { userId, songData, soundObj, currentAudio } = useContext(AudioContext);
-  const [recentId, setRecentId] = useState([]);
+  const [recentData, setRecentData] = useState([]);
   const { colors } = useContext(ThemeContext);
 
-  const fetchRecent = async (userId) => {
+  const getRecent = async (userId) => {
     try {
-      const docRef = doc(db, "users/" + userId);
-      const docSnap = await getDoc(docRef);
-      setRecentId(docSnap.data().recently);
-      // console.log(docSnap.data().recently);
+      const docSnap = await getDoc(doc(db, "users/" + userId));
+      const userData = docSnap.data();
+      const history = userData.recently;
+
+      const songsRef = collection(db, "songs");
+      const q = query(songsRef, where(documentId(), "in", history));
+
+      const querySnapshot = await getDocs(q);
+
+      const songsArray = await Promise.all(
+        querySnapshot.docs.map((docRef) => {
+          const songData = {
+            id: docRef.id,
+            name: docRef.data().name,
+            image: docRef.data().image,
+            public: docRef.data().public,
+            singer: docRef.data().artists,
+            album: docRef.data().album,
+            uri: docRef.data().url,
+            lyric: docRef.data().lyric,
+            view: docRef.data().view
+          }
+          return songData;
+        })
+      );
+      const sortedSongs = songsArray.sort((a, b) => {
+        const indexA = history.indexOf(a.id);
+        const indexB = history.indexOf(b.id);
+        return indexA - indexB;
+      })
+      setRecentData(sortedSongs);
+      // console.log(songsArray);
     } catch (error) {
-      console.log("Fail to fetch favorite songs", error);
+      console.log("Fail to fetch history songs", error);
     }
   };
 
-  const recentData = songData
-    .filter((item) => recentId.includes(item.id))
-    .sort((a, b) => recentId.indexOf(a.id) - recentId.indexOf(b.id));
-
   const isFocused = useIsFocused();
   useEffect(() => {
-    fetchRecent(userId);
+    getRecent(userId);
   }, [isFocused]);
 
   return (
@@ -59,20 +85,7 @@ const Recent = () => {
 
       <BackBar title={"Gần đây"} />
 
-      <FlatList
-        data={recentData}
-        renderItem={({ item }) => (
-          <SongItem
-            info={item}
-            time={item.time}
-            onPressOptionModal={() => {
-              setOptionModalVisible(true);
-              setCurrentItem(item);
-            }}
-          />
-        )}
-        keyExtractor={(item) => item.id}
-      />
+      <FlatListSong songs={recentData} />
 
       {currentAudio && <MiniPlayer />}
     </SafeAreaView>
