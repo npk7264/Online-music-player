@@ -368,5 +368,27 @@ export const searchSong = async (text, setResult) => {
     } catch (error) {
       console.log("Fail to fetch history songs", error);
     }
-  }
+  } else setResult([]);
+};
+
+export const searchSinger = async (text, setResult) => {
+  if (text.trim() !== "") {
+    try {
+      const querySnapshot = await getDocs(collection(db, "artists"));
+
+      // Lọc các bản ghi chứa chuỗi "text"
+      const filteredDocs = querySnapshot.docs.filter((doc) => {
+        return doc.data().name.includes(text); // Thay "name" bằng trường tên bài hát của bạn
+      });
+
+      // Xử lý các bản ghi đã lọc được
+      const songsArray = filteredDocs.map((doc) => {
+        return doc.data();
+      });
+
+      setResult(songsArray);
+    } catch (error) {
+      console.log("Fail to fetch history songs", error);
+    }
+  } else setResult([]);
 };
