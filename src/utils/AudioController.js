@@ -59,10 +59,10 @@ export const playNext = async (playbackObj, uri) => {
   }
 };
 
-export const selectSong = async (context, audio) => {
+export const selectSong = async (context, audio, songData) => {
   const {
     userId,
-    songData,
+    // songData,
     soundObj,
     playbackObj,
     currentAudio,
@@ -83,6 +83,7 @@ export const selectSong = async (context, audio) => {
         currentAudio: audio,
         currentAudioIndex: index,
         soundObj: status,
+        songData: songData,
         isPlaying: true,
         playbackDuration: status.durationMillis,
       });
@@ -123,6 +124,7 @@ export const selectSong = async (context, audio) => {
         currentAudioIndex: index,
         soundObj: status,
         isPlaying: true,
+        songData: songData,
         isLooping: false,
         playbackDuration: status.durationMillis,
       });

@@ -7,18 +7,29 @@ import { AudioContext } from "../context/AudioContext";
 import { selectSong } from "../utils/AudioController";
 import { ThemeContext } from "../context/ThemeContext";
 
+import { useNavigation } from "@react-navigation/native";
+
+
 const SongItem = (props) => {
   const contextAudio = useContext(AudioContext);
   const { colors } = useContext(ThemeContext);
   const [isPlay, setIsPlay] = useState(false);
+
+  const navigation = useNavigation();
+
   const handlePress = () => {
     setIsPlay(!isPlay);
   };
 
+
   return (
     <TouchableOpacity
       style={[styles.container, { backgroundColor: colors.background }]}
-      onPress={async () => await selectSong(contextAudio, props.info)}
+      onPress={async () => {
+        await selectSong(contextAudio, props.info, props.data)
+        navigation.navigate("Player");
+      }
+      }
     >
       <View style={styles.content}>
         <View
@@ -60,7 +71,7 @@ const SongItem = (props) => {
         </TouchableOpacity>
         {/* </View> */}
       </View>
-    </TouchableOpacity>
+    </TouchableOpacity >
   );
 };
 export default SongItem;
