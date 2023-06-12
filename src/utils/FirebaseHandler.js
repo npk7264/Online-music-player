@@ -11,29 +11,14 @@ import {
   where,
   orderBy,
   limit,
-  startAfter
+  startAfter,
+  documentId
 } from "firebase/firestore";
 
 import { Audio } from "expo-av";
 
 
 
-// FETCH ALL SONGS
-export const fetchSongs = async () => {
-  const querySnapshot = await getDocs(collection(db, "songs"));
-  const songsArray = querySnapshot.docs.map((docRef) => ({
-    id: docRef.id,
-    name: docRef.data().name,
-    image: docRef.data().image,
-    public: docRef.data().public,
-    singer: docRef.data().artists,
-    album: docRef.data().album,
-    uri: docRef.data().url,
-    lyric: docRef.data().lyric,
-  }));
-
-  return songsArray;
-};
 
 //Fetch limit song
 export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
@@ -212,34 +197,6 @@ export const updateRecentestPositon = async (userId, position, duration) => {
 };
 
 
-//Fetch all artist
-
-export const fetchAllArtist = async () => {
-  const querySnapshot = await getDocs(collection(db, "artists"));
-  const artistData = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    name: doc.data().name,
-    image: doc.data().image,
-    follower: doc.data().follower
-  }))
-  // console.log(artistData);
-  return artistData;
-}
-
-//Fetch 1 artist
-export const fetchOneArtist = async (address) => {
-  const docRef = doc(db, address);
-  const docSnap = await getDoc(docRef);
-  // console.log(docSnap.data(), docSnap.id)
-
-  const singer = {
-    name: docSnap.data().name,
-    follower: docSnap.data().follower,
-    image: docSnap.data().image
-  }
-  return singer;
-}
-
 export const fetchFollowArtist = async (address) => {
   const docRef = doc(db, address);
   const docSnap = await getDoc(docRef);
@@ -270,32 +227,6 @@ export const fetchSongOfArtist = async (idSigner) => {
 
 }
 
-
-//fetch all album
-export const fetchAllAlbum = async () => {
-  const querySnapshot = await getDocs(collection(db, "albums"));
-  let albumData = [];
-  for (const docRef of querySnapshot.docs) {
-    const album = docRef.data();
-
-    // get singer
-    const signer = await getDoc(album.singer);
-    //object song
-    const song = {
-      id: docRef.id,
-      name: album.name,
-      image: album.image,
-      singer: signer.data().name,
-      idSinger: signer.id,
-      public: album.public
-    }
-    albumData.push(song);
-
-  }
-  // console.log(artistData);
-  return albumData;
-}
-
 //fetch top song
 export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");
@@ -313,6 +244,84 @@ export const fetchTopSong = async () => {
     view: docRef.data().view
   }));
   return songsArray;
-
 }
 
+//fetch favorite
+export const fetchFavorite = async (userId) => {
+  try {
+    const docSnap = await getDoc(doc(db, "users/" + userId));
+    const userData = docSnap.data();
+    const favorite = userData.favorite;
+
+    const songsRef = collection(db, "songs");
+    const q = query(songsRef, where(documentId(), "in", favorite));
+
+    const querySnapshot = await getDocs(q);
+
+    const songsArray = await Promise.all(
+      querySnapshot.docs.map((docRef) => {
+        const songData = {
+          id: docRef.id,
+          name: docRef.data().name,
+          image: docRef.data().image,
+          public: docRef.data().public,
+          singer: docRef.data().artists,
+          album: docRef.data().album,
+          uri: docRef.data().url,
+          lyric: docRef.data().lyric,
+          view: docRef.data().view
+        }
+        return songData;
+      })
+    );
+    const sortedSongs = songsArray.sort((a, b) => {
+      const indexA = favorite.indexOf(a.id);
+      const indexB = favorite.indexOf(b.id);
+      return indexA - indexB;
+    })
+    return sortedSongs;
+    // console.log(songsArray);
+  } catch (error) {
+    console.log("Fail to fetch favorite songs", error);
+  }
+};
+
+//fetch recent
+export const getRecent = async (userId) => {
+  try {
+    const docSnap = await getDoc(doc(db, "users/" + userId));
+    const userData = docSnap.data();
+    const history = userData.recently;
+
+    const songsRef = collection(db, "songs");
+    const q = query(songsRef, where(documentId(), "in", history));
+
+    const querySnapshot = await getDocs(q);
+
+    const songsArray = await Promise.all(
+      querySnapshot.docs.map((docRef) => {
+        const songData = {
+          id: docRef.id,
+          name: docRef.data().name,
+          image: docRef.data().image,
+          public: docRef.data().public,
+          singer: docRef.data().artists,
+          album: docRef.data().album,
+          uri: docRef.data().url,
+          lyric: docRef.data().lyric,
+          view: docRef.data().view
+        }
+        return songData;
+      })
+    );
+    const sortedSongs = songsArray.sort((a, b) => {
+      const indexA = history.indexOf(a.id);
+      const indexB = history.indexOf(b.id);
+      return indexA - indexB;
+    })
+    return sortedSongs;
+    // console.log(songsArray);
+  } catch (error) {
+    console.log("Fail to fetch history songs", error);
+  }
+};

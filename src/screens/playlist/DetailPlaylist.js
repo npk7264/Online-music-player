@@ -12,7 +12,7 @@ import { PlaylistContext } from '../../context/PlaylistContext';
 import { useIsFocused } from '@react-navigation/native';
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
-  const { listSong, idPlaylist, updatePlaylist, setListSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
+  const { listSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 

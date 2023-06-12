@@ -24,7 +24,7 @@ export const PlaylistProvider = ({ children }) => {
     const [songs, setSongs] = useState([]);
     const [playlistData, setPlaylistData] = useState({});
     const [renderSong, setRenderSong] = useState([]);
-
+    const [searchText, setSearchText] = useState("");
 
 
     //get song by filter from listSong of playlistData and songData from fireStore 
@@ -136,6 +136,8 @@ export const PlaylistProvider = ({ children }) => {
         listSong: songs,
         playlistData: playlistData,
         renderSong: renderSong,
+        searchText: searchText,
+        setSearchText,
         updatePlaylist,
         updateListSong,
         handleAddSong,
