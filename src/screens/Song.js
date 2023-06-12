@@ -16,7 +16,9 @@ import FlatListSong from "../components/FlatListSong.js";
 
 import { AudioContext } from "../context/AudioContext.js";
 import { ThemeContext } from "../context/ThemeContext.js";
-import { fetchRecentestSong } from "../utils/FirebaseHandler.js";
+import { DataContext } from "../context/DataContext.js";
+
+import MoreData from "../components/MoreData.js";
 
 const Song = () => {
   const [optionModalVisible, setOptionModalVisible] = useState(false);
@@ -24,14 +26,11 @@ const Song = () => {
   const { colors } = useContext(ThemeContext);
   const context = useContext(AudioContext);
   const { songData, soundObj, userId, updateState } = context;
-
-  // useEffect(() => {
-  //   fetchRecentestSong(userId, context);
-  // }, []);
+  const { listSong, loadedAllSongs, handleLoadMoreSong } = useContext(DataContext);
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <View
+      {/* <View
         style={{
           height: 50,
           paddingHorizontal: 20,
@@ -65,10 +64,10 @@ const Song = () => {
             <FontAwesome name="sort" size={30} color={colors.primary} />
           </View>
         </TouchableOpacity>
-      </View>
+      </View> */}
 
       {/* Song list */}
-      <FlatListSong songs={songData} />
+      <FlatListSong songs={listSong} RenderMoreData={MoreData} loadAll={loadedAllSongs} handleLoadMore={handleLoadMoreSong} />
     </View>
   );
 };

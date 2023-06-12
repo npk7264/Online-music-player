@@ -44,16 +44,7 @@ const Chart = () => {
 
   async function updataSongData() {
     const songDataHaveUpdateView = await fetchTopSong();
-    // console.log(songDataHaveUpdateView)
-    const filteredArray = songDataHaveUpdateView
-      .map(itemB => {
-        const itemA = songData.find(itemA => itemA.id === itemB.id);
-        return itemA ? { ...itemA, view: itemB.view } : null;
-      })
-      .filter(item => item !== null);
-
-    console.log(filteredArray)
-    setSongs(filteredArray);
+    setSongs(songDataHaveUpdateView);
     setLoaded(true);
   }
 

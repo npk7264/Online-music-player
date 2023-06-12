@@ -1,27 +1,25 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import AlbumItem from './AlbumItem';
-// import { albums } from '../../data';
-import { AudioContext } from '../context/AudioContext';
+
 import { ThemeContext } from '../context/ThemeContext';
+import { DataContext } from '../context/DataContext';
+
+import MoreData from './MoreData';
+
 import { FontAwesome } from "@expo/vector-icons";
-import { fetchAllAlbum } from '../utils/FirebaseHandler';
+
 const Albums = () => {
     const { colors } = useContext(ThemeContext);
-    const { albumData } = useContext(AudioContext);
-    // const [albumData, setAlbumData] = useState([]);
+    const { listAlbum, loadedAllAlbum, handleLoadMoreAlbum } = useContext(DataContext);
 
-    // useEffect(() => {
-    //     const fetchAlbum = async () => {
-    //         const data = await fetchAllAlbum();
-    //         setAlbumData(data);
-    //     }
-    //     fetchAlbum();
-    // }, [])
+    const renderMoreData = () => {
+        return <MoreData loadAll={loadedAllAlbum} handleLoadMore={handleLoadMoreAlbum} />
+    }
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
-            <View
+            {/* <View
                 style={{
                     height: 50,
                     paddingHorizontal: 20,
@@ -55,12 +53,10 @@ const Albums = () => {
                         <FontAwesome name="sort" size={30} color={colors.primary} />
                     </View>
                 </TouchableOpacity>
-            </View>
-
-
+            </View> */}
 
             <FlatList
-                data={albumData}
+                data={listAlbum}
                 renderItem={({ item }) => (
                     <AlbumItem
                         id={item.id}
@@ -70,6 +66,7 @@ const Albums = () => {
                         image={item.image}
                     />
                 )}
+                ListFooterComponent={renderMoreData}
                 horizontal={false}
                 numColumns={2}
                 keyExtractor={(item) => item.id}

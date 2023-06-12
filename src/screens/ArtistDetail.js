@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import BackBar from '../components/BackBar';
-import { fetchOneArtist, fetchSongOfArtist } from '../utils/FirebaseHandler';
+import { fetchOneArtist, fetchSongOfArtist, fetchFollowArtist } from '../utils/FirebaseHandler';
 import { Ionicons } from "@expo/vector-icons";
 // import SongItem from '../components/SongItem';
 // import { songs } from '../../data';
@@ -19,25 +19,30 @@ const ArtistDetail = ({ route }) => {
     const id = route.params.id;
     const artistName = route.params.name;
     const artistImage = route.params.image;
-    const follower = route.params.follower;
+    // const follower = route.params.follower;
 
     //fetch data singer
     useEffect(() => {
-        // const fetchData = async () => {
-        //     const singer = await fetchOneArtist(`artists/${id}`);
-        //     const songData = await fetchSongOfArtist(id);
-        //     setListSong(songData)
-        //     setArtist(singer);
-        // }
-        // fetchData();
-        setArtist({
-            id,
-            name: artistName,
-            image: artistImage,
-            follower
-        })
-        const songs = songData?.filter(item => item.idSinger === id);
-        setListSong(songs)
+        const fetchData = async () => {
+            const follower = await fetchFollowArtist(`artists/${id}`);
+            const songData = await fetchSongOfArtist(id);
+            setListSong(songData)
+            setArtist({
+                id,
+                name: artistName,
+                image: artistImage,
+                follower
+            });
+        }
+        fetchData();
+        // setArtist({
+        //     id,
+        //     name: artistName,
+        //     image: artistImage,
+        //     follower
+        // })
+        // const songs = songData?.filter(item => item.idSinger === id);
+        // setListSong(songs)
 
     }, [])
 

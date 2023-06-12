@@ -68,7 +68,7 @@ const PlaylistItem = ({ type, name, id, numSong }) => {
             >
               {name}
             </Text>
-            <Text style={{ fontSize: 16, color: "gray" }}>{numberSong} Bài hát</Text>
+            {type !== "Favorite" && type !== "Recent" && <Text style={{ fontSize: 16, color: "gray" }}>{numberSong} Bài hát</Text>}
           </View>
         </View>
       </View>
