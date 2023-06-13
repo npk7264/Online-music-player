@@ -340,7 +340,7 @@ export const fetchTopSong = async () => {
   return songsArray;
 };
 
-// SEARCH
+// SEARCH SONG
 export const searchSong = async (text, setResult) => {
   if (text.trim() !== "") {
     try {
@@ -348,7 +348,11 @@ export const searchSong = async (text, setResult) => {
 
       // Lọc các bản ghi chứa chuỗi "text"
       const filteredDocs = querySnapshot.docs.filter((doc) => {
-        return doc.data().name.toLowerCase().includes(text.toLowerCase()); // Thay "name" bằng trường tên bài hát của bạn
+        // tìm kiếm tương đối
+        return text
+          .toLowerCase()
+          .split(" ")
+          .some((char) => doc.data().name.toLowerCase().includes(char));
       });
 
       // Xử lý các bản ghi đã lọc được
@@ -366,11 +370,12 @@ export const searchSong = async (text, setResult) => {
 
       setResult(songsArray);
     } catch (error) {
-      console.log("Fail to fetch history songs", error);
+      console.log("Fail to SEARCH songs", error);
     }
   } else setResult([]);
 };
 
+// SEARCH SINGER
 export const searchSinger = async (text, setResult) => {
   if (text.trim() !== "") {
     try {
@@ -378,17 +383,24 @@ export const searchSinger = async (text, setResult) => {
 
       // Lọc các bản ghi chứa chuỗi "text"
       const filteredDocs = querySnapshot.docs.filter((doc) => {
-        return doc.data().name.includes(text); // Thay "name" bằng trường tên bài hát của bạn
+        // tìm kiếm tương đối
+        return text
+          .toLowerCase()
+          .split(" ")
+          .some((char) => doc.data().name.toLowerCase().includes(char));
       });
 
       // Xử lý các bản ghi đã lọc được
       const songsArray = filteredDocs.map((doc) => {
-        return doc.data();
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
       });
 
       setResult(songsArray);
     } catch (error) {
-      console.log("Fail to fetch history songs", error);
+      console.log("Fail to SEARCH artists", error);
     }
   } else setResult([]);
 };

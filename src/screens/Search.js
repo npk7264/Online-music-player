@@ -66,6 +66,7 @@ const Search = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChangeText={(text) => {
+            setSearchText(text);
             if (searchType == 0) searchSong(text, setResult);
             else if (searchType == 1) searchSinger(text, setResult);
           }}
@@ -81,7 +82,11 @@ const Search = () => {
                 searchType === 0 ? colors.primary : colors.background,
             },
           ]}
-          onPress={() => setSearchType(0)}
+          onPress={() => {
+            setResult([]);
+            setSearchType(0);
+            searchSong(searchText, setResult);
+          }}
         >
           <Text
             style={[
@@ -100,7 +105,11 @@ const Search = () => {
                 searchType === 1 ? colors.primary : colors.background,
             },
           ]}
-          onPress={() => setSearchType(1)}
+          onPress={() => {
+            setResult([]);
+            setSearchType(1);
+            searchSinger(searchText, setResult);
+          }}
         >
           <Text
             style={[
@@ -108,7 +117,7 @@ const Search = () => {
               { color: searchType === 1 ? "white" : colors.primary },
             ]}
           >
-            Ca Sĩ
+            Nghệ sĩ
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -133,13 +142,12 @@ const Search = () => {
       </View>
 
       {/* Search Result */}
-      {result != [] && searchType == 0 && <FlatListSong songs={result} />}
-      {result != [] && searchType == 1 && (
+      {result.length != 0 && searchType == 0 && <FlatListSong songs={result} />}
+      {result.length != 0 && searchType == 1 && (
         <FlatList
           data={result}
-          renderItem={({ item, index }) => (
+          renderItem={({ item }) => (
             <ArtistItem
-              key={index}
               id={item.id}
               name={item.name}
               image={item.image}
@@ -193,14 +201,15 @@ const styles = StyleSheet.create({
   searchTypeItem: {
     borderColor: color.primary,
     borderWidth: 2,
-    borderRadius: 20,
-    height: 30,
+    borderRadius: 15,
+    height: 36,
     width: 100,
     justifyContent: "center",
     alignItems: "center",
   },
   textType: {
     fontSize: 15,
+    fontWeight: 500,
   },
   nothingSearch: {
     flex: 1,
