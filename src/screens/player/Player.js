@@ -50,8 +50,9 @@ const Player = () => {
     playbackPosition,
     playbackDuration,
     updateState,
+    songData,
   } = context;
-  const [currentPosition, setCurrentPositon] = useState(0);
+  const [currentPosition, setCurrentPositon] = useState(playbackPosition);
   const [currentTime, setCurrentTime] = useState("00:00");
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
@@ -140,7 +141,6 @@ const Player = () => {
   }, [currentAudio, soundObj]);
 
   return (
-
     <SafeAreaView style={{ backgroundColor: colors.background, flex: 1 }}>
       <StatusBar></StatusBar>
       <BackBar />
@@ -309,7 +309,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                selectSong(context, currentAudio);
+                selectSong(context, currentAudio, songData);
               }}
             >
               <FontAwesome
@@ -376,13 +376,13 @@ const styles = StyleSheet.create({
     // height: 30,
     // width: 100,
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonLyric: {
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     width: 150,
     height: 40,
   },

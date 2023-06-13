@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
@@ -28,8 +28,8 @@ const Register = () => {
 
         const defaultAvatar =
           "https://firebasestorage.googleapis.com/v0/b/musicapp-80f91.appspot.com/o/avatar%2Fdefault.jpg?alt=media&token=d18fc833-4899-44fb-8094-f4e3ba861c40&_gl=1*qx3bkt*_ga*NDQ0NjU1MTI2LjE2ODQzNDA2OTM.*_ga_CW55HF8NVT*MTY4NjUzMjIxNS4zMy4xLjE2ODY1MzQwMzAuMC4wLjA.";
-        
-          // khởi tạo thông tin user
+
+        // khởi tạo thông tin user
         setDoc(doc(db, "users", user.uid), {
           name: name,
           favorite: [],
@@ -43,24 +43,22 @@ const Register = () => {
           photoURL: defaultAvatar,
         });
 
-        try {
-          await AsyncStorage.setItem("email", email);
-          await AsyncStorage.setItem("password", password);
-          console.log("save email and password user signup");
-        } catch (error) {
-          console.error("Lỗi khi save email and password user signup:", error);
-        }
+        // try {
+        //   await AsyncStorage.setItem("email", email);
+        //   await AsyncStorage.setItem("password", password);
+        //   console.log("save email and password user signup");
+        // } catch (error) {
+        //   console.error("Lỗi khi save email and password user signup:", error);
+        // }
         alert("Đăng ký tài khoản thành công!");
         navigation.replace("Login");
       })
       .catch((error) => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorMessage);
       });
   };
-
-  useEffect(() => {}, []);
 
   return (
     <SafeAreaView

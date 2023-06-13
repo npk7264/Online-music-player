@@ -12,29 +12,14 @@ import {
   orderBy,
   limit,
   startAfter,
+  documentId,
+  increment,
 } from "firebase/firestore";
 
 import jsrmvi from "jsrmvi";
 import { removeVI, DefaultOption } from "jsrmvi";
 
 import { Audio } from "expo-av";
-
-// FETCH ALL SONGS
-export const fetchSongs = async () => {
-  const querySnapshot = await getDocs(collection(db, "songs"));
-  const songsArray = querySnapshot.docs.map((docRef) => ({
-    id: docRef.id,
-    name: docRef.data().name,
-    image: docRef.data().image,
-    public: docRef.data().public,
-    singer: docRef.data().artists,
-    album: docRef.data().album,
-    uri: docRef.data().url,
-    lyric: docRef.data().lyric,
-  }));
-
-  return songsArray;
-};
 
 //Fetch limit song
 export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
@@ -166,7 +151,7 @@ export const fetchRecent = async (docRef) => {
   }
 };
 
-// UPDATE RECENT
+// UPDATE RECENT and update genre
 export const updateRecent = async (userId, audioId) => {
   const userRef = doc(db, "users/" + userId);
   let data = await fetchRecent(userRef);
@@ -175,14 +160,25 @@ export const updateRecent = async (userId, audioId) => {
   });
 
   const songRef = doc(db, "songs/" + audioId);
+
+  //update thong ke genre
   let songDetail = await fetchDetailSong(songRef);
+  const genreCount = data.genre ? data.genre : null;
+  const updateDataUser = {};
+  songDetail.genre.forEach((key) => {
+    updateDataUser[`genre.${key}`] =
+      genreCount !== null && genreCount[key] !== undefined
+        ? genreCount[key] + 1
+        : 1;
+  });
+
+  //update recent
+  updateDataUser["recently"] = [audioId, ...recentList];
 
   try {
-    await updateDoc(userRef, {
-      recently: [audioId, ...recentList],
-    });
+    await updateDoc(userRef, updateDataUser);
     await updateDoc(songRef, {
-      view: songDetail.view + 1,
+      view: increment(1),
     });
   } catch (e) {
     alert("Failed to save recent song!", e);
@@ -201,22 +197,44 @@ export const fetchUser = async (userId, setUserName) => {
 };
 
 export const fetchRecentestSong = async (userId, context) => {
-  const { songData, updateState } = context;
-  // const songs = await fetchSongs();
+  const { updateState } = context;
+
   const data = await fetchRecent(doc(db, "users/" + userId));
-  let recentList = data.recently;
-  const recentestSong =
-    recentList != [] ? songData.find((item) => item.id == recentList[0]) : {};
-  console.log(data.recently);
-  // await updateState(context, {
-  //   userId: userId,
-  //   soundObj: null,
-  //   // songData: songs,
-  //   currentAudio: recentestSong,
-  //   playbackPosition: data.songPosition ? data.songPosition : null,
-  //   playbackDuration: data.songDuration ? data.songDuration : null,
-  // });
-  // console.log("lastPosition", data.songPosition);
+  let recentestId = data.recently[0];
+  console.log(userId);
+
+  if (recentestId != undefined) {
+    const songRef = doc(db, "songs", recentestId);
+
+    const songSnapshot = await getDoc(songRef);
+    const song = {
+      id: songSnapshot.id,
+      name: songSnapshot.data().name,
+      image: songSnapshot.data().image,
+      public: songSnapshot.data().public,
+      singer: songSnapshot.data().artists,
+      album: songSnapshot.data().album,
+      uri: songSnapshot.data().url,
+      lyric: songSnapshot.data().lyric,
+      view: songSnapshot.data().view,
+    };
+
+    await updateState(context, {
+      userId: userId,
+      playbackObj: new Audio.Sound(),
+      soundObj: null,
+      songData: [song],
+      currentAudio: song,
+      playbackPosition: data.songPosition ? data.songPosition : null,
+      playbackDuration: data.songDuration ? data.songDuration : null,
+    });
+  } else {
+    await updateState(context, {
+      userId: userId,
+      playbackObj: new Audio.Sound(),
+      soundObj: null,
+    });
+  }
 };
 
 // UPDATE POSITION OF SONG
@@ -231,34 +249,6 @@ export const updateRecentestPositon = async (userId, position, duration) => {
   } catch (e) {
     alert("Failed to save recent song!", e);
   }
-};
-
-//Fetch all artist
-
-export const fetchAllArtist = async () => {
-  const querySnapshot = await getDocs(collection(db, "artists"));
-  const artistData = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    name: doc.data().name,
-    image: doc.data().image,
-    follower: doc.data().follower,
-  }));
-  // console.log(artistData);
-  return artistData;
-};
-
-//Fetch 1 artist
-export const fetchOneArtist = async (address) => {
-  const docRef = doc(db, address);
-  const docSnap = await getDoc(docRef);
-  // console.log(docSnap.data(), docSnap.id)
-
-  const singer = {
-    name: docSnap.data().name,
-    follower: docSnap.data().follower,
-    image: docSnap.data().image,
-  };
-  return singer;
 };
 
 export const fetchFollowArtist = async (address) => {
@@ -289,30 +279,6 @@ export const fetchSongOfArtist = async (idSigner) => {
   return songsArray;
 };
 
-//fetch all album
-export const fetchAllAlbum = async () => {
-  const querySnapshot = await getDocs(collection(db, "albums"));
-  let albumData = [];
-  for (const docRef of querySnapshot.docs) {
-    const album = docRef.data();
-
-    // get singer
-    const signer = await getDoc(album.singer);
-    //object song
-    const song = {
-      id: docRef.id,
-      name: album.name,
-      image: album.image,
-      singer: signer.data().name,
-      idSinger: signer.id,
-      public: album.public,
-    };
-    albumData.push(song);
-  }
-  // console.log(artistData);
-  return albumData;
-};
-
 //fetch top song
 export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");
@@ -335,6 +301,86 @@ export const fetchTopSong = async () => {
     view: docRef.data().view,
   }));
   return songsArray;
+};
+
+//fetch favorite
+export const fetchFavorite = async (userId) => {
+  try {
+    const docSnap = await getDoc(doc(db, "users/" + userId));
+    const userData = docSnap.data();
+    const favorite = userData.favorite;
+
+    const songsRef = collection(db, "songs");
+    const q = query(songsRef, where(documentId(), "in", favorite));
+
+    const querySnapshot = await getDocs(q);
+
+    const songsArray = await Promise.all(
+      querySnapshot.docs.map((docRef) => {
+        const songData = {
+          id: docRef.id,
+          name: docRef.data().name,
+          image: docRef.data().image,
+          public: docRef.data().public,
+          singer: docRef.data().artists,
+          album: docRef.data().album,
+          uri: docRef.data().url,
+          lyric: docRef.data().lyric,
+          view: docRef.data().view,
+        };
+        return songData;
+      })
+    );
+    const sortedSongs = songsArray.sort((a, b) => {
+      const indexA = favorite.indexOf(a.id);
+      const indexB = favorite.indexOf(b.id);
+      return indexA - indexB;
+    });
+    return sortedSongs;
+    // console.log(songsArray);
+  } catch (error) {
+    console.log("Fail to fetch favorite songs", error);
+  }
+};
+
+//fetch recent
+export const getRecent = async (userId) => {
+  try {
+    const docSnap = await getDoc(doc(db, "users/" + userId));
+    const userData = docSnap.data();
+    const history = userData.recently;
+
+    const songsRef = collection(db, "songs");
+    const q = query(songsRef, where(documentId(), "in", history));
+
+    const querySnapshot = await getDocs(q);
+
+    const songsArray = await Promise.all(
+      querySnapshot.docs.map((docRef) => {
+        const songData = {
+          id: docRef.id,
+          name: docRef.data().name,
+          image: docRef.data().image,
+          public: docRef.data().public,
+          singer: docRef.data().artists,
+          album: docRef.data().album,
+          uri: docRef.data().url,
+          lyric: docRef.data().lyric,
+          view: docRef.data().view,
+        };
+        return songData;
+      })
+    );
+    const sortedSongs = songsArray.sort((a, b) => {
+      const indexA = history.indexOf(a.id);
+      const indexB = history.indexOf(b.id);
+      return indexA - indexB;
+    });
+    return sortedSongs;
+    // console.log(songsArray);
+  } catch (error) {
+    console.log("Fail to fetch history songs", error);
+  }
 };
 
 // convert VN text to EN text

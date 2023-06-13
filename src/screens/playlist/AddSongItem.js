@@ -36,7 +36,7 @@ const AddSongItem = (props) => {
                             {props.info.name}
                         </Text>
                         <Text style={{ fontSize: 16, color: "gray" }} numberOfLines={1}>
-                            {props.info.artists.name}
+                            {props.info.singer.name}
                         </Text>
                     </View>
                 </View>
