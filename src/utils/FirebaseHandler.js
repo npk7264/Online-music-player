@@ -352,6 +352,7 @@ function VN_to_EN(text) {
 // SEARCH SONG
 export const searchSong = async (text, setResult) => {
   if (text.trim() !== "") {
+    text = text.trim();
     try {
       const querySnapshot = await getDocs(collection(db, "songs"));
 
@@ -386,6 +387,7 @@ export const searchSong = async (text, setResult) => {
 // SEARCH SINGER
 export const searchSinger = async (text, setResult) => {
   if (text.trim() !== "") {
+    text = text.trim();
     try {
       const querySnapshot = await getDocs(collection(db, "artists"));
 
