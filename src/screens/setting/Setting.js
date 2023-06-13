@@ -7,33 +7,34 @@ import {
   ScrollView,
   Switch,
   TouchableOpacity,
+  Image,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-import { auth, db } from "../../services/firebaseConfig";
-import { signOut } from "firebase/auth";
-
-import { fetchUser } from "../../utils/FirebaseHandler";
-import { selectSong, pause } from "../../utils/AudioController";
+import { auth, db, storage } from "../../services/firebaseConfig";
+import { signOut, updateProfile } from "firebase/auth";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { updateDoc, doc } from "firebase/firestore";
 
 import SearchBar from "../../components/SearchBar";
 import MiniPlayer from "../../components/MiniPlayer";
-// import { Avatar } from 'react-native-paper';
+
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext";
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as ImagePicker from "expo-image-picker";
 
 const SECTIONS = [
   {
-    header: "Profile",
+    header: "Thông tin tài khoản",
     items: [
       {
         id: "changeName",
         icon: "person-circle-outline",
-        label: "Đổi nick name",
+        label: "Đổi tên hiển thị",
         type: "modal",
       },
       {
@@ -45,14 +46,14 @@ const SECTIONS = [
     ],
   },
   {
-    header: "Preferences",
+    header: "Điều khiển",
     items: [
-      {
-        id: "notification",
-        icon: "md-notifications-outline",
-        label: "Thông báo",
-        type: "link",
-      },
+      // {
+      //   id: "notification",
+      //   icon: "md-notifications-outline",
+      //   label: "Thông báo",
+      //   type: "link",
+      // },
       {
         id: "language",
         icon: "trail-sign-outline",
@@ -103,33 +104,74 @@ const Setting = () => {
     isPlaying,
     updateState,
   } = context;
-  const [userName, setUserName] = useState(null);
-  const navigation = useNavigation();
 
-  // useEffect(async () => {
-  //   await fetchUser(userId, setUserName);
-  // }, []);
+  const navigation = useNavigation();
+  const [avatar, setAvatar] = useState(auth.currentUser.photoURL);
+
+  useEffect(() => {
+    console.log("ok");
+  }, []);
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      quality: 0.5,
+    });
+
+    if (!result.canceled) {
+      const uri = result.assets[0].uri;
+      const avtref = ref(
+        storage,
+        `avatar/${uri.substring(uri.lastIndexOf("/") + 1)}`
+      );
+
+      const img = await fetch(uri);
+      const bytes = await img.blob();
+
+      try {
+        const snapshot = await uploadBytes(avtref, bytes);
+        const url = await getDownloadURL(snapshot.ref);
+        await setAvatar(url);
+        await updateProfile(auth.currentUser, {
+          photoURL: url,
+        });
+
+        const userRef = doc(db, "users/" + auth.currentUser.uid);
+        await updateDoc(userRef, {
+          avatar: url,
+        });
+        console.log(`Upload and update avatar successfully!`);
+      } catch (error) {
+        console.error(
+          `Error occurred while uploading or updating avatar: ${error}`
+        );
+      }
+    }
+  };
 
   const dangxuat = () => {
     signOut(auth)
       .then(async () => {
-        if (isPlaying) selectSong(context, currentAudio);
-        updateState(context, {
-          currentAudio: null,
-          currentAudioIndex: null,
-          isPlaying: false,
-          isLooping: false,
-          playbackPosition: null,
-          playbackDuration: null,
-        });
+        // if (isPlaying) selectSong(context, currentAudio);
+        // updateState(context, {
+        //   currentAudio: null,
+        //   currentAudioIndex: null,
+        //   isPlaying: false,
+        //   isLooping: false,
+        //   playbackPosition: null,
+        //   playbackDuration: null,
+        // });
         try {
-          await AsyncStorage.removeItem('email');
-          await AsyncStorage.removeItem('password');
-          console.log('setup email and password = null log out');
+          await AsyncStorage.removeItem("email");
+          await AsyncStorage.removeItem("password");
+          console.log("setup email and password = null log out");
         } catch (error) {
-          console.error('Lỗi khi setup email and password user log out: ', error);
+          console.error(
+            "Lỗi khi setup email and password user log out: ",
+            error
+          );
         }
-        navigation.navigate("Login");
+        navigation.replace("Login");
       })
       .catch((error) => {
         console.log(error);
@@ -147,8 +189,15 @@ const Setting = () => {
         <View style={styles.userInfoSection}>
           {/* <Avatar.Icon size={80} icon="account" /> */}
           <Text style={[styles.userName, { color: colors.text }]}>
-            User
+            {auth.currentUser.displayName}
           </Text>
+          <TouchableOpacity
+            onPress={async () => {
+              await pickImage();
+            }}
+          >
+            <Image source={{ uri: avatar }} style={styles.avatar} />
+          </TouchableOpacity>
         </View>
 
         {SECTIONS.map(({ header, items }) => {
@@ -160,8 +209,8 @@ const Setting = () => {
                   <TouchableOpacity
                     key={id}
                     onPress={() => {
-                      id == "logOut" ? dangxuat() : alert(id);
-                      id == "darkMode" ? toggleTheme() : alert(id)
+                      if (id == "logOut") dangxuat();
+                      else if (id == "darkMode") toggleTheme();
                     }}
                   >
                     <View
@@ -228,7 +277,16 @@ const styles = StyleSheet.create({
   },
   userName: {
     fontSize: 30,
+    fontWeight: 500,
     marginTop: 5,
+  },
+  avatar: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    borderWidth: 2,
+    borderColor: "#e9edf0",
+    marginVertical: 10,
   },
   section: {
     paddingHorizontal: 24,

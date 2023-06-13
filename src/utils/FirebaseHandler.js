@@ -14,10 +14,13 @@ import {
   startAfter,
   documentId,
   increment
+
 } from "firebase/firestore";
 
-import { Audio } from "expo-av";
+import jsrmvi from "jsrmvi";
+import { removeVI, DefaultOption } from "jsrmvi";
 
+import { Audio } from "expo-av";
 
 
 
@@ -30,10 +33,20 @@ export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
   if (listSong.length > 0) {
     // const lastVisibleSong = listSong[listSong.length - 1];
     // console.log(lastVisibleSong);
-    q = query(songsCollection, orderBy('view', 'desc'), orderBy('public', 'desc'), startAfter(lastVisibleSong), limit(limitSong))
-  }
-  else
-    q = query(songsCollection, orderBy('view', 'desc'), orderBy('public', 'desc'), limit(limitSong));
+    q = query(
+      songsCollection,
+      orderBy("view", "desc"),
+      orderBy("public", "desc"),
+      startAfter(lastVisibleSong),
+      limit(limitSong)
+    );
+  } else
+    q = query(
+      songsCollection,
+      orderBy("view", "desc"),
+      orderBy("public", "desc"),
+      limit(limitSong)
+    );
 
   const querySnapshot = await getDocs(q);
 
@@ -51,15 +64,28 @@ export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
   }));
   // console.log([songsArray, lastVisible])
   return [songsArray, lastVisible];
-}
+};
 //fetch limit singer
-export const loadSinger = async (listSinger, limitSinger, lastVisibleSinger) => {
-  const singerCollection = collection(db, 'artists');
+export const loadSinger = async (
+  listSinger,
+  limitSinger,
+  lastVisibleSinger
+) => {
+  const singerCollection = collection(db, "artists");
   let q = null;
   if (listSinger.length > 0)
-    q = query(singerCollection, orderBy('follower', 'desc'), startAfter(lastVisibleSinger), limit(limitSinger));
+    q = query(
+      singerCollection,
+      orderBy("follower", "desc"),
+      startAfter(lastVisibleSinger),
+      limit(limitSinger)
+    );
   else
-    q = query(singerCollection, orderBy('follower', 'desc'), limit(limitSinger));
+    q = query(
+      singerCollection,
+      orderBy("follower", "desc"),
+      limit(limitSinger)
+    );
 
   const querySnapshot = await getDocs(q);
 
@@ -69,19 +95,23 @@ export const loadSinger = async (listSinger, limitSinger, lastVisibleSinger) => 
     id: doc.id,
     name: doc.data().name,
     image: doc.data().image,
-    follower: doc.data().follower
-  }))
+    follower: doc.data().follower,
+  }));
   return [singerArray, lastVisible];
-}
+};
 
 //fetch limit album
 export const loadAlbum = async (listAlbum, limitAlbum, lastVisibleAlbum) => {
-  const albumCollection = collection(db, 'albums');
+  const albumCollection = collection(db, "albums");
   let q = null;
   if (listAlbum.length > 0)
-    q = query(albumCollection, orderBy('public', 'desc'), startAfter(lastVisibleAlbum), limit(limitAlbum));
-  else
-    q = query(albumCollection, orderBy('public', 'desc'), limit(limitAlbum));
+    q = query(
+      albumCollection,
+      orderBy("public", "desc"),
+      startAfter(lastVisibleAlbum),
+      limit(limitAlbum)
+    );
+  else q = query(albumCollection, orderBy("public", "desc"), limit(limitAlbum));
   const querySnapshot = await getDocs(q);
   const lastVisible = querySnapshot.docs[querySnapshot.docs.length - 1];
   let albumData = [];
@@ -97,13 +127,13 @@ export const loadAlbum = async (listAlbum, limitAlbum, lastVisibleAlbum) => {
       image: album.image,
       singer: signer.data().name,
       idSinger: signer.id,
-      public: album.public
-    }
+      public: album.public,
+    };
     albumData.push(song);
   }
 
   return [albumData, lastVisible];
-}
+};
 
 export const fetchDetailSong = async (docRef) => {
   try {
@@ -114,15 +144,7 @@ export const fetchDetailSong = async (docRef) => {
   }
 };
 
-// //fetch all id genre
-// export const fetchListIdGenre = async () => {
-//   try {
-//     const querySnapshot = await getDocs(collection(db, "genre"));
-//     return querySnapshot.docs.map((doc) => doc.id);
-//   } catch (error) {
-//     console.log("Fail to fetchListIdGenre", error);
-//   }
-// }
+
 
 // SAVE RECENT
 export const fetchRecent = async (docRef) => {
@@ -219,11 +241,10 @@ export const fetchFollowArtist = async (address) => {
   // console.log(docSnap.data(), docSnap.id)
 
   return docSnap.data().follower;
-}
+};
 
 //fetch all song of artist
 export const fetchSongOfArtist = async (idSigner) => {
-
   const songRef = collection(db, "songs");
   const q = query(songRef, where("artists.id", "==", idSigner));
   const querySnapshot = await getDocs(q);
@@ -240,13 +261,17 @@ export const fetchSongOfArtist = async (idSigner) => {
   }));
   // console.log(songsArray);
   return songsArray;
-
 }
 
 //fetch top song
 export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");
-  const q = query(songsRef, orderBy("view", 'desc'), orderBy("public", 'desc'), limit(10));
+  const q = query(
+    songsRef,
+    orderBy("view", "desc"),
+    orderBy("public", "desc"),
+    limit(10)
+  );
   const querySnapshot = await getDocs(q);
   const songsArray = querySnapshot.docs.map((docRef) => ({
     id: docRef.id,
@@ -257,7 +282,7 @@ export const fetchTopSong = async () => {
     album: docRef.data().album,
     uri: docRef.data().url,
     lyric: docRef.data().lyric,
-    view: docRef.data().view
+    view: docRef.data().view,
   }));
   return songsArray;
 }
@@ -340,4 +365,76 @@ export const getRecent = async (userId) => {
   } catch (error) {
     console.log("Fail to fetch history songs", error);
   }
+};
+
+
+// convert VN text to EN text
+function VN_to_EN(text) {
+  const result = removeVI(text, { replaceSpecialCharacters: false });
+  return result;
+}
+
+// SEARCH SONG
+export const searchSong = async (text, setResult) => {
+  if (text.trim() !== "") {
+    text = text.trim();
+    try {
+      const querySnapshot = await getDocs(collection(db, "songs"));
+
+      // Lọc các bản ghi chứa chuỗi "text"
+      const filteredDocs = querySnapshot.docs.filter((doc) => {
+        // tìm kiếm tương đối
+        return VN_to_EN(text)
+          .split(" ")
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
+      });
+
+      // Xử lý các bản ghi đã lọc được
+      const songsArray = filteredDocs.map((doc) => ({
+        id: doc.id,
+        name: doc.data().name,
+        image: doc.data().image,
+        public: doc.data().public,
+        singer: doc.data().artists,
+        album: doc.data().album,
+        uri: doc.data().url,
+        lyric: doc.data().lyric,
+        view: doc.data().view,
+      }));
+
+      setResult(songsArray);
+    } catch (error) {
+      console.log("Fail to SEARCH songs", error);
+    }
+  } else setResult([]);
+};
+
+// SEARCH SINGER
+export const searchSinger = async (text, setResult) => {
+  if (text.trim() !== "") {
+    text = text.trim();
+    try {
+      const querySnapshot = await getDocs(collection(db, "artists"));
+
+      // Lọc các bản ghi chứa chuỗi "text"
+      const filteredDocs = querySnapshot.docs.filter((doc) => {
+        // tìm kiếm tương đối
+        return VN_to_EN(text)
+          .split(" ")
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
+      });
+
+      // Xử lý các bản ghi đã lọc được
+      const songsArray = filteredDocs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+
+      setResult(songsArray);
+    } catch (error) {
+      console.log("Fail to SEARCH artists", error);
+    }
+  } else setResult([]);
 };

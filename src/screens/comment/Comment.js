@@ -25,6 +25,7 @@ import {
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
+
 const Comment = () => {
   const { colors } = useContext(ThemeContext);
   const { currentAudio, userId } = useContext(AudioContext);
@@ -73,11 +74,12 @@ const Comment = () => {
           user: {
             id: userSnapshot.id,
             name: userSnapshot.data().name,
+            avatar: userSnapshot.data().avatar,
           },
         };
-
         comments.push(comment);
       }
+
       setList(comments);
       setLoaded(true);
     } catch (error) {
@@ -97,7 +99,11 @@ const Comment = () => {
       <FlatList
         data={list}
         renderItem={({ item }) => (
-          <CommentItem userName={item.user.name} content={item.content} />
+          <CommentItem
+            userName={item.user.name}
+            content={item.content}
+            avatar={item.user.avatar}
+          />
         )}
         keyExtractor={(item, index) => index}
       />

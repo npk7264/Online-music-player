@@ -65,7 +65,7 @@ const Chart = () => {
 
       <SearchBar title={"Thịnh hành"} />
 
-      {!loaded && <View style={styles.container}><ActivityIndicator size="large" color={colors.primary} /></View>}
+      {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
       {loaded && (
         <View
           style={{
@@ -112,7 +112,7 @@ const Chart = () => {
                   style={{ fontSize: 12 }}
                 />
               }
-            // labelComponent={<SongBarLabel />}
+              // labelComponent={<SongBarLabel />}
             />
           </VictoryChart>
         </View>
@@ -161,8 +161,8 @@ export default Chart;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   rank: {
     flex: 1,
@@ -172,8 +172,8 @@ const styles = StyleSheet.create({
   },
   viewTextRank: {
     width: 50,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     // backgroundColor: 'red',
   },
   numRank: {

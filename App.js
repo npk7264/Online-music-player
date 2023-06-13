@@ -74,20 +74,6 @@ export default function App() {
     prepare();
   }, []);
 
-  // useEffect(() => {
-  //   const unsubscribe = auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       setInitScreen("BottomMenu");
-  //       console.log(true);
-  //     } else {
-  //       setInitScreen("Login");
-  //       console.log(false);
-  //     }
-  //   });
-  //   return unsubscribe;
-  // }, []);
-
-
   const onLayoutRootView = useCallback(async () => {
     if (appIsReady) {
       await SplashScreen.hideAsync();
