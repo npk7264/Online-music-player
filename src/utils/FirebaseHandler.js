@@ -14,6 +14,9 @@ import {
   startAfter,
 } from "firebase/firestore";
 
+import jsrmvi from "jsrmvi";
+import { removeVI, DefaultOption } from "jsrmvi";
+
 import { Audio } from "expo-av";
 
 // FETCH ALL SONGS
@@ -340,6 +343,12 @@ export const fetchTopSong = async () => {
   return songsArray;
 };
 
+// convert VN text to EN text
+function VN_to_EN(text) {
+  const result = removeVI(text, { replaceSpecialCharacters: false });
+  return result;
+}
+
 // SEARCH SONG
 export const searchSong = async (text, setResult) => {
   if (text.trim() !== "") {
@@ -349,10 +358,9 @@ export const searchSong = async (text, setResult) => {
       // Lọc các bản ghi chứa chuỗi "text"
       const filteredDocs = querySnapshot.docs.filter((doc) => {
         // tìm kiếm tương đối
-        return text
-          .toLowerCase()
+        return VN_to_EN(text)
           .split(" ")
-          .some((char) => doc.data().name.toLowerCase().includes(char));
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
       });
 
       // Xử lý các bản ghi đã lọc được
@@ -384,10 +392,9 @@ export const searchSinger = async (text, setResult) => {
       // Lọc các bản ghi chứa chuỗi "text"
       const filteredDocs = querySnapshot.docs.filter((doc) => {
         // tìm kiếm tương đối
-        return text
-          .toLowerCase()
+        return VN_to_EN(text)
           .split(" ")
-          .some((char) => doc.data().name.toLowerCase().includes(char));
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
       });
 
       // Xử lý các bản ghi đã lọc được
