@@ -207,21 +207,15 @@ export const fetchRecentestSong = async (userId, context) => {
   let recentList = data.recently;
   const recentestSong =
     recentList != [] ? songData.find((item) => item.id == recentList[0]) : {};
-
-  // PHÁT NỀN
-  await Audio.setAudioModeAsync({
-    staysActiveInBackground: true,
-  });
-
-  await updateState(context, {
-    userId: userId,
-    soundObj: null,
-    // songData: songs,
-    currentAudio: recentestSong,
-    playbackObj: new Audio.Sound(),
-    playbackPosition: data.songPosition ? data.songPosition : null,
-    playbackDuration: data.songDuration ? data.songDuration : null,
-  });
+  console.log(data.recently);
+  // await updateState(context, {
+  //   userId: userId,
+  //   soundObj: null,
+  //   // songData: songs,
+  //   currentAudio: recentestSong,
+  //   playbackPosition: data.songPosition ? data.songPosition : null,
+  //   playbackDuration: data.songDuration ? data.songDuration : null,
+  // });
   // console.log("lastPosition", data.songPosition);
 };
 

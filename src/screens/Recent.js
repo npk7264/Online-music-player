@@ -27,7 +27,8 @@ import {
   updateDoc,
   query,
   where,
-  documentId
+  documentId,
+  orderBy,
 } from "firebase/firestore";
 
 const Recent = () => {
@@ -57,8 +58,8 @@ const Recent = () => {
             album: docRef.data().album,
             uri: docRef.data().url,
             lyric: docRef.data().lyric,
-            view: docRef.data().view
-          }
+            view: docRef.data().view,
+          };
           return songData;
         })
       );
@@ -66,9 +67,8 @@ const Recent = () => {
         const indexA = history.indexOf(a.id);
         const indexB = history.indexOf(b.id);
         return indexA - indexB;
-      })
-      setRecentData(sortedSongs);
-      // console.log(songsArray);
+      });
+      setRecentData(songsArray);
     } catch (error) {
       console.log("Fail to fetch history songs", error);
     }

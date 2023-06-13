@@ -60,7 +60,7 @@ const Search = () => {
               color: colors.text,
             },
           ]}
-          placeholder="Bài hát, nghệ sĩ,..."
+          placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
           placeholderTextColor={colors.text}
           autoFocus={true}
           onFocus={() => setIsFocused(true)}

@@ -26,6 +26,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
+import { selectSong, pause } from "../../utils/AudioController";
 
 const SECTIONS = [
   {
@@ -106,11 +107,7 @@ const Setting = () => {
   } = context;
 
   const navigation = useNavigation();
-  const [avatar, setAvatar] = useState(auth.currentUser.photoURL);
-
-  useEffect(() => {
-    console.log("ok");
-  }, []);
+  const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -152,8 +149,8 @@ const Setting = () => {
   const dangxuat = () => {
     signOut(auth)
       .then(async () => {
-        // if (isPlaying) selectSong(context, currentAudio);
-        // updateState(context, {
+        if (isPlaying) await selectSong(context, currentAudio, [currentAudio]);
+        // await updateState(context, {
         //   currentAudio: null,
         //   currentAudioIndex: null,
         //   isPlaying: false,
@@ -161,6 +158,7 @@ const Setting = () => {
         //   playbackPosition: null,
         //   playbackDuration: null,
         // });
+
         try {
           await AsyncStorage.removeItem("email");
           await AsyncStorage.removeItem("password");
@@ -189,7 +187,7 @@ const Setting = () => {
         <View style={styles.userInfoSection}>
           {/* <Avatar.Icon size={80} icon="account" /> */}
           <Text style={[styles.userName, { color: colors.text }]}>
-            {auth.currentUser.displayName}
+            {auth.currentUser?.displayName}
           </Text>
           <TouchableOpacity
             onPress={async () => {
