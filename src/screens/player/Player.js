@@ -50,6 +50,7 @@ const Player = () => {
     playbackPosition,
     playbackDuration,
     updateState,
+    songData,
   } = context;
   const [currentPosition, setCurrentPositon] = useState(0);
   const [currentTime, setCurrentTime] = useState("00:00");
@@ -309,7 +310,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                selectSong(context, currentAudio);
+                selectSong(context, currentAudio, songData);
               }}
             >
               <FontAwesome

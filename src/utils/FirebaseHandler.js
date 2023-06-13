@@ -114,15 +114,15 @@ export const fetchDetailSong = async (docRef) => {
   }
 };
 
-//fetch all id genre
-export const fetchListIdGenre = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "genre"));
-    return querySnapshot.docs.map((doc) => doc.id);
-  } catch (error) {
-    console.log("Fail to fetchListIdGenre", error);
-  }
-}
+// //fetch all id genre
+// export const fetchListIdGenre = async () => {
+//   try {
+//     const querySnapshot = await getDocs(collection(db, "genre"));
+//     return querySnapshot.docs.map((doc) => doc.id);
+//   } catch (error) {
+//     console.log("Fail to fetchListIdGenre", error);
+//   }
+// }
 
 // SAVE RECENT
 export const fetchRecent = async (docRef) => {
@@ -177,12 +177,9 @@ export const fetchUser = async (userId, setUserName) => {
 };
 
 export const fetchRecentestSong = async (userId, context) => {
-  const { songData, updateState } = context;
-  // const songs = await fetchSongs();
+  const { updateState } = context;
   const data = await fetchRecent(doc(db, "users/" + userId));
-  let recentList = data.recently;
-  const recentestSong =
-    recentList != [] ? songData.find((item) => item.id == recentList[0]) : {};
+  let recentList = await getRecent(userId);
 
   // PHÁT NỀN
   await Audio.setAudioModeAsync({
@@ -192,8 +189,8 @@ export const fetchRecentestSong = async (userId, context) => {
   await updateState(context, {
     userId: userId,
     soundObj: null,
-    // songData: songs,
-    currentAudio: recentestSong,
+    songData: recentList,
+    currentAudio: recentList[0],
     playbackObj: new Audio.Sound(),
     playbackPosition: data.songPosition ? data.songPosition : null,
     playbackDuration: data.songDuration ? data.songDuration : null,
