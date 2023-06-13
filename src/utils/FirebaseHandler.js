@@ -12,7 +12,8 @@ import {
   orderBy,
   limit,
   startAfter,
-  documentId
+  documentId,
+  increment
 } from "firebase/firestore";
 
 import { Audio } from "expo-av";
@@ -113,6 +114,16 @@ export const fetchDetailSong = async (docRef) => {
   }
 };
 
+//fetch all id genre
+export const fetchListIdGenre = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "genre"));
+    return querySnapshot.docs.map((doc) => doc.id);
+  } catch (error) {
+    console.log("Fail to fetchListIdGenre", error);
+  }
+}
+
 // SAVE RECENT
 export const fetchRecent = async (docRef) => {
   try {
@@ -123,7 +134,7 @@ export const fetchRecent = async (docRef) => {
   }
 };
 
-// UPDATE RECENT
+// UPDATE RECENT and update genre
 export const updateRecent = async (userId, audioId) => {
   const userRef = doc(db, "users/" + userId);
   let data = await fetchRecent(userRef);
@@ -132,14 +143,22 @@ export const updateRecent = async (userId, audioId) => {
   });
 
   const songRef = doc(db, "songs/" + audioId);
+
+  //update thong ke genre
   let songDetail = await fetchDetailSong(songRef);
+  const genreCount = data.genre ? data.genre : null;
+  const updateDataUser = {}
+  songDetail.genre.forEach(key => {
+    updateDataUser[`genre.${key}`] = genreCount !== null && genreCount[key] !== undefined ? genreCount[key] + 1 : 1;
+  });
+
+  //update recent
+  updateDataUser['recently'] = [audioId, ...recentList]
 
   try {
-    await updateDoc(userRef, {
-      recently: [audioId, ...recentList],
-    });
+    await updateDoc(userRef, updateDataUser);
     await updateDoc(songRef, {
-      view: songDetail.view + 1,
+      view: increment(1),
     });
   } catch (e) {
     alert("Failed to save recent song!", e);

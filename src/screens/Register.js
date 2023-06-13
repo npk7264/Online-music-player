@@ -14,12 +14,22 @@ import { color } from "../constants/color";
 import { auth, db } from "../services/firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+// import { fetchListIdGenre } from "../utils/FirebaseHandler";
+
+
+// const arrayToObj = (array) => {
+//   return array.reduce((obj, id) => {
+//     obj[id] = 0;
+//     return obj;
+//   }, {});
+// };
 
 const Register = () => {
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  // const [listGenre, setListGenre] = useState([]);
 
   const handleRegister = () => {
     createUserWithEmailAndPassword(auth, email, password)
@@ -29,6 +39,7 @@ const Register = () => {
           name: name,
           favorite: [],
           recently: [],
+          // genre: listGenre
         });
 
         try {
@@ -42,13 +53,20 @@ const Register = () => {
         navigation.replace("Login");
       })
       .catch((error) => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorMessage);
       });
   };
 
-  useEffect(() => { }, []);
+  useEffect(() => {
+    // const fetchData = async () => {
+    //   const listGenre = await fetchListIdGenre();
+    //   const genreObject = arrayToObj(listGenre);
+    //   setListGenre(genreObject);
+    // }
+    // fetchData();
+  }, []);
 
   return (
     <SafeAreaView
