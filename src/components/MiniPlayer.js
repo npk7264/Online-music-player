@@ -8,7 +8,7 @@ import { Ionicons } from "@expo/vector-icons";
 
 const MiniPlayer = () => {
   const contextAudio = useContext(AudioContext);
-  const { currentAudio, isPlaying } = contextAudio;
+  const { currentAudio, isPlaying, songData } = contextAudio;
   const { colors } = useContext(ThemeContext);
   const navigation = useNavigation();
 
@@ -49,7 +49,7 @@ const MiniPlayer = () => {
               alignItems: "center",
               justifyContent: "center",
             }}
-            onPress={async () => await selectSong(contextAudio, currentAudio)}
+            onPress={async () => await selectSong(contextAudio, currentAudio, songData)}
           >
             <Ionicons
               name={isPlaying ? "pause-circle" : "play-circle"}

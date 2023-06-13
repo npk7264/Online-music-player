@@ -73,11 +73,10 @@ export const selectSong = async (context, audio, songData) => {
     playbackPosition,
   } = context;
   try {
-
     // playing audio for the first time.
     if (soundObj === null) {
-      const status = await play(playbackObj, audio.uri, playbackPosition);
-      const index = songData.findIndex(({ id }) => id === audio.id);
+      const status = await play(playbackObj, audio.uri, audio.id === currentAudio.id ? playbackPosition : 0);
+      const index = songData?.findIndex(({ id }) => id === audio.id);
       console.log(index);
       updateState(context, {
         currentAudio: audio,
@@ -86,6 +85,7 @@ export const selectSong = async (context, audio, songData) => {
         songData: songData,
         isPlaying: true,
         playbackDuration: status.durationMillis,
+        // playbackPosition: 0,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       updateRecent(userId, audio.id);
@@ -109,7 +109,7 @@ export const selectSong = async (context, audio, songData) => {
     }
 
     // resume audio
-    if (!isPlaying && currentAudio.id === audio.id) {
+    if (!isPlaying && (currentAudio.id === audio.id)) {
       const status = await resume(playbackObj);
       return updateState(context, { soundObj: status, isPlaying: true });
     }
@@ -118,7 +118,7 @@ export const selectSong = async (context, audio, songData) => {
     if (currentAudio.id !== audio.id) {
       const status = await playNext(playbackObj, audio.uri);
       const index = songData.findIndex(({ id }) => id === audio.id);
-      console.log(index);
+      console.log('select another audio', index);
       updateState(context, {
         currentAudio: audio,
         currentAudioIndex: index,
@@ -127,6 +127,7 @@ export const selectSong = async (context, audio, songData) => {
         songData: songData,
         isLooping: false,
         playbackDuration: status.durationMillis,
+        // playbackPosition: 0,
       });
       updateRecent(userId, audio.id);
       return;

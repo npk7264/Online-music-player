@@ -28,8 +28,8 @@ const Register = () => {
 
         const defaultAvatar =
           "https://firebasestorage.googleapis.com/v0/b/musicapp-80f91.appspot.com/o/avatar%2Fdefault.jpg?alt=media&token=d18fc833-4899-44fb-8094-f4e3ba861c40&_gl=1*qx3bkt*_ga*NDQ0NjU1MTI2LjE2ODQzNDA2OTM.*_ga_CW55HF8NVT*MTY4NjUzMjIxNS4zMy4xLjE2ODY1MzQwMzAuMC4wLjA.";
-        
-          // khởi tạo thông tin user
+
+        // khởi tạo thông tin user
         setDoc(doc(db, "users", user.uid), {
           name: name,
           favorite: [],
@@ -54,13 +54,11 @@ const Register = () => {
         navigation.replace("Login");
       })
       .catch((error) => {
-        const errorCode = error.code;
+        // const errorCode = error.code;
         const errorMessage = error.message;
         alert(errorMessage);
       });
   };
-
-  useEffect(() => {}, []);
 
   return (
     <SafeAreaView
