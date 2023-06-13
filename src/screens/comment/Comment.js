@@ -25,6 +25,7 @@ import {
   orderBy,
   serverTimestamp,
 } from "firebase/firestore";
+
 const Comment = () => {
   const { colors } = useContext(ThemeContext);
   const { currentAudio, userId } = useContext(AudioContext);
@@ -78,6 +79,7 @@ const Comment = () => {
         };
         comments.push(comment);
       }
+
       setList(comments);
       setLoaded(true);
     } catch (error) {

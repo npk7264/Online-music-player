@@ -29,12 +29,12 @@ import * as ImagePicker from "expo-image-picker";
 
 const SECTIONS = [
   {
-    header: "Profile",
+    header: "Thông tin tài khoản",
     items: [
       {
         id: "changeName",
         icon: "person-circle-outline",
-        label: "Đổi nick name",
+        label: "Đổi tên hiển thị",
         type: "modal",
       },
       {
@@ -46,14 +46,14 @@ const SECTIONS = [
     ],
   },
   {
-    header: "Preferences",
+    header: "Điều khiển",
     items: [
-      {
-        id: "notification",
-        icon: "md-notifications-outline",
-        label: "Thông báo",
-        type: "link",
-      },
+      // {
+      //   id: "notification",
+      //   icon: "md-notifications-outline",
+      //   label: "Thông báo",
+      //   type: "link",
+      // },
       {
         id: "language",
         icon: "trail-sign-outline",
@@ -209,8 +209,8 @@ const Setting = () => {
                   <TouchableOpacity
                     key={id}
                     onPress={() => {
-                      id == "logOut" ? dangxuat() : alert(id);
-                      id == "darkMode" ? toggleTheme() : alert(id);
+                      if (id == "logOut") dangxuat();
+                      else if (id == "darkMode") toggleTheme();
                     }}
                   >
                     <View

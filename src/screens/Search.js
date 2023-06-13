@@ -16,9 +16,10 @@ import { useNavigation } from "@react-navigation/core";
 import { ThemeContext } from "../context/ThemeContext";
 import { AudioContext } from "../context/AudioContext";
 import FlatListSong from "../components/FlatListSong";
+import ArtistItem from "../components/ArtistItem";
 import { color } from "../constants/color";
 
-import { searchSong } from "../utils/FirebaseHandler";
+import { searchSinger, searchSong } from "../utils/FirebaseHandler";
 
 const Search = () => {
   const { colors, darkMode } = useContext(ThemeContext);
@@ -65,7 +66,9 @@ const Search = () => {
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChangeText={(text) => {
-            searchSong(text, setResult);
+            setSearchText(text);
+            if (searchType == 0) searchSong(text, setResult);
+            else if (searchType == 1) searchSinger(text, setResult);
           }}
         />
       </View>
@@ -79,7 +82,11 @@ const Search = () => {
                 searchType === 0 ? colors.primary : colors.background,
             },
           ]}
-          onPress={() => setSearchType(0)}
+          onPress={() => {
+            setResult([]);
+            setSearchType(0);
+            searchSong(searchText, setResult);
+          }}
         >
           <Text
             style={[
@@ -98,7 +105,11 @@ const Search = () => {
                 searchType === 1 ? colors.primary : colors.background,
             },
           ]}
-          onPress={() => setSearchType(1)}
+          onPress={() => {
+            setResult([]);
+            setSearchType(1);
+            searchSinger(searchText, setResult);
+          }}
         >
           <Text
             style={[
@@ -106,7 +117,7 @@ const Search = () => {
               { color: searchType === 1 ? "white" : colors.primary },
             ]}
           >
-            Ca Sĩ
+            Nghệ sĩ
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -131,7 +142,26 @@ const Search = () => {
       </View>
 
       {/* Search Result */}
-      {result != [] && <FlatListSong songs={result} />}
+      {result.length != 0 && searchType == 0 && <FlatListSong songs={result} />}
+      {result.length != 0 && searchType == 1 && (
+        <FlatList
+          data={result}
+          renderItem={({ item }) => (
+            <ArtistItem
+              id={item.id}
+              name={item.name}
+              image={item.image}
+              follower={item.follower}
+              onPressOptionModal={() => {
+                setOptionModalVisible(true);
+                setCurrentSinger(item);
+              }}
+            />
+          )}
+          keyExtractor={(item) => item.id}
+        />
+      )}
+
       {searchText != "" && result.length === 0 && (
         <View style={styles.nothingSearch}>
           <Text style={[styles.textType, { color: colors.text }]}>
@@ -171,14 +201,15 @@ const styles = StyleSheet.create({
   searchTypeItem: {
     borderColor: color.primary,
     borderWidth: 2,
-    borderRadius: 20,
-    height: 30,
+    borderRadius: 15,
+    height: 36,
     width: 100,
     justifyContent: "center",
     alignItems: "center",
   },
   textType: {
     fontSize: 15,
+    fontWeight: 500,
   },
   nothingSearch: {
     flex: 1,

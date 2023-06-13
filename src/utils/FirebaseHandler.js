@@ -14,6 +14,9 @@ import {
   startAfter,
 } from "firebase/firestore";
 
+import jsrmvi from "jsrmvi";
+import { removeVI, DefaultOption } from "jsrmvi";
+
 import { Audio } from "expo-av";
 
 // FETCH ALL SONGS
@@ -340,15 +343,25 @@ export const fetchTopSong = async () => {
   return songsArray;
 };
 
-// SEARCH
+// convert VN text to EN text
+function VN_to_EN(text) {
+  const result = removeVI(text, { replaceSpecialCharacters: false });
+  return result;
+}
+
+// SEARCH SONG
 export const searchSong = async (text, setResult) => {
   if (text.trim() !== "") {
+    text = text.trim();
     try {
       const querySnapshot = await getDocs(collection(db, "songs"));
 
       // Lọc các bản ghi chứa chuỗi "text"
       const filteredDocs = querySnapshot.docs.filter((doc) => {
-        return doc.data().name.toLowerCase().includes(text.toLowerCase()); // Thay "name" bằng trường tên bài hát của bạn
+        // tìm kiếm tương đối
+        return VN_to_EN(text)
+          .split(" ")
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
       });
 
       // Xử lý các bản ghi đã lọc được
@@ -366,7 +379,37 @@ export const searchSong = async (text, setResult) => {
 
       setResult(songsArray);
     } catch (error) {
-      console.log("Fail to fetch history songs", error);
+      console.log("Fail to SEARCH songs", error);
     }
-  }
+  } else setResult([]);
+};
+
+// SEARCH SINGER
+export const searchSinger = async (text, setResult) => {
+  if (text.trim() !== "") {
+    text = text.trim();
+    try {
+      const querySnapshot = await getDocs(collection(db, "artists"));
+
+      // Lọc các bản ghi chứa chuỗi "text"
+      const filteredDocs = querySnapshot.docs.filter((doc) => {
+        // tìm kiếm tương đối
+        return VN_to_EN(text)
+          .split(" ")
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
+      });
+
+      // Xử lý các bản ghi đã lọc được
+      const songsArray = filteredDocs.map((doc) => {
+        return {
+          id: doc.id,
+          ...doc.data(),
+        };
+      });
+
+      setResult(songsArray);
+    } catch (error) {
+      console.log("Fail to SEARCH artists", error);
+    }
+  } else setResult([]);
 };
