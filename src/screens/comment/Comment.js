@@ -60,25 +60,25 @@ const Comment = () => {
 
     try {
       const querySnapshot = await getDocs(q);
-      const comments = [];
 
-      for (const comment_doc of querySnapshot.docs) {
-        const commentData = comment_doc.data();
-        const userRef = doc(db, "users/" + comment_doc.data().userId);
-        const userSnapshot = await getDoc(userRef);
+      const comments = await Promise.all(
+        querySnapshot.docs.map(async (comment_doc) => {
+          const commentData = comment_doc.data();
+          const userRef = doc(db, `users/${commentData.userId}`);
+          const userSnapshot = await getDoc(userRef);
 
-        const comment = {
-          id: comment_doc.id,
-          content: commentData.content,
-          createdAt: commentData.created_at,
-          user: {
-            id: userSnapshot.id,
-            name: userSnapshot.data().name,
-            avatar: userSnapshot.data().avatar,
-          },
-        };
-        comments.push(comment);
-      }
+          return {
+            id: comment_doc.id,
+            content: commentData.content,
+            createdAt: commentData.created_at,
+            user: {
+              id: userSnapshot.id,
+              name: userSnapshot.data().name,
+              avatar: userSnapshot.data().avatar,
+            },
+          };
+        })
+      );
 
       setList(comments);
       setLoaded(true);

@@ -75,7 +75,11 @@ export const selectSong = async (context, audio, songData) => {
   try {
     // playing audio for the first time.
     if (soundObj === null) {
-      const status = await play(playbackObj, audio.uri, audio.id === currentAudio.id ? playbackPosition : 0);
+      const status = await play(
+        playbackObj,
+        audio.uri,
+        currentAudio ? (audio.id == currentAudio.id ? playbackPosition : 0) : 0
+      );
       const index = songData?.findIndex(({ id }) => id === audio.id);
       console.log(index);
       updateState(context, {
@@ -109,7 +113,7 @@ export const selectSong = async (context, audio, songData) => {
     }
 
     // resume audio
-    if (!isPlaying && (currentAudio.id === audio.id)) {
+    if (!isPlaying && currentAudio.id === audio.id) {
       const status = await resume(playbackObj);
       return updateState(context, { soundObj: status, isPlaying: true });
     }
@@ -118,7 +122,7 @@ export const selectSong = async (context, audio, songData) => {
     if (currentAudio.id !== audio.id) {
       const status = await playNext(playbackObj, audio.uri);
       const index = songData.findIndex(({ id }) => id === audio.id);
-      console.log('select another audio', index);
+      console.log("select another audio", index);
       updateState(context, {
         currentAudio: audio,
         currentAudioIndex: index,

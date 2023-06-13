@@ -13,16 +13,13 @@ import {
   limit,
   startAfter,
   documentId,
-  increment
-
+  increment,
 } from "firebase/firestore";
 
 import jsrmvi from "jsrmvi";
 import { removeVI, DefaultOption } from "jsrmvi";
 
 import { Audio } from "expo-av";
-
-
 
 //Fetch limit song
 export const loadSongs = async (listSong, limitSong, lastVisibleSong) => {
@@ -144,8 +141,6 @@ export const fetchDetailSong = async (docRef) => {
   }
 };
 
-
-
 // SAVE RECENT
 export const fetchRecent = async (docRef) => {
   try {
@@ -169,13 +164,16 @@ export const updateRecent = async (userId, audioId) => {
   //update thong ke genre
   let songDetail = await fetchDetailSong(songRef);
   const genreCount = data.genre ? data.genre : null;
-  const updateDataUser = {}
-  songDetail.genre.forEach(key => {
-    updateDataUser[`genre.${key}`] = genreCount !== null && genreCount[key] !== undefined ? genreCount[key] + 1 : 1;
+  const updateDataUser = {};
+  songDetail.genre.forEach((key) => {
+    updateDataUser[`genre.${key}`] =
+      genreCount !== null && genreCount[key] !== undefined
+        ? genreCount[key] + 1
+        : 1;
   });
 
   //update recent
-  updateDataUser['recently'] = [audioId, ...recentList]
+  updateDataUser["recently"] = [audioId, ...recentList];
 
   try {
     await updateDoc(userRef, updateDataUser);
@@ -200,24 +198,43 @@ export const fetchUser = async (userId, setUserName) => {
 
 export const fetchRecentestSong = async (userId, context) => {
   const { updateState } = context;
+
   const data = await fetchRecent(doc(db, "users/" + userId));
-  let recentList = await getRecent(userId);
+  let recentestId = data.recently[0];
+  console.log(userId);
 
-  // PHÁT NỀN
-  await Audio.setAudioModeAsync({
-    staysActiveInBackground: true,
-  });
+  if (recentestId != undefined) {
+    const songRef = doc(db, "songs", recentestId);
 
-  await updateState(context, {
-    userId: userId,
-    soundObj: null,
-    songData: recentList,
-    currentAudio: recentList[0],
-    playbackObj: new Audio.Sound(),
-    playbackPosition: data.songPosition ? data.songPosition : null,
-    playbackDuration: data.songDuration ? data.songDuration : null,
-  });
-  // console.log("lastPosition", data.songPosition);
+    const songSnapshot = await getDoc(songRef);
+    const song = {
+      id: songSnapshot.id,
+      name: songSnapshot.data().name,
+      image: songSnapshot.data().image,
+      public: songSnapshot.data().public,
+      singer: songSnapshot.data().artists,
+      album: songSnapshot.data().album,
+      uri: songSnapshot.data().url,
+      lyric: songSnapshot.data().lyric,
+      view: songSnapshot.data().view,
+    };
+
+    await updateState(context, {
+      userId: userId,
+      playbackObj: new Audio.Sound(),
+      soundObj: null,
+      songData: [song],
+      currentAudio: song,
+      playbackPosition: data.songPosition ? data.songPosition : null,
+      playbackDuration: data.songDuration ? data.songDuration : null,
+    });
+  } else {
+    await updateState(context, {
+      userId: userId,
+      playbackObj: new Audio.Sound(),
+      soundObj: null,
+    });
+  }
 };
 
 // UPDATE POSITION OF SONG
@@ -233,7 +250,6 @@ export const updateRecentestPositon = async (userId, position, duration) => {
     alert("Failed to save recent song!", e);
   }
 };
-
 
 export const fetchFollowArtist = async (address) => {
   const docRef = doc(db, address);
@@ -261,7 +277,7 @@ export const fetchSongOfArtist = async (idSigner) => {
   }));
   // console.log(songsArray);
   return songsArray;
-}
+};
 
 //fetch top song
 export const fetchTopSong = async () => {
@@ -285,7 +301,7 @@ export const fetchTopSong = async () => {
     view: docRef.data().view,
   }));
   return songsArray;
-}
+};
 
 //fetch favorite
 export const fetchFavorite = async (userId) => {
@@ -310,8 +326,8 @@ export const fetchFavorite = async (userId) => {
           album: docRef.data().album,
           uri: docRef.data().url,
           lyric: docRef.data().lyric,
-          view: docRef.data().view
-        }
+          view: docRef.data().view,
+        };
         return songData;
       })
     );
@@ -319,7 +335,7 @@ export const fetchFavorite = async (userId) => {
       const indexA = favorite.indexOf(a.id);
       const indexB = favorite.indexOf(b.id);
       return indexA - indexB;
-    })
+    });
     return sortedSongs;
     // console.log(songsArray);
   } catch (error) {
@@ -350,8 +366,8 @@ export const getRecent = async (userId) => {
           album: docRef.data().album,
           uri: docRef.data().url,
           lyric: docRef.data().lyric,
-          view: docRef.data().view
-        }
+          view: docRef.data().view,
+        };
         return songData;
       })
     );
@@ -359,14 +375,13 @@ export const getRecent = async (userId) => {
       const indexA = history.indexOf(a.id);
       const indexB = history.indexOf(b.id);
       return indexA - indexB;
-    })
+    });
     return sortedSongs;
     // console.log(songsArray);
   } catch (error) {
     console.log("Fail to fetch history songs", error);
   }
 };
-
 
 // convert VN text to EN text
 function VN_to_EN(text) {

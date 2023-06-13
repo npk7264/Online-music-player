@@ -12,7 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 const Register = () => {
@@ -43,13 +43,13 @@ const Register = () => {
           photoURL: defaultAvatar,
         });
 
-        try {
-          await AsyncStorage.setItem("email", email);
-          await AsyncStorage.setItem("password", password);
-          console.log("save email and password user signup");
-        } catch (error) {
-          console.error("Lỗi khi save email and password user signup:", error);
-        }
+        // try {
+        //   await AsyncStorage.setItem("email", email);
+        //   await AsyncStorage.setItem("password", password);
+        //   console.log("save email and password user signup");
+        // } catch (error) {
+        //   console.error("Lỗi khi save email and password user signup:", error);
+        // }
         alert("Đăng ký tài khoản thành công!");
         navigation.replace("Login");
       })

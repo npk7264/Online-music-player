@@ -140,6 +140,7 @@ const Chart = () => {
                 setOptionModalVisible(true);
                 setCurrentItem(item);
               }}
+              data={songs}
             />
           </View>
         )}

@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
     },
     numSong: {
         fontSize: 15,
-        marginTop: 10,
+        // marginTop: 10,
         color: 'gray',
         fontFamily: 'sans-serif',
     },
