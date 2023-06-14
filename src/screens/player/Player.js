@@ -52,7 +52,9 @@ const Player = () => {
     updateState,
     songData,
   } = context;
-  const [currentPosition, setCurrentPositon] = useState(playbackPosition);
+  const [currentPosition, setCurrentPositon] = useState(
+    !soundObj ? playbackPosition : 0
+  );
   const [currentTime, setCurrentTime] = useState("00:00");
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
