@@ -12,7 +12,10 @@ import { AudioContext } from "../context/AudioContext";
 import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+} from "firebase/auth";
 import { fetchRecentestSong } from "../utils/FirebaseHandler";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -47,6 +50,13 @@ const Login = () => {
 
   const handleLogin = () => {
     LoginFirebase(auth, email, password);
+  };
+
+  const forgotPasswrod = (email) => {
+    if (email !== "") {
+      sendPasswordResetEmail(auth, email);
+      alert("Kiểm tra email và đặt lại mật khẩu");
+    } else alert("Vui lòng nhập email!");
   };
 
   useEffect(() => {
@@ -122,8 +132,16 @@ const Login = () => {
           Đăng nhập
         </Text>
       </TouchableOpacity>
-      <Text style={{ fontSize: 16, fontWeight: "500", marginBottom: 10 }}>
-        Bạn chưa có tài khoản?
+      <Text
+        style={{
+          fontSize: 16,
+          fontWeight: "500",
+          marginBottom: 20,
+          padding: 5,
+        }}
+        onPress={() => forgotPasswrod(email)}
+      >
+        Quên mật khẩu?
       </Text>
       <TouchableOpacity
         style={[styles.button, { backgroundColor: "#006edc", width: "70%" }]}
@@ -161,6 +179,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.primary,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 10,
   },
 });

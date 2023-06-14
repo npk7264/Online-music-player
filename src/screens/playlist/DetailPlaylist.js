@@ -12,14 +12,17 @@ import BackBar from "../../components/BackBar";
 import { ThemeContext } from "../../context/ThemeContext";
 import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
+import MiniPlayer from "../../components/MiniPlayer";
 import { useNavigation } from "@react-navigation/native";
 
 import { PlaylistContext } from "../../context/PlaylistContext";
+import { AudioContext } from "../../context/AudioContext";
 import { useIsFocused } from "@react-navigation/native";
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
   const { listSong, filterSong, renderSong, playlistData } =
     useContext(PlaylistContext);
+  const { userId, currentAudio } = useContext(AudioContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
@@ -77,7 +80,18 @@ const DetailPlaylist = () => {
 
       {/* list song */}
       {renderSong.length > 0 && <FlatListSong songs={renderSong} />}
-      {/* {console.log(renderSong.length, listSong, idPlaylist, playlistData)} */}
+      {renderSong.length == 0 && (
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Text style={{ fontSize: 16 }}>Không có bài hát nào</Text>
+        </View>
+      )}
+      {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
 };
