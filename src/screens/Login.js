@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  ActivityIndicator,
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -26,6 +27,7 @@ const Login = () => {
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loaded, setLoaded] = useState(false);
 
   const LoginFirebase = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
@@ -75,13 +77,12 @@ const Login = () => {
         if (mail !== null && pass !== null) {
           LoginFirebase(auth, mail, pass);
           console.log("auto login complete");
-        }
+        } else setLoaded(true);
       } catch (error) {
         console.error("Lỗi khi signInAuto:", error);
       }
     };
     signInAuto();
-    console.log("LOGIN");
   }, []);
 
   return (
@@ -107,52 +108,61 @@ const Login = () => {
         </Text>
       </View>
 
-      {/* Input */}
-      <TextInput
-        style={styles.textInput}
-        placeholder="Email"
-        placeholderTextColor={"gray"}
-        onChangeText={(text) => {
-          setEmail(text);
-        }}
-      />
-      <TextInput
-        style={[styles.textInput, { marginBottom: 20 }]}
-        placeholderTextColor={"gray"}
-        placeholder="Mật khẩu"
-        onChangeText={(text) => {
-          setPassword(text);
-        }}
-        secureTextEntry={true}
-      />
+      {!loaded && <ActivityIndicator size="large" color="#ff8216" />}
 
-      {/* Button */}
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
-          Đăng nhập
-        </Text>
-      </TouchableOpacity>
-      <Text
-        style={{
-          fontSize: 16,
-          fontWeight: "500",
-          marginBottom: 20,
-          padding: 5,
-        }}
-        onPress={() => forgotPasswrod(email)}
-      >
-        Quên mật khẩu?
-      </Text>
-      <TouchableOpacity
-        style={[styles.button, { backgroundColor: "#006edc", width: "70%" }]}
-        onPress={() => {
-          navigation.replace("Register");
-        }}
-      >
-        <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
-          Tạo tài khoản mới
-        </Text>
-      </TouchableOpacity>
+      {loaded && (
+        <View style={{ width: "100%", flex: 1, alignItems: "center" }}>
+          {/* Input */}
+          <TextInput
+            style={styles.textInput}
+            placeholder="Email"
+            placeholderTextColor={"gray"}
+            onChangeText={(text) => {
+              setEmail(text);
+            }}
+          />
+          <TextInput
+            style={[styles.textInput, { marginBottom: 20 }]}
+            placeholderTextColor={"gray"}
+            placeholder="Mật khẩu"
+            onChangeText={(text) => {
+              setPassword(text);
+            }}
+            secureTextEntry={true}
+          />
+
+          {/* Button */}
+          <TouchableOpacity style={styles.button} onPress={handleLogin}>
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
+              Đăng nhập
+            </Text>
+          </TouchableOpacity>
+          <Text
+            style={{
+              fontSize: 16,
+              fontWeight: "500",
+              marginBottom: 20,
+              padding: 5,
+            }}
+            onPress={() => forgotPasswrod(email)}
+          >
+            Quên mật khẩu?
+          </Text>
+          <TouchableOpacity
+            style={[
+              styles.button,
+              { backgroundColor: "#006edc", width: "70%" },
+            ]}
+            onPress={() => {
+              navigation.replace("Register");
+            }}
+          >
+            <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
+              Tạo tài khoản mới
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </SafeAreaView>
   );
 };
