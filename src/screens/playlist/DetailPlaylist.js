@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  SafeAreaView,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 import BackBar from "../../components/BackBar";
@@ -7,38 +14,51 @@ import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
 import { useNavigation } from "@react-navigation/native";
 
-
-import { PlaylistContext } from '../../context/PlaylistContext';
-import { useIsFocused } from '@react-navigation/native';
+import { PlaylistContext } from "../../context/PlaylistContext";
+import { useIsFocused } from "@react-navigation/native";
 const DetailPlaylist = () => {
   const { colors } = useContext(ThemeContext);
-  const { listSong, filterSong, renderSong, playlistData } = useContext(PlaylistContext);
+  const { listSong, filterSong, renderSong, playlistData } =
+    useContext(PlaylistContext);
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     filterSong(listSong);
-  }, [isFocused])
+  }, [isFocused]);
 
   return (
-    <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
+    <SafeAreaView
+      style={[styles.container, { backgroundColor: colors.background }]}
+    >
       <BackBar isSearch={true}></BackBar>
       <View style={styles.header}>
         {/* info singer */}
         <Image
           source={require("../../../assets/temp.jpg")}
-          style={styles.poster} />
-        <Text style={[styles.singer, { color: colors.text }]}>{playlistData?.name}</Text>
+          style={styles.poster}
+        />
+        <Text style={[styles.singer, { color: colors.text }]}>
+          {playlistData?.name}
+        </Text>
         <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
         {/* button */}
         <View style={styles.buttons}>
-          <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
-            <Ionicons name='shuffle' size={20} color='white' />
-            <Text style={[styles.buttonText, { color: 'white' }]}>Shuffle</Text>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.primary }]}
+          >
+            <Ionicons name="shuffle" size={20} color="white" />
+            <Text style={[styles.buttonText, { color: "white" }]}>
+              Trộn bài
+            </Text>
           </TouchableOpacity>
-          <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
-            <Ionicons name='play-circle' size={20} color={colors.primary} />
-            <Text style={[styles.buttonText, { color: colors.primary }]}>Play</Text>
+          <TouchableOpacity
+            style={[styles.button, { backgroundColor: colors.frame }]}
+          >
+            <Ionicons name="play-circle" size={20} color={colors.primary} />
+            <Text style={[styles.buttonText, { color: colors.primary }]}>
+              Phát
+            </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -47,19 +67,16 @@ const DetailPlaylist = () => {
 
       {/* add songs */}
       <View style={[styles.addSong]}>
-        <Text style={{ fontSize: 20, color: colors.text }}>Bài hát</Text>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('AddSong')}>
-          <FontAwesome name='plus-square' size={30} color={colors.primary} />
+        <Text style={{ fontSize: 20, color: colors.text, fontWeight: 500 }}>
+          Bài hát
+        </Text>
+        <TouchableOpacity onPress={() => navigation.navigate("AddSong")}>
+          <FontAwesome name="plus-square" size={30} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
-
       {/* list song */}
-      {renderSong.length > 0 &&
-        <FlatListSong
-          songs={renderSong}
-        />}
+      {renderSong.length > 0 && <FlatListSong songs={renderSong} />}
       {/* {console.log(renderSong.length, listSong, idPlaylist, playlistData)} */}
     </SafeAreaView>
   );
@@ -70,64 +87,64 @@ export default DetailPlaylist;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
 
   header: {
     // flex: 1,
     marginTop: 10,
     // justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: "center",
   },
   poster: {
-    width: 200,
-    height: 200,
+    width: 150,
+    height: 150,
     borderRadius: 35,
   },
   singer: {
     fontSize: 28,
-    fontWeight: '900',
+    fontWeight: "900",
     marginTop: 10,
-    fontFamily: 'sans-serif',
+    fontFamily: "sans-serif",
   },
   numSong: {
     fontSize: 15,
-    marginTop: 10,
-    color: 'gray',
-    fontFamily: 'sans-serif',
+    // marginTop: 10,
+    color: "gray",
+    fontFamily: "sans-serif",
   },
   buttons: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    alignItems: "center",
     marginTop: 10,
   },
   button: {
     height: 45,
     width: 160,
-    backgroundColor: '#ff973e',
+    backgroundColor: "#ff973e",
     borderRadius: 40,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'row',
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "row",
   },
   buttonText: {
     fontSize: 16,
     marginLeft: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   line: {
-    borderColor: '#efefef',
+    borderColor: "#efefef",
     borderBottomWidth: 1,
     marginLeft: 20,
     marginRight: 20,
     paddingBottom: 25,
   },
   addSong: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingHorizontal: 20,
     marginVertical: 20,
   },
