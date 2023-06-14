@@ -279,6 +279,43 @@ export const fetchSongOfArtist = async (idSigner) => {
   return songsArray;
 };
 
+//fetch all song of album
+export const fetchSongOfAlbum = async (idAlbum) => {
+  try {
+    const songRef = collection(db, "songs");
+    const q = query(songRef, where("album", "==", idAlbum));
+    const querySnapshot = await getDocs(q);
+    const songsArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      name: docRef.data().name,
+      image: docRef.data().image,
+      // public: docRef.data().public,
+      singer: docRef.data().artists,
+      album: docRef.data().album,
+      uri: docRef.data().url,
+      lyric: docRef.data().lyric,
+      // view: docRef.data().view
+    }));
+    // console.log(songsArray);
+    return songsArray;
+  } catch (error) {
+    console.log("🚀 ~ file: FirebaseHandler.js:302 ~ fetchSongOfAlbum ~ error:", error)
+  }
+};
+
+//fetch one album
+export const fetchOneAlbum = async (idAlbum) => {
+  try {
+    const ref = doc(db, 'albums/' + idAlbum);
+    const snapShot = await getDoc(ref);
+    return { image: snapShot.data().image, name: snapShot.data().name };
+  }
+  catch (error) {
+    console.log("🚀 ~ file: FirebaseHandler.js:321 ~ fetchOneAlbum ~ error:", error)
+  }
+}
+
+
 //fetch top song
 export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");

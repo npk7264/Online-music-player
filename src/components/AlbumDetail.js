@@ -1,26 +1,37 @@
 import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import BackBar from '../components/BackBar';
-
+import {
+    doc,
+} from "firebase/firestore";
+import { db } from '../services/firebaseConfig';
 import { Ionicons } from "@expo/vector-icons";
 
 import FlatListSong from './FlatListSong';
 import { ThemeContext } from '../context/ThemeContext';
 import { AudioContext } from '../context/AudioContext';
+import { fetchOneAlbum, fetchSongOfAlbum } from '../utils/FirebaseHandler';
+import MiniPlayer from './MiniPlayer';
 
 const AlbumDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
-    const { songData } = useContext(AudioContext);
+    const { currentAudio } = useContext(AudioContext);
+    const [album, setAlbum] = useState({});
     const [listSong, setListSong] = useState([]);
-    const name = route.params.name;
+    // const name = route.params.name;
     const singer = route.params.singer;
-    const image = route.params.image;
+    // const image = route.params.image;
     const id = route.params.id;
-    const idSinger = route.params.idSinger;
+    // const idSinger = route.params.idSinger;
 
     useEffect(() => {
-        const songs = songData?.filter(item => item.idAlbum === id);
-        setListSong(songs)
+        const fetchData = async () => {
+            const infoAlbum = await fetchOneAlbum(id);
+            setAlbum({ id, singer, image: infoAlbum.image, name: infoAlbum.name });
+            const songs = await fetchSongOfAlbum(id);
+            setListSong(songs)
+        }
+        fetchData();
     }, [])
 
     return (
@@ -29,10 +40,10 @@ const AlbumDetail = ({ route }) => {
             <View style={styles.header}>
                 {/* info singer */}
                 <Image
-                    source={{ uri: image }}
+                    source={{ uri: album?.image }}
                     style={styles.poster} />
-                <Text style={[styles.nameAlbum, { color: colors.text }]}>{name}</Text>
-                <Text style={styles.singer}> {singer}</Text>
+                <Text style={[styles.nameAlbum, { color: colors.text }]}>{album?.name}</Text>
+                <Text style={styles.singer}> {album?.singer}</Text>
                 <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
                 {/* button */}
                 <View style={styles.buttons}>
@@ -53,6 +64,8 @@ const AlbumDetail = ({ route }) => {
             <FlatListSong
                 songs={listSong}
             />
+            {currentAudio && <MiniPlayer />}
+
         </SafeAreaView>
     )
 }

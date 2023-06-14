@@ -25,25 +25,16 @@ const ArtistDetail = ({ route }) => {
     useEffect(() => {
         const fetchData = async () => {
             const follower = await fetchFollowArtist(`artists/${id}`);
-            const songData = await fetchSongOfArtist(id);
-            setListSong(songData)
             setArtist({
                 id,
                 name: artistName,
                 image: artistImage,
                 follower
             });
+            const songData = await fetchSongOfArtist(id);
+            setListSong(songData)
         }
         fetchData();
-        // setArtist({
-        //     id,
-        //     name: artistName,
-        //     image: artistImage,
-        //     follower
-        // })
-        // const songs = songData?.filter(item => item.idSinger === id);
-        // setListSong(songs)
-
     }, [])
 
     return (

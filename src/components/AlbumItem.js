@@ -9,7 +9,7 @@ const AlbumItem = ({ name, singer, id, image, idSinger }) => {
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() => navigation.navigate('AlbumDetail', { name, singer, id, image, idSinger })}>
+            onPress={() => navigation.navigate('AlbumDetail', { singer, id })}>
             {/* Image */}
             <Image
                 source={{ uri: image }}
