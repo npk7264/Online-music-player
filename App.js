@@ -58,7 +58,7 @@ export default function App() {
         setSingerData(data2);
         setLastVisibleSinger(lastVisible2);
 
-        const [data3, lastVisible3] = await loadAlbum(albumData, 10, lastVisibleAlbum);
+        const [data3, lastVisible3] = await loadAlbum(albumData, 6, lastVisibleAlbum);
         setLastVisibleAlbum(lastVisible3);
         setAlbumData(data3);
 
@@ -91,6 +91,7 @@ export default function App() {
         <ThemeProvider>
           <PlaylistProvider>
             <SafeAreaProvider onLayout={onLayoutRootView}>
+              <StatusBar hidden={true} />
               <NavigationContainer>
                 <Stack.Navigator
                   initialRouteName="Login"

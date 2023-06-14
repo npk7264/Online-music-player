@@ -15,3 +15,14 @@ export const convertTime = (milliseconds) => {
   }
   return `00:00`;
 };
+
+//lấy top 3 thể loại được nghe nhiều nhất của user
+export const getTopGenre = (listGenre, topNumber) => {
+  // Chuyển đổi object thành mảng các cặp key-value
+  const genreArray = Object.entries(listGenre);
+  // Sắp xếp mảng theo số lượt nghe
+  const sortedGenre = genreArray.sort((a, b) => b[1] - a[1]);
+  // Lấy 3 thể loại có lượt nghe nhiều nhất
+  const topGenre = sortedGenre.slice(0, topNumber).map(item => item[0]);
+  return topGenre;
+}

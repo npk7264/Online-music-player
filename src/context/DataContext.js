@@ -13,6 +13,7 @@ export const DataProvider = ({ children, songData, singerData, albumData, lastSo
     const [lastVisibleSinger, setLastVisibleSinger] = useState(lastSinger || null);
     const [lastVisibleAlbum, setLastVisibleAlbum] = useState(lastAlbum || null);
 
+    const [suggestData, setSuggestData] = useState([]); //các bài hát của trang khám phá danh mục gợi ý
 
     //load more Data
     const LoadMoreData = async (listData, limit, lastVisibleData, setLoadAll, setLastVisible, setListData, loadFunction) => {
@@ -46,6 +47,8 @@ export const DataProvider = ({ children, songData, singerData, albumData, lastSo
         loadedAllAlbum: loadedAllAlbum,
         listSinger: listSinger,
         loadedAllSinger: loadedAllSinger,
+        suggestData: suggestData,
+        setSuggestData,
         setListSinger,
         setListSong,
         setListAlbum,

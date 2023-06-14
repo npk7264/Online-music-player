@@ -9,7 +9,6 @@ import { ThemeContext } from "../context/ThemeContext";
 
 import { useNavigation } from "@react-navigation/native";
 
-
 const SongItem = (props) => {
   const contextAudio = useContext(AudioContext);
   const { colors } = useContext(ThemeContext);
@@ -27,7 +26,7 @@ const SongItem = (props) => {
       style={[styles.container, { backgroundColor: colors.background }]}
       onPress={async () => {
         await selectSong(contextAudio, props.info, props.data)
-        // navigation.navigate("Player");
+        navigation.navigate("Player");
       }
       }
     >

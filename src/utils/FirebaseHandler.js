@@ -16,6 +16,7 @@ import {
   increment,
 } from "firebase/firestore";
 
+import { getTopGenre } from "./helper";
 import jsrmvi from "jsrmvi";
 import { removeVI, DefaultOption } from "jsrmvi";
 
@@ -302,6 +303,36 @@ export const fetchSongOfAlbum = async (idAlbum) => {
     console.log("🚀 ~ file: FirebaseHandler.js:302 ~ fetchSongOfAlbum ~ error:", error)
   }
 };
+
+//get suggested song list from genre statistics
+export const fetchSongListFromGenreStatistics = async (userId, limitSong) => {
+  try {
+    //lấy danh sách top thể loại nghe nhiều của user
+    const userSnap = await getDoc(doc(db, "users/" + userId));
+    //lấy danh sách bài hát từ thể loại đã tìm được
+    if (userSnap.data().genre) {
+      const topGenre = getTopGenre(userSnap.data().genre, 3);
+      const querySong = query(collection(db, 'songs'), where("genre", "array-contains-any", topGenre), orderBy("view", "desc"), orderBy("public", "desc"), limit(limitSong));
+      const querySnapshot = await getDocs(querySong);
+      const songsArray = querySnapshot.docs.map((docRef) => ({
+        id: docRef.id,
+        name: docRef.data().name,
+        image: docRef.data().image,
+        public: docRef.data().public,
+        singer: docRef.data().artists,
+        album: docRef.data().album,
+        uri: docRef.data().url,
+        lyric: docRef.data().lyric,
+        view: docRef.data().view,
+      }))
+      return songsArray;
+    }
+    return null;
+  } catch (error) {
+    console.log("🚀 ~ file: FirebaseHandler.js:314 ~ fetchSongListFromGenreStatistics ~ error:", error);
+  }
+
+}
 
 //fetch one album
 export const fetchOneAlbum = async (idAlbum) => {
