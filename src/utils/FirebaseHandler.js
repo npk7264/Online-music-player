@@ -98,6 +98,29 @@ export const loadSinger = async (
   return [singerArray, lastVisible];
 };
 
+//fetch limit singer for Suggested screen
+export const fetchSingerAllLimit = async (limitSinger) => {
+  try {
+    const singerCollection = collection(db, "artists");
+    const q = query(
+      singerCollection,
+      orderBy("follower", "desc"),
+      limit(limitSinger)
+    );
+    const querySnapshot = await getDocs(q);
+    const singerArray = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      name: doc.data().name,
+      image: doc.data().image,
+      follower: doc.data().follower,
+    }));
+    return singerArray;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:119 ~ fetchSingerAllLimit ~ e:", e)
+
+  }
+}
+
 //fetch limit album
 export const loadAlbum = async (listAlbum, limitAlbum, lastVisibleAlbum) => {
   const albumCollection = collection(db, "albums");
@@ -521,3 +544,43 @@ export const searchSinger = async (text, setResult) => {
     }
   } else setResult([]);
 };
+
+
+// export const fetchGenreForSuggest = async()=>{
+//   try {
+//     const docSnap = await getDoc(doc(db, ""));
+//     const userData = docSnap.data();
+//     const history = userData.recently;
+
+//     const songsRef = collection(db, "songs");
+//     const q = query(songsRef, where(documentId(), "in", history));
+
+//     const querySnapshot = await getDocs(q);
+
+//     const songsArray = await Promise.all(
+//       querySnapshot.docs.map((docRef) => {
+//         const songData = {
+//           id: docRef.id,
+//           name: docRef.data().name,
+//           image: docRef.data().image,
+//           public: docRef.data().public,
+//           singer: docRef.data().artists,
+//           album: docRef.data().album,
+//           uri: docRef.data().url,
+//           lyric: docRef.data().lyric,
+//           view: docRef.data().view,
+//         };
+//         return songData;
+//       })
+//     );
+//     const sortedSongs = songsArray.sort((a, b) => {
+//       const indexA = history.indexOf(a.id);
+//       const indexB = history.indexOf(b.id);
+//       return indexA - indexB;
+//     });
+//     return sortedSongs;
+//     // console.log(songsArray);
+//   } catch (error) {
+//     console.log("Fail to fetch history songs", error);
+//   }
+// }

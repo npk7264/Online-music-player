@@ -14,6 +14,10 @@ const ItemSuggest = ({ item, type, data, onPressOptionModal }) => {
             await selectSong(contextAudio, item, data)
             navigation.navigate("Player");
         }
+        if (type === 'singer') {
+            const { id, name, image } = item;
+            navigation.navigate("ArtistDetail", { id, name, image })
+        }
     }
     return (
         <TouchableOpacity style={styles.container} onPress={handlePressItem} onLongPress={onPressOptionModal}>

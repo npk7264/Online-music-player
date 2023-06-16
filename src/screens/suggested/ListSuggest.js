@@ -3,40 +3,52 @@ import React, { useContext, useState } from 'react'
 
 import ItemSuggest from './ItemSuggest'
 import { ThemeContext } from '../../context/ThemeContext'
-import { fetchSongListFromGenreStatistics } from '../../utils/FirebaseHandler'
+import { fetchSongListFromGenreStatistics, fetchSingerAllLimit } from '../../utils/FirebaseHandler'
 import { FontAwesome } from "@expo/vector-icons";
 import { auth } from '../../services/firebaseConfig'
 import OptionModal from '../../components/OptionModal'
 import { optionSinger, optionSong } from '../../utils/optionModal'
+import { DataContext } from '../../context/DataContext'
+import { useNavigation } from "@react-navigation/native";
+
 
 const ListSuggest = ({ title, data, id }) => {
+    const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
+    const contextData = useContext(DataContext);
     const [listSong, setListSong] = useState(data);
     const [showAll, setShowAll] = useState(false);
     const [optionModalVisible, setOptionModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
 
 
-    const closeModal = () => {
-        setShowAll(false);
-    };
+    // const closeModal = () => {
+    //     setShowAll(false);
+    // };
 
-    const openModal = () => {
-        setShowAll(true);
-    };
+    // const openModal = () => {
+    //     setShowAll(true);
+    // };
 
     const handleSeeALl = async () => {
-        let allData
+        let data;
         if (id === 5) {
-            allData = await fetchSongListFromGenreStatistics(auth.currentUser.uid, 20);
+            data = await fetchSongListFromGenreStatistics(auth.currentUser.uid, 20);
         }
-        setListSong(allData);
-        openModal();
+        if (id === 2) {
+            data = contextData.listSong.slice(0, 10);
+        }
+        if (id === 3) {
+            data = await fetchSingerAllLimit(10);
+        }
+        // setListSong(data);
+        // console.log("🚀 ~ file: ListSuggest.js:46 ~ handleSeeALl ~ id, title, data :", id, title, data)
+        navigation.navigate('SeeAll', { id, title, data })
+
     }
 
     return (
-        <SafeAreaView style={styles.container}>
-
+        <SafeAreaView style={[styles.container, { marginTop: id === 1 ? 10 : 0 }]}>
             <View style={styles.title}>
                 <Text style={[styles.textTitle, { color: colors.text }]}> {title}</Text>
                 <TouchableOpacity onPress={handleSeeALl} >
@@ -45,7 +57,7 @@ const ListSuggest = ({ title, data, id }) => {
             </View>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <ItemSuggest item={item} type={id !== 3 ? 'song' : 'singer'} data={data} onPressOptionModal={() => {
+                renderItem={({ item }) => <ItemSuggest item={item} type={id !== 3 ? (id !== 4 ? 'song' : 'album') : 'singer'} data={data} onPressOptionModal={() => {
                     setOptionModalVisible(true);
                     setCurrentItem(item);
                 }} />}
@@ -59,45 +71,6 @@ const ListSuggest = ({ title, data, id }) => {
                 onClose={() => setOptionModalVisible(false)}
                 visible={optionModalVisible}
             />
-
-            <Modal visible={showAll} transparent={true} statusBarTranslucent >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalContent}>
-                        {/* Nội dung của modal */}
-                        <View style={styles.viewTitle}>
-                            <TouchableOpacity
-                                style={{ paddingHorizontal: 20 }}
-                                onPress={closeModal}
-                            >
-                                <FontAwesome name="arrow-left" size={24} color={colors.text} />
-                            </TouchableOpacity>
-                            <Text style={styles.modalTitle}>{title}</Text>
-                        </View>
-
-                        <FlatList
-                            data={listSong}
-                            renderItem={({ item }) =>
-                                <ItemSuggest
-                                    item={item}
-                                    type={id !== 3 ? 'song' : 'singer'}
-                                    data={listSong}
-                                    onPressOptionModal={() => {
-                                        setOptionModalVisible(true);
-                                        setCurrentItem(item);
-                                    }} />}
-                            horizontal={false}
-                            numColumns={2}
-                            keyExtractor={item => item.id}
-                        />
-                        {/* <OptionModal
-                            options={id !== 3 ? optionSong : optionSinger}
-                            currentItem={currentItem}
-                            onClose={() => setOptionModalVisible(false)}
-                            visible={optionModalVisible}
-                        /> */}
-                    </View>
-                </View>
-            </Modal>
         </SafeAreaView>
     )
 }
@@ -112,7 +85,7 @@ const styles = StyleSheet.create({
     title: {
         flexDirection: "row",
         justifyContent: "space-between",
-        // alignItems: 'center',
+        alignItems: 'center',
         paddingHorizontal: 15,
         // marginVertical: 10,
     },
@@ -128,6 +101,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0, 0, 0, 0.5)',
     },
     modalContent: {
+        flex: 1,
         backgroundColor: 'white',
         padding: 20,
         borderRadius: 8,

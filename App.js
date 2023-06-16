@@ -21,6 +21,7 @@ import AddSong from "./src/screens/playlist/AddSong";
 import Favorite from "./src/screens/Favorite";
 import Recent from "./src/screens/Recent";
 import Comment from "./src/screens/comment/Comment";
+import SeeAll from "./src/screens/suggested/SeeAll";
 
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
@@ -54,7 +55,7 @@ export default function App() {
         setSongData(data);
         setLastVisibleSong(lastVisible);
 
-        const [data2, lastVisible2] = await loadSinger(singerData, 5, lastVisibleSinger);
+        const [data2, lastVisible2] = await loadSinger(singerData, 6, lastVisibleSinger);
         setSingerData(data2);
         setLastVisibleSinger(lastVisible2);
 
@@ -97,6 +98,7 @@ export default function App() {
                   initialRouteName="Login"
                   screenOptions={{ headerShown: false }}
                 >
+                  <Stack.Screen name="SeeAll" component={SeeAll} />
                   <Stack.Screen name="AddSong" component={AddSong} />
                   <Stack.Screen name="Login" component={Login} />
                   <Stack.Screen name="Register" component={Register} />

@@ -14,6 +14,11 @@ const data = [{
     data: songs
 },
 {
+    id: 6,
+    title: 'Đang theo dõi',
+    data: songs,
+},
+{
     id: 5,
     title: 'Gợi ý',
     data: songs
@@ -37,20 +42,45 @@ const data = [{
 
 const Suggested = () => {
     const { colors } = useContext(ThemeContext);
-    const { suggestData } = useContext(DataContext);
-    // Tạo một bản sao của mảng data
-    const updatedData = [...data];
+    const { suggestData, listSong, listSinger } = useContext(DataContext);
 
-    // Tìm mục có id là 5 trong bản sao và thay đổi dữ liệu
-    const itemIndex = updatedData.findIndex(item => item.id === 5);
-    if (itemIndex !== -1) {
-        updatedData[itemIndex].data = suggestData;
+
+    const updatedData = data.map((item) => {
+        if (item.id === 1)
+            return {
+                ...item,
+            }
+        else if (item.id === 2)
+            return {
+                ...item,
+                data: listSong.slice(0, 6),
+            }
+        else if (item.id === 3)
+            return {
+                ...item,
+                data: listSinger.slice(0, 6),
+            }
+        else if (item.id === 4)
+            return {
+                ...item,
+            }
+        else if (item.id === 5)
+            return {
+                ...item,
+                data: suggestData,
+            }
+        if (item.id === 6)
+            return {
+                ...item,
+                // data: suggestData,
+            }
     }
+    )
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             <FlatList
-                data={data}
+                data={updatedData}
                 renderItem={({ item }) => <ListSuggest title={item.title} data={item.data} id={item.id} />}
                 keyExtractor={item => item.id}
             />
