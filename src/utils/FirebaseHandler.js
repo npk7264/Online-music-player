@@ -593,10 +593,10 @@ export const fetchTopSongByGenre = async (id, topNumber) => {
 export const fetchSongByIDGenre = async (id) => {
   try {
     const q = query(
-      songsRef,
+      collection(db, "songs"),
       where("genre", "array-contains", id),
       orderBy("view", "desc"),
-      orderBy("public", "desc"),
+      orderBy("public", "desc")
     );
     const querySnapshot = await getDocs(q);
     const songsArray = querySnapshot.docs.map((docRef) => ({

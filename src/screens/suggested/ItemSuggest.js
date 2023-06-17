@@ -20,7 +20,7 @@ const ItemSuggest = ({ item, type, data, onPressOptionModal }) => {
         }
         if (type === 'genre') {
             const { id, name, image } = item;
-            navigation.navigate("GenreDetail", { id, name: `Top 10 nhạc ${name} hay nhất`, image })
+            navigation.navigate("GenreDetail", { id, name: `Top 10 nhạc ${name} hay nhất`, image, type: "top" })
         }
     }
     return (

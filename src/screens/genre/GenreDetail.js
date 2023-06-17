@@ -6,18 +6,18 @@ import MiniPlayer from '../../components/MiniPlayer'
 import FlatListSong from '../../components/FlatListSong'
 import { ThemeContext } from '../../context/ThemeContext';
 import { AudioContext } from '../../context/AudioContext';
-import { fetchTopSongByGenre } from '../../utils/FirebaseHandler';
+import { fetchTopSongByGenre, fetchSongByIDGenre } from '../../utils/FirebaseHandler';
 
 const GenreDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
     const { currentAudio } = useContext(AudioContext);
     const [listSong, setListSong] = useState([]);
 
-    const { id, name, image } = route.params;
+    const { id, name, image, type } = route.params;
 
     useEffect(() => {
         const fetchData = async () => {
-            const data = await fetchTopSongByGenre(id);
+            const data = (type === "top") ? await fetchTopSongByGenre(id, 10) : await fetchSongByIDGenre(id);
             setListSong(data);
         }
         fetchData();
@@ -27,11 +27,11 @@ const GenreDetail = ({ route }) => {
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <BackBar isSearch={true}></BackBar>
             <View style={styles.header}>
-                {/* info singer */}
+                {/* info Genre */}
                 <Image
                     source={{ uri: image }}
                     style={styles.poster} />
-                <Text style={[styles.nameGenre, { color: colors.text }]}>{name.slice(0, 3) === "Top" ? name : `Nhạc ${name}`}</Text>
+                <Text style={[styles.nameGenre, { color: colors.text }]}>{name?.search("Top") === true ? name : `Nhạc ${name}`}</Text>
                 <Text style={styles.numSong}>{listSong?.length + " bài hát"} </Text>
                 {/* button */}
                 <View style={styles.buttons}>
@@ -80,6 +80,8 @@ const styles = StyleSheet.create({
         fontSize: 28,
         fontWeight: '900',
         marginTop: 10,
+        textAlign: 'center',
+        paddingHorizontal: 40,
         fontFamily: 'sans-serif',
     },
     numSong: {

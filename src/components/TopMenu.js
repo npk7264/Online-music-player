@@ -7,6 +7,7 @@ import SearchBar from "./SearchBar";
 import MiniPlayer from "./MiniPlayer";
 import Suggested from "../screens/suggested/Suggested";
 import Albums from "./Albums";
+import Genre from "../screens/genre/Genre";
 
 import { ThemeContext } from "../context/ThemeContext";
 
@@ -46,6 +47,7 @@ const TopMenu = () => {
         <Tab.Screen name="Bài hát" component={Song} />
         <Tab.Screen name="Ca sĩ" component={Artist} />
         <Tab.Screen name="Albums" component={Albums} />
+        <Tab.Screen name="Thể loại" component={Genre} />
       </Tab.Navigator>
 
       {currentAudio && <MiniPlayer />}
