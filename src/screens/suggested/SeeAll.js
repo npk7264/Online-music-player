@@ -25,7 +25,7 @@ const SeeAll = ({ route }) => {
                 renderItem={({ item }) =>
                     <ItemSuggest
                         item={item}
-                        type={id !== 3 ? (id !== 4 ? 'song' : 'album') : 'singer'}
+                        type={id !== 3 ? (id !== 4 ? 'song' : 'genre') : 'singer'}
                         data={data}
                         onPressOptionModal={() => {
                             setOptionModalVisible(true);

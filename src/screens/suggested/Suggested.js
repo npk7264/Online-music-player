@@ -42,7 +42,7 @@ const data = [{
 
 const Suggested = () => {
     const { colors } = useContext(ThemeContext);
-    const { suggestData, listSong, listSinger } = useContext(DataContext);
+    const { suggestData, listSong, listSinger, listGenre } = useContext(DataContext);
 
 
     const updatedData = data.map((item) => {
@@ -63,6 +63,7 @@ const Suggested = () => {
         else if (item.id === 4)
             return {
                 ...item,
+                data: listGenre.slice(0, 6),
             }
         else if (item.id === 5)
             return {

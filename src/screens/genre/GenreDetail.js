@@ -1,31 +1,24 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import BackBar from '../components/BackBar';
 import { Ionicons } from "@expo/vector-icons";
+import BackBar from '../../components/BackBar'
+import MiniPlayer from '../../components/MiniPlayer'
+import FlatListSong from '../../components/FlatListSong'
+import { ThemeContext } from '../../context/ThemeContext';
+import { AudioContext } from '../../context/AudioContext';
+import { fetchTopSongByGenre } from '../../utils/FirebaseHandler';
 
-import FlatListSong from './FlatListSong';
-import { ThemeContext } from '../context/ThemeContext';
-import { AudioContext } from '../context/AudioContext';
-import { fetchOneAlbum, fetchSongOfAlbum } from '../utils/FirebaseHandler';
-import MiniPlayer from './MiniPlayer';
-
-const AlbumDetail = ({ route }) => {
+const GenreDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
     const { currentAudio } = useContext(AudioContext);
-    const [album, setAlbum] = useState({});
     const [listSong, setListSong] = useState([]);
-    // const name = route.params.name;
-    const singer = route.params.singer;
-    // const image = route.params.image;
-    const id = route.params.id;
-    // const idSinger = route.params.idSinger;
+
+    const { id, name, image } = route.params;
 
     useEffect(() => {
         const fetchData = async () => {
-            const infoAlbum = await fetchOneAlbum(id);
-            setAlbum({ id, singer, image: infoAlbum.image, name: infoAlbum.name });
-            const songs = await fetchSongOfAlbum(id);
-            setListSong(songs)
+            const data = await fetchTopSongByGenre(id);
+            setListSong(data);
         }
         fetchData();
     }, [])
@@ -36,11 +29,10 @@ const AlbumDetail = ({ route }) => {
             <View style={styles.header}>
                 {/* info singer */}
                 <Image
-                    source={{ uri: album?.image }}
+                    source={{ uri: image }}
                     style={styles.poster} />
-                <Text style={[styles.nameAlbum, { color: colors.text }]}>{album?.name}</Text>
-                <Text style={styles.singer}> {album?.singer}</Text>
-                <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
+                <Text style={[styles.nameGenre, { color: colors.text }]}>{name.slice(0, 3) === "Top" ? name : `Nhạc ${name}`}</Text>
+                <Text style={styles.numSong}>{listSong?.length + " bài hát"} </Text>
                 {/* button */}
                 <View style={styles.buttons}>
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
@@ -66,7 +58,7 @@ const AlbumDetail = ({ route }) => {
     )
 }
 
-export default AlbumDetail;
+export default GenreDetail
 
 const styles = StyleSheet.create({
     container: {
@@ -84,14 +76,9 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 35,
     },
-    nameAlbum: {
+    nameGenre: {
         fontSize: 28,
         fontWeight: '900',
-        marginTop: 10,
-        fontFamily: 'sans-serif',
-    },
-    singer: {
-        fontSize: 20,
         marginTop: 10,
         fontFamily: 'sans-serif',
     },

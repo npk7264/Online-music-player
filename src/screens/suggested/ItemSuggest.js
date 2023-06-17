@@ -18,16 +18,20 @@ const ItemSuggest = ({ item, type, data, onPressOptionModal }) => {
             const { id, name, image } = item;
             navigation.navigate("ArtistDetail", { id, name, image })
         }
+        if (type === 'genre') {
+            const { id, name, image } = item;
+            navigation.navigate("GenreDetail", { id, name: `Top 10 nhạc ${name} hay nhất`, image })
+        }
     }
     return (
         <TouchableOpacity style={styles.container} onPress={handlePressItem} onLongPress={onPressOptionModal}>
             <Image source={{ uri: item.image }} style={styles.poster} />
-            <Text style={[styles.text, { color: colors.text }]}>{item.name}</Text>
+            <Text style={[styles.text, { color: colors.text }]}>{type === 'genre' ? `Top 10 nhạc ${item.name} hay nhất` : item.name}</Text>
         </TouchableOpacity>
     )
 }
 
-export default ItemSuggest
+export default ItemSuggest;
 
 const styles = StyleSheet.create({
     container: {

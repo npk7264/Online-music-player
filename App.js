@@ -22,13 +22,14 @@ import Favorite from "./src/screens/Favorite";
 import Recent from "./src/screens/Recent";
 import Comment from "./src/screens/comment/Comment";
 import SeeAll from "./src/screens/suggested/SeeAll";
+import GenreDetail from "./src/screens/genre/GenreDetail";
 
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
 import { PlaylistProvider } from "./src/context/PlaylistContext";
 import { DataProvider } from "./src/context/DataContext";
 
-import { loadSinger, loadSongs, loadAlbum } from "./src/utils/FirebaseHandler";
+import { loadSinger, loadSongs, loadAlbum, fetchGenre } from "./src/utils/FirebaseHandler";
 
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -44,6 +45,7 @@ export default function App() {
   const [songData, setSongData] = useState([]);
   const [singerData, setSingerData] = useState([]);
   const [albumData, setAlbumData] = useState([]);
+  const [genreData, setGenreData] = useState([]);
   const [lastVisibleSong, setLastVisibleSong] = useState(null);
   const [lastVisibleSinger, setLastVisibleSinger] = useState(null);
   const [lastVisibleAlbum, setLastVisibleAlbum] = useState(null);
@@ -62,6 +64,9 @@ export default function App() {
         const [data3, lastVisible3] = await loadAlbum(albumData, 6, lastVisibleAlbum);
         setLastVisibleAlbum(lastVisible3);
         setAlbumData(data3);
+
+        const genre = await fetchGenre();
+        setGenreData(genre);
 
       } catch (e) {
         console.warn('prepare data', e);
@@ -86,7 +91,7 @@ export default function App() {
   }
 
   return (
-    <DataProvider songData={songData} albumData={albumData} singerData={singerData} lastSong={lastVisibleSong} lastSinger={lastVisibleSinger} lastAlbum={lastVisibleAlbum}>
+    <DataProvider songData={songData} albumData={albumData} singerData={singerData} genreData={genreData} lastSong={lastVisibleSong} lastSinger={lastVisibleSinger} lastAlbum={lastVisibleAlbum}>
       <AudioProvider>
         {/* {console.log(songData)} */}
         <ThemeProvider>
@@ -98,6 +103,7 @@ export default function App() {
                   initialRouteName="Login"
                   screenOptions={{ headerShown: false }}
                 >
+                  <Stack.Screen name="GenreDetail" component={GenreDetail} />
                   <Stack.Screen name="SeeAll" component={SeeAll} />
                   <Stack.Screen name="AddSong" component={AddSong} />
                   <Stack.Screen name="Login" component={Login} />

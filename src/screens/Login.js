@@ -31,6 +31,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [loaded, setLoaded] = useState(false);
 
+  //fetch list song suggest for screen home
   const setSuggestDataForScreenHone = async (userId) => {
     const data = await (fetchSongListFromGenreStatistics(userId, 6));
     setSuggestData(data ? data : listSong);
@@ -47,9 +48,9 @@ const Login = () => {
         } catch (error) {
           console.error("Lỗi khi save email and password user login:", error);
         }
+        // fetch data
         const promiseFunction = [fetchRecentestSong(user.uid, context), setSuggestDataForScreenHone(user.uid)]
         await Promise.all(promiseFunction);
-        // fetchRecentestSong(user.uid, context);
         navigation.replace("BottomMenu");
       })
       .catch((error) => {

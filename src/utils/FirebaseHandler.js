@@ -545,42 +545,73 @@ export const searchSinger = async (text, setResult) => {
   } else setResult([]);
 };
 
+//fetch limit genre
+export const fetchGenre = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "genre"));
 
-// export const fetchGenreForSuggest = async()=>{
-//   try {
-//     const docSnap = await getDoc(doc(db, ""));
-//     const userData = docSnap.data();
-//     const history = userData.recently;
+    const genreArray =
+      querySnapshot.docs.map((docRef) => ({
+        ...docRef.data(),
+        id: docRef.id,
+      }))
 
-//     const songsRef = collection(db, "songs");
-//     const q = query(songsRef, where(documentId(), "in", history));
+    return genreArray;
+  } catch (error) {
+    console.log("Fail to fetch history songs", error);
+  }
+}
 
-//     const querySnapshot = await getDocs(q);
+export const fetchTopSongByGenre = async (id, topNumber) => {
+  try {
+    const q = query(
+      collection(db, "songs"),
+      where("genre", "array-contains", id),
+      orderBy("view", "desc"),
+      orderBy("public", "desc"),
+      limit(topNumber)
+    );
+    const querySnapshot = await getDocs(q);
+    const songsArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      name: docRef.data().name,
+      image: docRef.data().image,
+      public: docRef.data().public,
+      singer: docRef.data().artists,
+      album: docRef.data().album,
+      uri: docRef.data().url,
+      lyric: docRef.data().lyric,
+      view: docRef.data().view,
+    }));
+    return songsArray;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:567 ~ fetchTopSongByGenre ~ e:", e)
 
-//     const songsArray = await Promise.all(
-//       querySnapshot.docs.map((docRef) => {
-//         const songData = {
-//           id: docRef.id,
-//           name: docRef.data().name,
-//           image: docRef.data().image,
-//           public: docRef.data().public,
-//           singer: docRef.data().artists,
-//           album: docRef.data().album,
-//           uri: docRef.data().url,
-//           lyric: docRef.data().lyric,
-//           view: docRef.data().view,
-//         };
-//         return songData;
-//       })
-//     );
-//     const sortedSongs = songsArray.sort((a, b) => {
-//       const indexA = history.indexOf(a.id);
-//       const indexB = history.indexOf(b.id);
-//       return indexA - indexB;
-//     });
-//     return sortedSongs;
-//     // console.log(songsArray);
-//   } catch (error) {
-//     console.log("Fail to fetch history songs", error);
-//   }
-// }
+  }
+}
+
+export const fetchSongByIDGenre = async (id) => {
+  try {
+    const q = query(
+      songsRef,
+      where("genre", "array-contains", id),
+      orderBy("view", "desc"),
+      orderBy("public", "desc"),
+    );
+    const querySnapshot = await getDocs(q);
+    const songsArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      name: docRef.data().name,
+      image: docRef.data().image,
+      public: docRef.data().public,
+      singer: docRef.data().artists,
+      album: docRef.data().album,
+      uri: docRef.data().url,
+      lyric: docRef.data().lyric,
+      view: docRef.data().view,
+    }));
+    return songsArray;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:616 ~ fetchSongByIDGenre ~ e:", e)
+  }
+}

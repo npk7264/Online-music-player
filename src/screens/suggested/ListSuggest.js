@@ -4,7 +4,6 @@ import React, { useContext, useState } from 'react'
 import ItemSuggest from './ItemSuggest'
 import { ThemeContext } from '../../context/ThemeContext'
 import { fetchSongListFromGenreStatistics, fetchSingerAllLimit } from '../../utils/FirebaseHandler'
-import { FontAwesome } from "@expo/vector-icons";
 import { auth } from '../../services/firebaseConfig'
 import OptionModal from '../../components/OptionModal'
 import { optionSinger, optionSong } from '../../utils/optionModal'
@@ -16,19 +15,8 @@ const ListSuggest = ({ title, data, id }) => {
     const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
     const contextData = useContext(DataContext);
-    const [listSong, setListSong] = useState(data);
-    const [showAll, setShowAll] = useState(false);
     const [optionModalVisible, setOptionModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
-
-
-    // const closeModal = () => {
-    //     setShowAll(false);
-    // };
-
-    // const openModal = () => {
-    //     setShowAll(true);
-    // };
 
     const handleSeeALl = async () => {
         let data;
@@ -41,8 +29,9 @@ const ListSuggest = ({ title, data, id }) => {
         if (id === 3) {
             data = await fetchSingerAllLimit(10);
         }
-        // setListSong(data);
-        // console.log("🚀 ~ file: ListSuggest.js:46 ~ handleSeeALl ~ id, title, data :", id, title, data)
+        if (id === 4) {
+            data = contextData.listGenre;
+        }
         navigation.navigate('SeeAll', { id, title, data })
 
     }
@@ -57,7 +46,7 @@ const ListSuggest = ({ title, data, id }) => {
             </View>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <ItemSuggest item={item} type={id !== 3 ? (id !== 4 ? 'song' : 'album') : 'singer'} data={data} onPressOptionModal={() => {
+                renderItem={({ item }) => <ItemSuggest item={item} type={id !== 3 ? (id !== 4 ? 'song' : 'genre') : 'singer'} data={data} onPressOptionModal={() => {
                     setOptionModalVisible(true);
                     setCurrentItem(item);
                 }} />}
