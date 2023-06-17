@@ -2,7 +2,8 @@ import React, { createContext, useState, useEffect } from 'react';
 import { loadSongs, loadSinger, loadAlbum } from '../utils/FirebaseHandler';
 export const DataContext = createContext();
 
-export const DataProvider = ({ children, songData, singerData, albumData, lastSong, lastSinger, lastAlbum }) => {
+export const DataProvider = ({ children, songData, singerData, albumData, genreData, lastSong, lastSinger, lastAlbum }) => {
+    const [listGenre, setListGenre] = useState(genreData || []);
     const [listSong, setListSong] = useState(songData || []);
     const [loadedAllSongs, setLoadedAllSongs] = useState(false);
     const [listSinger, setListSinger] = useState(singerData || []);
@@ -13,6 +14,7 @@ export const DataProvider = ({ children, songData, singerData, albumData, lastSo
     const [lastVisibleSinger, setLastVisibleSinger] = useState(lastSinger || null);
     const [lastVisibleAlbum, setLastVisibleAlbum] = useState(lastAlbum || null);
 
+    const [suggestData, setSuggestData] = useState([]); //các bài hát của trang khám phá danh mục gợi ý
 
     //load more Data
     const LoadMoreData = async (listData, limit, lastVisibleData, setLoadAll, setLastVisible, setListData, loadFunction) => {
@@ -40,12 +42,15 @@ export const DataProvider = ({ children, songData, singerData, albumData, lastSo
     }
 
     const data = {
+        listGenre: listGenre,
         listSong: listSong,
         loadedAllSongs: loadedAllSongs,
         listAlbum: listAlbum,
         loadedAllAlbum: loadedAllAlbum,
         listSinger: listSinger,
         loadedAllSinger: loadedAllSinger,
+        suggestData: suggestData,
+        setSuggestData,
         setListSinger,
         setListSong,
         setListAlbum,

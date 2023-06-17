@@ -16,6 +16,7 @@ import {
   increment,
 } from "firebase/firestore";
 
+import { getTopGenre } from "./helper";
 import jsrmvi from "jsrmvi";
 import { removeVI, DefaultOption } from "jsrmvi";
 
@@ -96,6 +97,29 @@ export const loadSinger = async (
   }));
   return [singerArray, lastVisible];
 };
+
+//fetch limit singer for Suggested screen
+export const fetchSingerAllLimit = async (limitSinger) => {
+  try {
+    const singerCollection = collection(db, "artists");
+    const q = query(
+      singerCollection,
+      orderBy("follower", "desc"),
+      limit(limitSinger)
+    );
+    const querySnapshot = await getDocs(q);
+    const singerArray = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      name: doc.data().name,
+      image: doc.data().image,
+      follower: doc.data().follower,
+    }));
+    return singerArray;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:119 ~ fetchSingerAllLimit ~ e:", e)
+
+  }
+}
 
 //fetch limit album
 export const loadAlbum = async (listAlbum, limitAlbum, lastVisibleAlbum) => {
@@ -279,6 +303,73 @@ export const fetchSongOfArtist = async (idSigner) => {
   return songsArray;
 };
 
+//fetch all song of album
+export const fetchSongOfAlbum = async (idAlbum) => {
+  try {
+    const songRef = collection(db, "songs");
+    const q = query(songRef, where("album", "==", idAlbum));
+    const querySnapshot = await getDocs(q);
+    const songsArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      name: docRef.data().name,
+      image: docRef.data().image,
+      // public: docRef.data().public,
+      singer: docRef.data().artists,
+      album: docRef.data().album,
+      uri: docRef.data().url,
+      lyric: docRef.data().lyric,
+      // view: docRef.data().view
+    }));
+    // console.log(songsArray);
+    return songsArray;
+  } catch (error) {
+    console.log("🚀 ~ file: FirebaseHandler.js:302 ~ fetchSongOfAlbum ~ error:", error)
+  }
+};
+
+//get suggested song list from genre statistics
+export const fetchSongListFromGenreStatistics = async (userId, limitSong) => {
+  try {
+    //lấy danh sách top thể loại nghe nhiều của user
+    const userSnap = await getDoc(doc(db, "users/" + userId));
+    //lấy danh sách bài hát từ thể loại đã tìm được
+    if (userSnap.data().genre) {
+      const topGenre = getTopGenre(userSnap.data().genre, 3);
+      const querySong = query(collection(db, 'songs'), where("genre", "array-contains-any", topGenre), orderBy("view", "desc"), orderBy("public", "desc"), limit(limitSong));
+      const querySnapshot = await getDocs(querySong);
+      const songsArray = querySnapshot.docs.map((docRef) => ({
+        id: docRef.id,
+        name: docRef.data().name,
+        image: docRef.data().image,
+        public: docRef.data().public,
+        singer: docRef.data().artists,
+        album: docRef.data().album,
+        uri: docRef.data().url,
+        lyric: docRef.data().lyric,
+        view: docRef.data().view,
+      }))
+      return songsArray;
+    }
+    return null;
+  } catch (error) {
+    console.log("🚀 ~ file: FirebaseHandler.js:314 ~ fetchSongListFromGenreStatistics ~ error:", error);
+  }
+
+}
+
+//fetch one album
+export const fetchOneAlbum = async (idAlbum) => {
+  try {
+    const ref = doc(db, 'albums/' + idAlbum);
+    const snapShot = await getDoc(ref);
+    return { image: snapShot.data().image, name: snapShot.data().name };
+  }
+  catch (error) {
+    console.log("🚀 ~ file: FirebaseHandler.js:321 ~ fetchOneAlbum ~ error:", error)
+  }
+}
+
+
 //fetch top song
 export const fetchTopSong = async () => {
   const songsRef = collection(db, "songs");
@@ -453,3 +544,74 @@ export const searchSinger = async (text, setResult) => {
     }
   } else setResult([]);
 };
+
+//fetch limit genre
+export const fetchGenre = async () => {
+  try {
+    const querySnapshot = await getDocs(collection(db, "genre"));
+
+    const genreArray =
+      querySnapshot.docs.map((docRef) => ({
+        ...docRef.data(),
+        id: docRef.id,
+      }))
+
+    return genreArray;
+  } catch (error) {
+    console.log("Fail to fetch history songs", error);
+  }
+}
+
+export const fetchTopSongByGenre = async (id, topNumber) => {
+  try {
+    const q = query(
+      collection(db, "songs"),
+      where("genre", "array-contains", id),
+      orderBy("view", "desc"),
+      orderBy("public", "desc"),
+      limit(topNumber)
+    );
+    const querySnapshot = await getDocs(q);
+    const songsArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      name: docRef.data().name,
+      image: docRef.data().image,
+      public: docRef.data().public,
+      singer: docRef.data().artists,
+      album: docRef.data().album,
+      uri: docRef.data().url,
+      lyric: docRef.data().lyric,
+      view: docRef.data().view,
+    }));
+    return songsArray;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:567 ~ fetchTopSongByGenre ~ e:", e)
+
+  }
+}
+
+export const fetchSongByIDGenre = async (id) => {
+  try {
+    const q = query(
+      collection(db, "songs"),
+      where("genre", "array-contains", id),
+      orderBy("view", "desc"),
+      orderBy("public", "desc")
+    );
+    const querySnapshot = await getDocs(q);
+    const songsArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      name: docRef.data().name,
+      image: docRef.data().image,
+      public: docRef.data().public,
+      singer: docRef.data().artists,
+      album: docRef.data().album,
+      uri: docRef.data().url,
+      lyric: docRef.data().lyric,
+      view: docRef.data().view,
+    }));
+    return songsArray;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:616 ~ fetchSongByIDGenre ~ e:", e)
+  }
+}

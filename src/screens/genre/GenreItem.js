@@ -1,15 +1,15 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 import React, { useContext } from 'react'
 import { useNavigation } from "@react-navigation/native";
-import { ThemeContext } from '../context/ThemeContext';
+import { ThemeContext } from '../../context/ThemeContext';
 
-const AlbumItem = ({ name, singer, id, image, idSinger }) => {
+const GenreItem = ({ name, id, image }) => {
     const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
     return (
         <TouchableOpacity
             style={styles.container}
-            onPress={() => navigation.navigate('AlbumDetail', { singer, id })}>
+            onPress={() => navigation.navigate('GenreDetail', { id, name, image, type: "all" })}>
             {/* Image */}
             <Image
                 source={{ uri: image }}
@@ -17,14 +17,13 @@ const AlbumItem = ({ name, singer, id, image, idSinger }) => {
             />
             {/* info */}
             <View style={styles.info}>
-                <Text style={[styles.name, { color: colors.text }]} >{name}</Text>
-                <Text style={styles.singer}>{singer}</Text>
+                <Text style={[styles.name, { color: colors.text }]} >Nhạc {name}</Text>
             </View>
         </TouchableOpacity>
     )
 }
 
-export default AlbumItem
+export default GenreItem
 
 const styles = StyleSheet.create({
     container: {
@@ -53,6 +52,7 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 16,
         fontWeight: '800',
+        textAlign: 'center'
     },
     singer: {
         fontSize: 12,

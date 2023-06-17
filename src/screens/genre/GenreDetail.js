@@ -1,38 +1,24 @@
-import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import BackBar from '../components/BackBar';
-import { fetchOneArtist, fetchSongOfArtist, fetchFollowArtist } from '../utils/FirebaseHandler';
 import { Ionicons } from "@expo/vector-icons";
-// import SongItem from '../components/SongItem';
-// import { songs } from '../../data';
-import FlatListSong from '../components/FlatListSong';
+import BackBar from '../../components/BackBar'
+import MiniPlayer from '../../components/MiniPlayer'
+import FlatListSong from '../../components/FlatListSong'
+import { ThemeContext } from '../../context/ThemeContext';
+import { AudioContext } from '../../context/AudioContext';
+import { fetchTopSongByGenre, fetchSongByIDGenre } from '../../utils/FirebaseHandler';
 
-import { AudioContext } from '../context/AudioContext';
-import { ThemeContext } from '../context/ThemeContext';
-
-const ArtistDetail = ({ route }) => {
+const GenreDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
-    const { songData } = useContext(AudioContext);
-    const [artist, setArtist] = useState({});
+    const { currentAudio } = useContext(AudioContext);
     const [listSong, setListSong] = useState([]);
 
-    const id = route.params.id;
-    const artistName = route.params.name;
-    const artistImage = route.params.image;
-    // const follower = route.params.follower;
+    const { id, name, image, type } = route.params;
 
-    //fetch data singer
     useEffect(() => {
         const fetchData = async () => {
-            const follower = await fetchFollowArtist(`artists/${id}`);
-            setArtist({
-                id,
-                name: artistName,
-                image: artistImage,
-                follower
-            });
-            const songData = await fetchSongOfArtist(id);
-            setListSong(songData)
+            const data = (type === "top") ? await fetchTopSongByGenre(id, 10) : await fetchSongByIDGenre(id);
+            setListSong(data);
         }
         fetchData();
     }, [])
@@ -41,12 +27,12 @@ const ArtistDetail = ({ route }) => {
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
             <BackBar isSearch={true}></BackBar>
             <View style={styles.header}>
-                {/* info singer */}
+                {/* info Genre */}
                 <Image
-                    source={{ uri: artist?.image }}
+                    source={{ uri: image }}
                     style={styles.poster} />
-                <Text style={[styles.singer, { color: colors.text }]}>{artist?.name}</Text>
-                <Text style={styles.numSong}>{artist?.follower} người theo dõi</Text>
+                <Text style={[styles.nameGenre, { color: colors.text }]}>{name?.search("Top") === true ? name : `Nhạc ${name}`}</Text>
+                <Text style={styles.numSong}>{listSong?.length + " bài hát"} </Text>
                 {/* button */}
                 <View style={styles.buttons}>
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
@@ -66,16 +52,17 @@ const ArtistDetail = ({ route }) => {
             <FlatListSong
                 songs={listSong}
             />
+            {currentAudio && <MiniPlayer />}
+
         </SafeAreaView>
     )
 }
 
-export default ArtistDetail;
+export default GenreDetail
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
     },
 
     header: {
@@ -89,15 +76,17 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 35,
     },
-    singer: {
+    nameGenre: {
         fontSize: 28,
         fontWeight: '900',
         marginTop: 10,
+        textAlign: 'center',
+        paddingHorizontal: 40,
         fontFamily: 'sans-serif',
     },
     numSong: {
         fontSize: 15,
-        // marginTop: 10,
+        marginTop: 10,
         color: 'gray',
         fontFamily: 'sans-serif',
     },

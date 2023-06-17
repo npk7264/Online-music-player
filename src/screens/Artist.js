@@ -1,17 +1,14 @@
-import { StyleSheet, Text, View, FlatList, TouchableOpacity } from "react-native";
-import React, { useState, useContext, useEffect } from "react";
+import { StyleSheet, View, FlatList } from "react-native";
+import React, { useState, useContext } from "react";
 import ArtistItem from "../components/ArtistItem";
 import OptionModal from "../components/OptionModal";
 import { ThemeContext } from "../context/ThemeContext";
-// import { AudioContext } from "../context/AudioContext";
 import { DataContext } from "../context/DataContext";
-import { FontAwesome } from "@expo/vector-icons";
 import { optionSinger } from "../utils/optionModal"
 import MoreData from "../components/MoreData";
 
 const Artist = () => {
   const { colors } = useContext(ThemeContext);
-  // const { singerData } = useContext(AudioContext);
   const { listSinger, loadedAllSinger, handleLoadMoreSinger } = useContext(DataContext);
   const [currentSinger, setCurrentSinger] = useState(null);
   const [optionModalVisible, setOptionModalVisible] = useState(false);

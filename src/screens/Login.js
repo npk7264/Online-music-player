@@ -17,17 +17,25 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { fetchRecentestSong } from "../utils/FirebaseHandler";
+import { fetchRecentestSong, fetchSongListFromGenreStatistics } from "../utils/FirebaseHandler";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { DataContext } from "../context/DataContext";
 
 const Login = () => {
   const context = useContext(AudioContext);
+  const { setSuggestData, listSong } = useContext(DataContext);
   const { updateState } = context;
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loaded, setLoaded] = useState(false);
+
+  //fetch list song suggest for screen home
+  const setSuggestDataForScreenHone = async (userId) => {
+    const data = await (fetchSongListFromGenreStatistics(userId, 6));
+    setSuggestData(data ? data : listSong);
+  }
 
   const LoginFirebase = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
@@ -40,7 +48,9 @@ const Login = () => {
         } catch (error) {
           console.error("Lỗi khi save email and password user login:", error);
         }
-        fetchRecentestSong(user.uid, context);
+        // fetch data
+        const promiseFunction = [fetchRecentestSong(user.uid, context), setSuggestDataForScreenHone(user.uid)]
+        await Promise.all(promiseFunction);
         navigation.replace("BottomMenu");
       })
       .catch((error) => {

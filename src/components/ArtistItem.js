@@ -10,7 +10,7 @@ const ArtistItem = ({ id, name, image, follower, onPressOptionModal }) => {
     return (
         <TouchableOpacity
             style={[styles.container, { backgroundColor: colors.background }]}
-            onPress={() => navigation.navigate('ArtistDetail', { id, name, image, follower })}
+            onPress={() => navigation.navigate('ArtistDetail', { id, name, image })}
         >
             <View style={styles.content}>
                 <View
