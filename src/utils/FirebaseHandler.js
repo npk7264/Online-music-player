@@ -177,11 +177,15 @@ export const fetchRecent = async (docRef) => {
 };
 
 // UPDATE RECENT and update genre
-export const updateRecent = async (userId, audioId) => {
+export const updateRecent = async (userId, audioId, audio, recentID, setRecentID, recentData, setRecentData) => {
   const userRef = doc(db, "users/" + userId);
   let data = await fetchRecent(userRef);
-  let recentList = data.recently.filter((item) => {
+  let recentList = recentID.filter((item) => {
     return item != audioId;
+  });
+
+  let recentListData = recentData.filter((item) => {
+    return item.id != audioId;
   });
 
   const songRef = doc(db, "songs/" + audioId);
@@ -199,6 +203,8 @@ export const updateRecent = async (userId, audioId) => {
 
   //update recent
   updateDataUser["recently"] = [audioId, ...recentList];
+  setRecentID([audioId, ...recentList]);
+  setRecentData([audio, ...recentListData]);
 
   try {
     await updateDoc(userRef, updateDataUser);
@@ -617,16 +623,6 @@ export const fetchSongByIDGenre = async (id) => {
   }
 }
 
-//fetch list ID artist is followed by user
-export const fetchIDFollowArtistByUser = async (userId) => {
-  try {
-    const userData = await fetchUser(userId);
-    return userData.follow;
-  } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:624 ~ fetchIDFollowArtistByUser ~ e:", e)
-  }
-}
-
 //update artist when is unfollow or follow by user
 export const updateFollowArtistAndUser = async (userId, artistId, type, listIDArtistFollowing) => {
   try {
@@ -637,6 +633,7 @@ export const updateFollowArtistAndUser = async (userId, artistId, type, listIDAr
   }
 }
 
+//fetch Data Artist Followed By User
 export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
   try {
     const q = query(collection(db, "artists"), where(documentId(), "in", listIDArtist));
@@ -651,3 +648,37 @@ export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
     console.log("🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:", e)
   }
 }
+
+// save to favorite
+export const saveFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
+  const docRef = doc(db, "users/" + userId);
+  try {
+    setFavoriteData([currentAudio, ...favoriteData])
+    setFavoriteID([currentAudio.id, ...favoriteID]);
+    await updateDoc(docRef, {
+      favorite: [currentAudio.id, ...favoriteID],
+    });
+  } catch (e) {
+    alert("Failed to save favorite song!", e);
+  }
+};
+
+// remove from favorite
+export const removeFavorite = async (userId, favoriteID, setFavoriteData, favoriteData, setFavoriteID, currentAudio) => {
+  const docRef = doc(db, "users/" + userId);
+  try {
+    const newfavoriteID = favoriteID.filter((item) => {
+      return item != currentAudio.id;
+    });
+    const newFavoriteData = favoriteData.filter((item) => {
+      return item.id != currentAudio.id;
+    });
+    setFavoriteData(newFavoriteData);
+    setFavoriteID(newfavoriteID);
+    await updateDoc(docRef, {
+      favorite: newfavoriteID,
+    });
+  } catch (e) {
+    alert("Failed to remove favorite song!", e);
+  }
+};

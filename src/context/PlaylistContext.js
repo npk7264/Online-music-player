@@ -18,7 +18,7 @@ export const PlaylistContext = createContext();
 
 
 export const PlaylistProvider = ({ children }) => {
-    const { userId, songData } = useContext(AudioContext);
+    const { userId } = useContext(AudioContext);
 
     const [idPlaylist, setIdPlaylist] = useState('');
     const [songs, setSongs] = useState([]);
@@ -26,12 +26,15 @@ export const PlaylistProvider = ({ children }) => {
     const [renderSong, setRenderSong] = useState([]);
     const [searchText, setSearchText] = useState("");
 
+    const [playlistArray, setPlaylistArray] = useState([]);//danh sách các playlist
+    const [favoriteData, setFavoriteData] = useState([]);//danh sách các bàu hát yêu thích (info);
+    const [recentData, setRecentData] = useState([]);//danh sachs lich su cac bai hat(info)
+    const [favoriteID, setFavoriteID] = useState([]);//danh sach id bai hat yeu thich
+    const [recentID, setRecentID] = useState([]);//danh sach id bai hat yeu thich
 
     //get song by filter from listSong of playlistData and songData from fireStore 
     const filterSong = async (listSong) => {
-        // const song = songData?.filter(obj => listSong.includes(obj.id));
-        // setRenderSong(song);
-        // console.log('filterSong')
+
         if (listSong.length > 0)
             try {
                 const songsRef = collection(db, "songs");
@@ -76,7 +79,7 @@ export const PlaylistProvider = ({ children }) => {
 
     const setListSong = (list) => {
         setSongs([...list])
-        // console.log('set listsong')
+
     }
     const handleAddSong = async (idSong) => {
 
@@ -85,7 +88,7 @@ export const PlaylistProvider = ({ children }) => {
             const newSongs = [...songs];
             newSongs.splice(index, 1);
             setSongs(newSongs);
-            // console.log(newSongs)
+
             await DeleteSongToPlaylist(newSongs);
         }
         else {
@@ -97,11 +100,10 @@ export const PlaylistProvider = ({ children }) => {
     const fetchPlaylist = async (id) => {
         const playlistArray = await getDoc(doc(db, `users/${userId}/playlist/${id}`));
         setPlaylistData({ ...playlistArray.data() });
-        // console.log('fetch ne');
 
         setListSong(playlistArray.data().listSong);
         filterSong(playlistArray.data().listSong);
-        // console.log(renderSong.length, songs, playlistData)
+
     };
 
     const AddSongToPlaylist = async (idSong) => {
@@ -132,11 +134,19 @@ export const PlaylistProvider = ({ children }) => {
     }
 
     const theme = {
+        recentID, setRecentID,
+        favoriteID, setFavoriteID,
+        recentData,
+        favoriteData,
+        playlistArray,
         idPlaylist: idPlaylist,
         listSong: songs,
         playlistData: playlistData,
         renderSong: renderSong,
         searchText: searchText,
+        setRecentData,
+        setFavoriteData,
+        setPlaylistArray,
         setSearchText,
         updatePlaylist,
         updateListSong,

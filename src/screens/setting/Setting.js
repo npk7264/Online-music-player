@@ -23,7 +23,7 @@ import MiniPlayer from "../../components/MiniPlayer";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext";
-
+import { PlaylistContext } from "../../context/PlaylistContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { selectSong, pause } from "../../utils/AudioController";
@@ -106,6 +106,8 @@ const Setting = () => {
     updateState,
   } = context;
 
+  const contextPlaylist = useContext(PlaylistContext);
+
   const navigation = useNavigation();
   const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
 
@@ -149,7 +151,7 @@ const Setting = () => {
   const dangxuat = () => {
     signOut(auth)
       .then(async () => {
-        if (isPlaying) await selectSong(context, currentAudio, [currentAudio]);
+        if (isPlaying) await selectSong(context, currentAudio, [currentAudio], contextPlaylist);
         // await updateState(context, {
         //   currentAudio: null,
         //   currentAudioIndex: null,

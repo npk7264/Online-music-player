@@ -47,14 +47,14 @@ const DetailPlaylist = () => {
         <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
         {/* button */}
         <View style={styles.buttons}>
-          <TouchableOpacity
+          {/* <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.primary }]}
           >
             <Ionicons name="shuffle" size={20} color="white" />
             <Text style={[styles.buttonText, { color: "white" }]}>
               Trộn bài
             </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.frame }]}
           >

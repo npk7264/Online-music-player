@@ -17,13 +17,15 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { fetchRecentestSong, fetchSongListFromGenreStatistics, fetchIDFollowArtistByUser, fetchDataArtistFollowedByUser } from "../utils/FirebaseHandler";
+import { fetchRecentestSong, fetchSongListFromGenreStatistics, fetchDataArtistFollowedByUser, fetchUser } from "../utils/FirebaseHandler";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataContext } from "../context/DataContext";
+import { PlaylistContext } from "../context/PlaylistContext";
 
 const Login = () => {
   const context = useContext(AudioContext);
+  const { setFavoriteID, setRecentID } = useContext(PlaylistContext);
   const { setSuggestData, listSong, setListIDArtistFollowing, setArtistFollowing } = useContext(DataContext);
   const { updateState } = context;
   const navigation = useNavigation();
@@ -37,12 +39,15 @@ const Login = () => {
     setSuggestData(data ? data : listSong);
   }
   //fetch list artist following by user
-  const fetchArtistFollowingByUser = async (userId) => {
-    const listIDArtist = await fetchIDFollowArtistByUser(userId);
-    const infoArtist = await fetchDataArtistFollowedByUser(listIDArtist);
+  const fetchArtistFollowingAndFavoriteIDAndRecentIDByUser = async (userId) => {
+    const userData = await fetchUser(userId);
+    const infoArtist = await fetchDataArtistFollowedByUser(userData.follow);
     setArtistFollowing(infoArtist);
-    setListIDArtistFollowing(listIDArtist);
+    setListIDArtistFollowing(userData.follow);
+    setFavoriteID(userData.favorite);
+    setRecentID(userData.recently);
   }
+
 
   const LoginFirebase = (auth, email, password) => {
     signInWithEmailAndPassword(auth, email, password)
@@ -56,7 +61,7 @@ const Login = () => {
           console.error("Lỗi khi save email and password user login:", error);
         }
         // fetch data
-        const promiseFunction = [fetchRecentestSong(user.uid, context), setSuggestDataForScreenHone(user.uid), fetchArtistFollowingByUser(user.uid)]
+        const promiseFunction = [fetchRecentestSong(user.uid, context), setSuggestDataForScreenHone(user.uid), fetchArtistFollowingAndFavoriteIDAndRecentIDByUser(user.uid)]
         await Promise.all(promiseFunction);
         navigation.replace("BottomMenu");
       })
