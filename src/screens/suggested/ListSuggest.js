@@ -9,11 +9,12 @@ import OptionModal from '../../components/OptionModal'
 import { optionSinger, optionSong } from '../../utils/optionModal'
 import { DataContext } from '../../context/DataContext'
 import { useNavigation } from "@react-navigation/native";
-
+import { PlaylistContext } from '../../context/PlaylistContext'
 
 const ListSuggest = ({ title, data, id }) => {
     const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
+    const { recentData } = useContext(PlaylistContext);
     const contextData = useContext(DataContext);
     const [optionModalVisible, setOptionModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
@@ -22,6 +23,10 @@ const ListSuggest = ({ title, data, id }) => {
         let data;
         if (id === 5) {
             data = await fetchSongListFromGenreStatistics(auth.currentUser.uid, 20);
+        }
+        if (id === 1) {
+            // data = recentData;
+            return navigation.navigate("Recent");
         }
         if (id === 2) {
             data = contextData.listSong.slice(0, 10);
