@@ -30,11 +30,16 @@ import {
 } from "firebase/firestore";
 
 import { ThemeContext } from "../../context/ThemeContext";
+import { PlaylistContext } from "../../context/PlaylistContext";
+
+import { saveFavorite, removeFavorite } from "../../utils/FirebaseHandler";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
+  const contextPlaylist = useContext(PlaylistContext)
+  const { setFavoriteData, favoriteData, favoriteID, setFavoriteID } = contextPlaylist;
   const context = useContext(AudioContext);
   const {
     userId,
@@ -54,7 +59,7 @@ const Player = () => {
   const [currentTime, setCurrentTime] = useState("00:00");
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
-  const [favoriteList, setFavoriteList] = useState([]);
+  // const [favoriteID, setFavoriteID] = useState([]);
   const navigation = useNavigation();
 
   const { colors } = useContext(ThemeContext);
@@ -76,45 +81,9 @@ const Player = () => {
     });
   };
 
-  // fetch favorite songs
-  const fetchFavorite = async () => {
-    const docRef = doc(db, "users/" + userId);
-    try {
-      const docSnap = await getDoc(docRef);
-      setFavoriteList(docSnap.data().favorite);
-      setLike(docSnap.data().favorite.includes(currentAudio.id));
-    } catch (error) {
-      console.log("Fail to fetch favorite songs", error);
-    }
-  };
-
-  // save to favorite
-  const saveFavorite = async () => {
-    const docRef = doc(db, "users/" + userId);
-    try {
-      setFavoriteList([currentAudio.id, ...favoriteList]);
-      await updateDoc(docRef, {
-        favorite: [currentAudio.id, ...favoriteList],
-      });
-    } catch (e) {
-      alert("Failed to save favorite song!", e);
-    }
-  };
-
-  // remove from favorite
-  const removeFavorite = async () => {
-    const docRef = doc(db, "users/" + userId);
-    try {
-      const newFavoriteList = favoriteList.filter((item) => {
-        return item != currentAudio.id;
-      });
-      setFavoriteList(newFavoriteList);
-      await updateDoc(docRef, {
-        favorite: newFavoriteList,
-      });
-    } catch (e) {
-      alert("Failed to remove favorite song!", e);
-    }
+  // check favorite songs
+  const checkFavorite = async () => {
+    setLike(favoriteID.includes(currentAudio.id));
   };
 
   const onPlaybackStatusUpdate = async (status) => {
@@ -134,7 +103,7 @@ const Player = () => {
   useEffect(() => {
     playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
     setRepeat(isLooping);
-    fetchFavorite();
+    checkFavorite();
   }, [currentAudio, soundObj]);
 
   return (
@@ -243,7 +212,7 @@ const Player = () => {
               onPress={() => {
                 const flag = !isLike;
                 setLike(!isLike);
-                flag ? saveFavorite() : removeFavorite();
+                flag ? saveFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) : removeFavorite(userId, favoriteID, setFavoriteID, favoriteData, setFavoriteID, currentAudio);
               }}
             >
               <FontAwesome
@@ -306,7 +275,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                selectSong(context, currentAudio, songData);
+                selectSong(context, currentAudio, songData, contextPlaylist);
               }}
             >
               <FontAwesome

@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import { useState, useContext, } from "react";
-import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 
 import { AudioContext } from "../context/AudioContext";
 import { selectSong } from "../utils/AudioController";
 import { ThemeContext } from "../context/ThemeContext";
-
+import { PlaylistContext } from "../context/PlaylistContext";
 import { useNavigation } from "@react-navigation/native";
 
 const SongItem = (props) => {
   const contextAudio = useContext(AudioContext);
+  const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -25,7 +25,7 @@ const SongItem = (props) => {
     <TouchableOpacity
       style={[styles.container, { backgroundColor: colors.background }]}
       onPress={async () => {
-        await selectSong(contextAudio, props.info, props.data)
+        await selectSong(contextAudio, props.info, props.data, contextPlaylist);
         navigation.navigate("Player");
       }
       }

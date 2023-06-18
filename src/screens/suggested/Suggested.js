@@ -5,6 +5,7 @@ import ListSuggest from './ListSuggest'
 
 import { ThemeContext } from '../../context/ThemeContext'
 import { DataContext } from '../../context/DataContext'
+import { PlaylistContext } from '../../context/PlaylistContext'
 
 // test data
 import { songs } from '../../../data'
@@ -43,12 +44,14 @@ const data = [{
 const Suggested = () => {
     const { colors } = useContext(ThemeContext);
     const { suggestData, listSong, listSinger, listGenre, ArtistFollowing } = useContext(DataContext);
+    const { recentData } = useContext(PlaylistContext);
 
 
     const updatedData = data.map((item) => {
         if (item.id === 1)
             return {
                 ...item,
+                data: recentData.slice(0, 6),
             }
         else if (item.id === 2)
             return {

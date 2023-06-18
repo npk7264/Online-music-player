@@ -15,6 +15,7 @@ import MiniPlayer from "../components/MiniPlayer";
 
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { PlaylistContext } from "../context/PlaylistContext";
 
 import FlatListSong from "../components/FlatListSong";
 import { fetchFavorite } from "../utils/FirebaseHandler";
@@ -24,9 +25,10 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const Favorite = () => {
   const { userId, currentAudio } = useContext(AudioContext);
-  const [favoriteData, setFavoriteData] = useState([]);
+
+  const { favoriteData, setFavoriteData } = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(favoriteData.length !== 0);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -35,7 +37,8 @@ const Favorite = () => {
       setFavoriteData(favorite);
       setLoaded(true);
     };
-    fetchData();
+    if (favoriteData.length === 0)
+      fetchData();
   }, [isFocused]);
 
   return (
@@ -51,7 +54,7 @@ const Favorite = () => {
           <View style={styles.header}>
             {/* info singer */}
             <Image
-              source={require("../../assets/temp.jpg")}
+              source={{ uri: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThuEtcKQjwA9Mnq3QaKNTY9hytEDT-80wG4lDTEHYpDB2nKhbH360H8rwZqkx6zuj4hfk&usqp=CAU' }}
               style={styles.poster}
             />
             <Text style={[styles.singer, { color: colors.text }]}>
@@ -83,7 +86,7 @@ const Favorite = () => {
 
           {/* add songs */}
           <View style={[styles.addSong]}>
-            <Text style={{ fontSize: 20, color: colors.text,fontWeight: 500 }}>Bài hát</Text>
+            <Text style={{ fontSize: 20, color: colors.text, fontWeight: 500 }}>Bài hát</Text>
           </View>
           {/*  */}
         </View>

@@ -15,6 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 import BackBar from "../components/BackBar";
 import MiniPlayer from "../components/MiniPlayer";
 
+import { PlaylistContext } from "../context/PlaylistContext";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import FlatListSong from "../components/FlatListSong";
@@ -24,9 +25,9 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const Recent = () => {
   const { userId, currentAudio } = useContext(AudioContext);
-  const [recentData, setRecentData] = useState([]);
+  const { recentData, setRecentData } = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
-  const [loaded, setLoaded] = useState(false);
+  const [loaded, setLoaded] = useState(recentData.length !== 0);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -35,7 +36,8 @@ const Recent = () => {
       setRecentData(recent);
       setLoaded(true);
     };
-    fetchData();
+    if (recentData.length === 0)
+      fetchData();
   }, [isFocused]);
 
   return (
@@ -51,7 +53,7 @@ const Recent = () => {
           <View style={styles.header}>
             {/* info singer */}
             <Image
-              source={require("../../assets/temp.jpg")}
+              source={{ uri: 'https://kcr.sdsu.edu/wordpress/wp-content/uploads/IMG_0481.jpg' }}
               style={styles.poster}
             />
             <Text style={[styles.singer, { color: colors.text }]}>
@@ -60,14 +62,14 @@ const Recent = () => {
             <Text style={styles.numSong}>{recentData?.length} bài hát</Text>
             {/* button */}
             <View style={styles.buttons}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.button, { backgroundColor: colors.primary }]}
               >
                 <Ionicons name="shuffle" size={20} color="white" />
                 <Text style={[styles.buttonText, { color: "white" }]}>
                   Trộn bài
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: colors.frame }]}
               >

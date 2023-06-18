@@ -1,6 +1,7 @@
 import React, { useContext, useMemo } from "react";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { PlaylistContext } from "../context/PlaylistContext";
 import { selectSong } from "../utils/AudioController";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
@@ -9,6 +10,7 @@ import { Ionicons } from "@expo/vector-icons";
 const MiniPlayer = () => {
   const contextAudio = useContext(AudioContext);
   const { currentAudio, isPlaying, songData } = contextAudio;
+  const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
   const navigation = useNavigation();
 
@@ -49,7 +51,7 @@ const MiniPlayer = () => {
               alignItems: "center",
               justifyContent: "center",
             }}
-            onPress={async () => await selectSong(contextAudio, currentAudio, songData)}
+            onPress={async () => await selectSong(contextAudio, currentAudio, songData, contextPlaylist)}
           >
             <Ionicons
               name={isPlaying ? "pause-circle" : "play-circle"}

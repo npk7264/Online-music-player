@@ -59,7 +59,7 @@ export const playNext = async (playbackObj, uri) => {
   }
 };
 
-export const selectSong = async (context, audio, songData) => {
+export const selectSong = async (context, audio, songData, contextPlaylist) => {
   const {
     userId,
     // songData,
@@ -72,6 +72,8 @@ export const selectSong = async (context, audio, songData) => {
     onPlaybackStatusUpdate,
     playbackPosition,
   } = context;
+
+  const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
   try {
     // playing audio for the first time.
     if (soundObj === null) {
@@ -92,7 +94,7 @@ export const selectSong = async (context, audio, songData) => {
         // playbackPosition: 0,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-      updateRecent(userId, audio.id);
+      updateRecent(userId, audio.id, audio, recentID, setRecentID, recentData, setRecentData);
       return;
     }
 
@@ -133,7 +135,8 @@ export const selectSong = async (context, audio, songData) => {
         playbackDuration: status.durationMillis,
         // playbackPosition: 0,
       });
-      updateRecent(userId, audio.id);
+      // updateRecent(userId, audio.id);
+      updateRecent(userId, audio.id, audio, recentID, setRecentID, recentData, setRecentData);
       return;
     }
   } catch (error) {
@@ -141,7 +144,7 @@ export const selectSong = async (context, audio, songData) => {
   }
 };
 
-export const changeSong = async (context, option) => {
+export const changeSong = async (context, option, contextPlaylist) => {
   const {
     userId,
     songData,
@@ -152,6 +155,8 @@ export const changeSong = async (context, option) => {
     isPlaying,
     updateState,
   } = context;
+
+  const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
 
   let nextIndex;
 
@@ -176,7 +181,7 @@ export const changeSong = async (context, option) => {
       isLooping: false,
       playbackDuration: status.durationMillis,
     });
-    updateRecent(userId, nextAudio.id);
+    updateRecent(userId, nextAudio.id, nextAudio, recentID, setRecentID, recentData, setRecentData);
     return;
   } catch (e) {
     console.log("error inside change audio method", e);
