@@ -17,7 +17,7 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { fetchRecentestSong, fetchSongListFromGenreStatistics, fetchDataArtistFollowedByUser, fetchUser } from "../utils/FirebaseHandler";
+import { fetchRecentestSong, fetchSongListFromGenreStatistics, fetchDataArtistFollowedByUser, fetchUser, getRecent } from "../utils/FirebaseHandler";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataContext } from "../context/DataContext";
@@ -25,7 +25,7 @@ import { PlaylistContext } from "../context/PlaylistContext";
 
 const Login = () => {
   const context = useContext(AudioContext);
-  const { setFavoriteID, setRecentID } = useContext(PlaylistContext);
+  const { setFavoriteID, setRecentID, setRecentData } = useContext(PlaylistContext);
   const { setSuggestData, listSong, setListIDArtistFollowing, setArtistFollowing } = useContext(DataContext);
   const { updateState } = context;
   const navigation = useNavigation();
@@ -42,10 +42,12 @@ const Login = () => {
   const fetchArtistFollowingAndFavoriteIDAndRecentIDByUser = async (userId) => {
     const userData = await fetchUser(userId);
     const infoArtist = await fetchDataArtistFollowedByUser(userData.follow);
+    const recentData = await getRecent(userId);
     setArtistFollowing(infoArtist);
     setListIDArtistFollowing(userData.follow);
     setFavoriteID(userData.favorite);
     setRecentID(userData.recently);
+    setRecentData(recentData);
   }
 
 
