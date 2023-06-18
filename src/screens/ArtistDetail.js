@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import BackBar from '../components/BackBar';
-import { fetchSongOfArtist, fetchFollowArtist, fetchFollowArtistByUser, updateFollowArtistAndUser } from '../utils/FirebaseHandler';
+import { fetchSongOfArtist, fetchFollowArtist, updateFollowArtistAndUser, fetchDataArtistFollowedByUser } from '../utils/FirebaseHandler';
 import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 
 import FlatListSong from '../components/FlatListSong';
@@ -9,13 +9,15 @@ import MiniPlayer from '../components/MiniPlayer';
 
 import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
+import { DataContext } from '../context/DataContext';
 
 const ArtistDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
+    const { listIDArtistFollowing, setListIDArtistFollowing, setArtistFollowing } = useContext(DataContext);
     const { userId, currentAudio } = useContext(AudioContext);
     const [artist, setArtist] = useState({});
     const [listSong, setListSong] = useState([]);
-    const [isFollowed, setIsFollowed] = useState({ type: false, listArtistFollow: [] });
+    const [isFollowed, setIsFollowed] = useState(false);
 
     const id = route.params.id;
     const artistName = route.params.name;
@@ -23,26 +25,34 @@ const ArtistDetail = ({ route }) => {
 
     //check Follow
     const checkFollow = async () => {
-        const following = await fetchFollowArtistByUser(userId);
-        if (following)
-            setIsFollowed({ type: following?.includes(id), listArtistFollow: [...following] });
+        if (listIDArtistFollowing)
+            setIsFollowed(listIDArtistFollowing?.includes(id));
         else
-            setIsFollowed({ type: false, listArtistFollow: [] });
+            setIsFollowed(false);
 
     }
 
     const handleFollow = async () => {
-        if (isFollowed.type) {
-            const newListFollow = isFollowed.listArtistFollow?.filter((item) => item !== id);
-            setIsFollowed({ type: false, listArtistFollow: [...newListFollow] });
+        //Thêm hoặc bớt singer ra khỏi danh sách đang follow
+        if (isFollowed) {
+            const newListFollow = listIDArtistFollowing?.filter((item) => item !== id);
+            setIsFollowed(false);
+            setListIDArtistFollowing([...newListFollow])
             setArtist({ ...artist, follower: artist.follower - 1 })
-            await updateFollowArtistAndUser(userId, id, "unfollow", newListFollow);
+            updateFollowArtistAndUser(userId, id, "unfollow", newListFollow);
+
+            const listInfArtist = await fetchDataArtistFollowedByUser(newListFollow);
+            setArtistFollowing(listInfArtist)
         }
         else {
-            const newListFollow = [...isFollowed.listArtistFollow, id]
-            setIsFollowed({ type: true, listArtistFollow: [...newListFollow] });
+            const newListFollow = [...listIDArtistFollowing, id]
+            setIsFollowed(true);
+            setListIDArtistFollowing([...newListFollow])
             setArtist({ ...artist, follower: artist.follower + 1 })
-            await updateFollowArtistAndUser(userId, id, "follow", newListFollow);
+            updateFollowArtistAndUser(userId, id, "follow", newListFollow);
+
+            const listInfArtist = await fetchDataArtistFollowedByUser(newListFollow);
+            setArtistFollowing(listInfArtist)
         }
     }
 
@@ -78,8 +88,8 @@ const ArtistDetail = ({ route }) => {
                     <TouchableOpacity
                         style={[styles.button, { backgroundColor: colors.primary }]}
                         onPress={handleFollow}>
-                        <SimpleLineIcons name={!isFollowed.type ? 'user-follow' : 'user-following'} size={20} color='white' />
-                        <Text style={[styles.buttonText, { color: 'white' }]}>{!isFollowed.type ? "Theo dõi" : "Đã theo dõi"}</Text>
+                        <SimpleLineIcons name={!isFollowed ? 'user-follow' : 'user-following'} size={20} color='white' />
+                        <Text style={[styles.buttonText, { color: 'white' }]}>{!isFollowed ? "Theo dõi" : "Đã theo dõi"}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
                         <Ionicons name='play-circle' size={20} color={colors.primary} />

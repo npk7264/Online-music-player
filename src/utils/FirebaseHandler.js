@@ -617,22 +617,37 @@ export const fetchSongByIDGenre = async (id) => {
   }
 }
 
-export const fetchFollowArtistByUser = async (userId) => {
+//fetch list ID artist is followed by user
+export const fetchIDFollowArtistByUser = async (userId) => {
   try {
     const userData = await fetchUser(userId);
     return userData.follow;
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:624 ~ fetchFollowArtistByUser ~ e:", e)
+    console.log("🚀 ~ file: FirebaseHandler.js:624 ~ fetchIDFollowArtistByUser ~ e:", e)
   }
-
-
 }
 
-export const updateFollowArtistAndUser = async (userId, artistId, type, listArtistFollowing) => {
+//update artist when is unfollow or follow by user
+export const updateFollowArtistAndUser = async (userId, artistId, type, listIDArtistFollowing) => {
   try {
-    await updateDoc(doc(db, `users/${userId}`), { follow: listArtistFollowing })
+    await updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
     await updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
   } catch (e) {
     console.log("🚀 ~ file: FirebaseHandler.js:636 ~ updateFollowArtistAndUser ~ e:", e)
+  }
+}
+
+export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
+  try {
+    const q = query(collection(db, "artists"), where(documentId(), "in", listIDArtist));
+    const querySnapshot = await getDocs(q);
+    const artistArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      ...docRef.data(),
+    }));
+    return artistArray;
+
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:", e)
   }
 }
