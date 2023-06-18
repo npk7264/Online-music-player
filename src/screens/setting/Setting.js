@@ -8,11 +8,16 @@ import {
   Switch,
   TouchableOpacity,
   Image,
+  Alert,
+  Button,
+  Modal,
+  TextInput,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { auth, db, storage } from "../../services/firebaseConfig";
+import { updatePassword } from "firebase/auth";
 import { signOut, updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateDoc, doc } from "firebase/firestore";
@@ -110,6 +115,10 @@ const Setting = () => {
 
   const navigation = useNavigation();
   const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
+  const [newPassword, setNewPassword] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -178,6 +187,85 @@ const Setting = () => {
       });
   };
 
+  const handleChangePassword = async () => {
+    await changePassword();
+    setModalVisible(false);
+  };
+
+  const changePassword = async () => {
+    try {
+      const dataPassword = await AsyncStorage.getItem("password");
+      const user = auth.currentUser;
+
+      if (dataPassword === currentPassword) {
+        updatePassword(user, newPassword).then(async () => {
+          // Update successful.
+          await AsyncStorage.setItem("password", newPassword);
+          Alert.alert('Thành công', 'Bạn đã đổi mật khẩu thành công')
+        }).catch((error) => {
+          // An error ocurred
+          // ...
+          Alert.alert("197 setting", error);
+        });
+      }
+      else
+        Alert.alert('Thất bại', 'Bạn nhập sai mật khẩu');
+      setCurrentPassword('');
+      setNewPassword('');
+    }
+    catch (error) {
+      Alert.alert("206 setting", error);
+    }
+  }
+
+  const handlePressOption = (id) => {
+    if (id == "logOut") dangxuat();
+    if (id == "darkMode") toggleTheme();
+    if (id == "changePassword") {
+      setModalVisible(true);
+    }
+  }
+
+
+  const RenderChangePassword = () => {
+    return (
+      <>
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: colors.text,
+            },
+          ]}
+          placeholder="Current Password"
+          placeholderTextColor={colors.text}
+          secureTextEntry
+          value={currentPassword}
+          onChangeText={setCurrentPassword}
+        />
+        <TextInput
+          style={[
+            styles.input,
+            {
+              color: colors.text,
+            },
+          ]}
+          placeholderTextColor={colors.text}
+          placeholder="New Password"
+          secureTextEntry
+          value={newPassword}
+          onChangeText={setNewPassword}
+        />
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]} onPress={handleChangePassword}><Text style={{ fontSize: 20 }}>Đổi mật khẩu</Text></TouchableOpacity>
+        <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]} onPress={() => {
+          setModalVisible(false);
+          setCurrentPassword('');
+          setNewPassword('');
+        }} ><Text style={{ fontSize: 18 }}>Hủy</Text></TouchableOpacity>
+      </>
+    )
+  }
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
@@ -199,7 +287,19 @@ const Setting = () => {
             <Image source={{ uri: avatar }} style={styles.avatar} />
           </TouchableOpacity>
         </View>
-
+        <View style={styles.modal}>
+          <Modal
+            statusBarTranslucent
+            transparent
+            visible={modalVisible}
+            animationType="slide"
+          // onRequestClose={() => setModalVisible(false)}
+          >
+            <View style={[styles.modalContainer, { backgroundColor: colors.modal }]}>
+              {<RenderChangePassword />}
+            </View>
+          </Modal>
+        </View>
         {SECTIONS.map(({ header, items }) => {
           return (
             <View style={styles.section} key={header}>
@@ -208,10 +308,7 @@ const Setting = () => {
                 return (
                   <TouchableOpacity
                     key={id}
-                    onPress={() => {
-                      if (id == "logOut") dangxuat();
-                      else if (id == "darkMode") toggleTheme();
-                    }}
+                    onPress={() => handlePressOption(id)}
                   >
                     <View
                       style={[
@@ -254,10 +351,12 @@ const Setting = () => {
                   </TouchableOpacity>
                 );
               })}
+
             </View>
           );
         })}
       </ScrollView>
+
       {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
@@ -327,4 +426,33 @@ const styles = StyleSheet.create({
     flexShrink: 1,
     flexBasis: 0,
   },
+  modal: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  input: {
+    width: 300,
+    borderWidth: 1,
+    borderColor: 'gray',
+    padding: 10,
+    marginHorizontal: 40,
+    marginVertical: 10,
+    marginBottom: 10,
+  },
+  button: {
+    width: 170,
+    height: 45,
+    marginVertical: 15,
+    backgroundColor: 'red',
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 20,
+    // padding: 10
+  }
 });

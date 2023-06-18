@@ -9,12 +9,12 @@ import OptionModal from '../../components/OptionModal'
 import { optionSinger, optionSong } from '../../utils/optionModal'
 import { DataContext } from '../../context/DataContext'
 import { useNavigation } from "@react-navigation/native";
-import { PlaylistContext } from '../../context/PlaylistContext'
+// import { PlaylistContext } from '../../context/PlaylistContext'
 
 const ListSuggest = ({ title, data, id }) => {
     const navigation = useNavigation();
     const { colors } = useContext(ThemeContext);
-    const { recentData } = useContext(PlaylistContext);
+    // const { recentData } = useContext(PlaylistContext);
     const contextData = useContext(DataContext);
     const [optionModalVisible, setOptionModalVisible] = useState(false);
     const [currentItem, setCurrentItem] = useState(null);
