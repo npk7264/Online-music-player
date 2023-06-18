@@ -1,25 +1,50 @@
-import { StyleSheet, Text, View, SafeAreaView, StatusBar, Image, TouchableOpacity, FlatList } from 'react-native'
+import { StyleSheet, Text, View, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import BackBar from '../components/BackBar';
-import { fetchOneArtist, fetchSongOfArtist, fetchFollowArtist } from '../utils/FirebaseHandler';
-import { Ionicons } from "@expo/vector-icons";
-// import SongItem from '../components/SongItem';
-// import { songs } from '../../data';
+import { fetchSongOfArtist, fetchFollowArtist, fetchFollowArtistByUser, updateFollowArtistAndUser } from '../utils/FirebaseHandler';
+import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
+
 import FlatListSong from '../components/FlatListSong';
+import MiniPlayer from '../components/MiniPlayer';
 
 import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
 
 const ArtistDetail = ({ route }) => {
     const { colors } = useContext(ThemeContext);
-    const { songData } = useContext(AudioContext);
+    const { userId, currentAudio } = useContext(AudioContext);
     const [artist, setArtist] = useState({});
     const [listSong, setListSong] = useState([]);
+    const [isFollowed, setIsFollowed] = useState({ type: false, listArtistFollow: [] });
 
     const id = route.params.id;
     const artistName = route.params.name;
     const artistImage = route.params.image;
-    // const follower = route.params.follower;
+
+    //check Follow
+    const checkFollow = async () => {
+        const following = await fetchFollowArtistByUser(userId);
+        if (following)
+            setIsFollowed({ type: following?.includes(id), listArtistFollow: [...following] });
+        else
+            setIsFollowed({ type: false, listArtistFollow: [] });
+
+    }
+
+    const handleFollow = async () => {
+        if (isFollowed.type) {
+            const newListFollow = isFollowed.listArtistFollow?.filter((item) => item !== id);
+            setIsFollowed({ type: false, listArtistFollow: [...newListFollow] });
+            setArtist({ ...artist, follower: artist.follower - 1 })
+            await updateFollowArtistAndUser(userId, id, "unfollow", newListFollow);
+        }
+        else {
+            const newListFollow = [...isFollowed.listArtistFollow, id]
+            setIsFollowed({ type: true, listArtistFollow: [...newListFollow] });
+            setArtist({ ...artist, follower: artist.follower + 1 })
+            await updateFollowArtistAndUser(userId, id, "follow", newListFollow);
+        }
+    }
 
     //fetch data singer
     useEffect(() => {
@@ -31,6 +56,7 @@ const ArtistDetail = ({ route }) => {
                 image: artistImage,
                 follower
             });
+            await checkFollow();
             const songData = await fetchSongOfArtist(id);
             setListSong(songData)
         }
@@ -49,9 +75,11 @@ const ArtistDetail = ({ route }) => {
                 <Text style={styles.numSong}>{artist?.follower} người theo dõi</Text>
                 {/* button */}
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
-                        <Ionicons name='shuffle' size={20} color='white' />
-                        <Text style={[styles.buttonText, { color: 'white' }]}>Shuffle</Text>
+                    <TouchableOpacity
+                        style={[styles.button, { backgroundColor: colors.primary }]}
+                        onPress={handleFollow}>
+                        <SimpleLineIcons name={!isFollowed.type ? 'user-follow' : 'user-following'} size={20} color='white' />
+                        <Text style={[styles.buttonText, { color: 'white' }]}>{!isFollowed.type ? "Theo dõi" : "Đã theo dõi"}</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
                         <Ionicons name='play-circle' size={20} color={colors.primary} />
@@ -66,6 +94,8 @@ const ArtistDetail = ({ route }) => {
             <FlatListSong
                 songs={listSong}
             />
+
+            {currentAudio && <MiniPlayer />}
         </SafeAreaView>
     )
 }

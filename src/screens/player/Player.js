@@ -22,14 +22,10 @@ import { convertTime } from "../../utils/helper";
 import { selectSong, changeSong } from "../../utils/AudioController";
 import { useNavigation } from "@react-navigation/native";
 
-import { auth, db } from "../../services/firebaseConfig";
+import { db } from "../../services/firebaseConfig";
 import {
-  collection,
   doc,
   getDoc,
-  getDocs,
-  setDoc,
-  addDoc,
   updateDoc,
 } from "firebase/firestore";
 
@@ -85,7 +81,6 @@ const Player = () => {
     const docRef = doc(db, "users/" + userId);
     try {
       const docSnap = await getDoc(docRef);
-      // console.log(docSnap.data().favorite);
       setFavoriteList(docSnap.data().favorite);
       setLike(docSnap.data().favorite.includes(currentAudio.id));
     } catch (error) {
