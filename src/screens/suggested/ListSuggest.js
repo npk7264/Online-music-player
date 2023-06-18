@@ -32,6 +32,9 @@ const ListSuggest = ({ title, data, id }) => {
         if (id === 4) {
             data = contextData.listGenre;
         }
+        if (id === 6) {
+            data = contextData.ArtistFollowing;
+        }
         navigation.navigate('SeeAll', { id, title, data })
 
     }
@@ -46,7 +49,7 @@ const ListSuggest = ({ title, data, id }) => {
             </View>
             <FlatList
                 data={data}
-                renderItem={({ item }) => <ItemSuggest item={item} type={id !== 3 ? (id !== 4 ? 'song' : 'genre') : 'singer'} data={data} onPressOptionModal={() => {
+                renderItem={({ item }) => <ItemSuggest item={item} type={id !== 3 || id !== 6 ? (id !== 4 ? 'song' : 'genre') : 'singer'} data={data} onPressOptionModal={() => {
                     setOptionModalVisible(true);
                     setCurrentItem(item);
                 }} />}

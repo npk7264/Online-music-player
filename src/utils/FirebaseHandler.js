@@ -14,10 +14,11 @@ import {
   startAfter,
   documentId,
   increment,
+
 } from "firebase/firestore";
 
 import { getTopGenre } from "./helper";
-import jsrmvi from "jsrmvi";
+// import jsrmvi from "jsrmvi";
 import { removeVI, DefaultOption } from "jsrmvi";
 
 import { Audio } from "expo-av";
@@ -210,11 +211,11 @@ export const updateRecent = async (userId, audioId) => {
 };
 
 // FETCH USER
-export const fetchUser = async (userId, setUserName) => {
+export const fetchUser = async (userId) => {
   try {
     const docRef = doc(db, "users/" + userId);
     const docSnap = await getDoc(docRef);
-    setUserName(docSnap.data().name);
+    return docSnap.data();
   } catch (error) {
     console.log("Fail to fetch user name", error);
   }
@@ -561,7 +562,7 @@ export const fetchGenre = async () => {
     console.log("Fail to fetch history songs", error);
   }
 }
-
+// fetch Top Song By Genre
 export const fetchTopSongByGenre = async (id, topNumber) => {
   try {
     const q = query(
@@ -589,7 +590,7 @@ export const fetchTopSongByGenre = async (id, topNumber) => {
 
   }
 }
-
+//fetch song by genre
 export const fetchSongByIDGenre = async (id) => {
   try {
     const q = query(
@@ -613,5 +614,40 @@ export const fetchSongByIDGenre = async (id) => {
     return songsArray;
   } catch (e) {
     console.log("🚀 ~ file: FirebaseHandler.js:616 ~ fetchSongByIDGenre ~ e:", e)
+  }
+}
+
+//fetch list ID artist is followed by user
+export const fetchIDFollowArtistByUser = async (userId) => {
+  try {
+    const userData = await fetchUser(userId);
+    return userData.follow;
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:624 ~ fetchIDFollowArtistByUser ~ e:", e)
+  }
+}
+
+//update artist when is unfollow or follow by user
+export const updateFollowArtistAndUser = async (userId, artistId, type, listIDArtistFollowing) => {
+  try {
+    await updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
+    await updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:636 ~ updateFollowArtistAndUser ~ e:", e)
+  }
+}
+
+export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
+  try {
+    const q = query(collection(db, "artists"), where(documentId(), "in", listIDArtist));
+    const querySnapshot = await getDocs(q);
+    const artistArray = querySnapshot.docs.map((docRef) => ({
+      id: docRef.id,
+      ...docRef.data(),
+    }));
+    return artistArray;
+
+  } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:", e)
   }
 }

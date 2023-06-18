@@ -14,8 +14,10 @@ export const DataProvider = ({ children, songData, singerData, albumData, genreD
     const [lastVisibleSinger, setLastVisibleSinger] = useState(lastSinger || null);
     const [lastVisibleAlbum, setLastVisibleAlbum] = useState(lastAlbum || null);
 
-    const [suggestData, setSuggestData] = useState([]); //các bài hát của trang khám phá danh mục gợi ý
 
+    const [suggestData, setSuggestData] = useState([]); //các bài hát của trang khám phá danh mục gợi ý
+    const [listIDArtistFollowing, setListIDArtistFollowing] = useState([]);// các id ca sĩ user đang theo dõi
+    const [ArtistFollowing, setArtistFollowing] = useState([])// info các các sĩ được user theo dõi
     //load more Data
     const LoadMoreData = async (listData, limit, lastVisibleData, setLoadAll, setLastVisible, setListData, loadFunction) => {
         const [newListData, lastVisible] = await loadFunction(listData, limit, lastVisibleData);
@@ -42,6 +44,8 @@ export const DataProvider = ({ children, songData, singerData, albumData, genreD
     }
 
     const data = {
+        ArtistFollowing,
+        listIDArtistFollowing,
         listGenre: listGenre,
         listSong: listSong,
         loadedAllSongs: loadedAllSongs,
@@ -50,6 +54,8 @@ export const DataProvider = ({ children, songData, singerData, albumData, genreD
         listSinger: listSinger,
         loadedAllSinger: loadedAllSinger,
         suggestData: suggestData,
+        setArtistFollowing,
+        setListIDArtistFollowing,
         setSuggestData,
         setListSinger,
         setListSong,
