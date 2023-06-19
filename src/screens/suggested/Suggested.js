@@ -21,7 +21,7 @@ const data = [{
 },
 {
     id: 5,
-    title: 'Gợi ý',
+    title: 'Gợi ý cho bạn',
     data: songs
 },
 {
@@ -31,7 +31,7 @@ const data = [{
 },
 {
     id: 3,
-    title: 'Ca sĩ yêu thích',
+    title: 'Ca sĩ nổi bật',
     data: songs
 },
 {

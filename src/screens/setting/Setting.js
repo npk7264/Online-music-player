@@ -28,6 +28,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { selectSong, pause } from "../../utils/AudioController";
 import ChangePassword from "./ChangePassword";
+import ChangeUsername from "./ChangeUsername";
 
 const SECTIONS = [
   {
@@ -110,8 +111,10 @@ const Setting = () => {
   const contextPlaylist = useContext(PlaylistContext);
 
   const navigation = useNavigation();
+  const [username, setUsername] = useState(auth.currentUser?.displayName);
   const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
   const [modalVisible, setModalVisible] = useState(false);
+  const [changeNameVisible, setChangeNameVisible] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -160,14 +163,6 @@ const Setting = () => {
             [currentAudio],
             contextPlaylist
           );
-        // await updateState(context, {
-        //   currentAudio: null,
-        //   currentAudioIndex: null,
-        //   isPlaying: false,
-        //   isLooping: false,
-        //   playbackPosition: null,
-        //   playbackDuration: null,
-        // });
 
         try {
           await AsyncStorage.removeItem("email");
@@ -187,6 +182,7 @@ const Setting = () => {
   };
 
   const handlePressOption = (id) => {
+    if (id == "changeName") setChangeNameVisible(true);
     if (id == "logOut") dangxuat();
     if (id == "darkMode") toggleTheme();
     if (id == "changePassword") {
@@ -205,7 +201,7 @@ const Setting = () => {
         <View style={styles.userInfoSection}>
           {/* <Avatar.Icon size={80} icon="account" /> */}
           <Text style={[styles.userName, { color: colors.text }]}>
-            {auth.currentUser?.displayName}
+            {username}
           </Text>
           <TouchableOpacity
             onPress={async () => {
@@ -274,6 +270,14 @@ const Setting = () => {
           <ChangePassword
             visible={modalVisible}
             onClose={() => setModalVisible(false)}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          {/* modal add new playlist */}
+          <ChangeUsername
+            visible={changeNameVisible}
+            onClose={() => setChangeNameVisible(false)}
+            setUsername={setUsername}
           />
         </View>
       </ScrollView>
