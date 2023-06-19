@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { AudioContext } from "../../context/AudioContext";
+import { NotificationContext } from "../../context/NotifyContext";
 import { useNavigation } from "@react-navigation/native";
 import { selectSong } from "../../utils/AudioController";
 
@@ -9,9 +10,10 @@ const ItemSuggest = ({ item, type, data, onPressOptionModal }) => {
   const navigation = useNavigation();
   const { colors } = useContext(ThemeContext);
   const contextAudio = useContext(AudioContext);
+  const contextNotify = useContext(NotificationContext);
   const handlePressItem = async () => {
     if (type === "song") {
-      await selectSong(contextAudio, item, data);
+      await selectSong(contextAudio, item, data, contextNotify);
       navigation.navigate("Player");
     }
     if (type === "singer") {

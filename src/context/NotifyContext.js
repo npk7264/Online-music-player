@@ -35,7 +35,7 @@ export const NotificationProvider = ({ children }) => {
   };
 
   const pushNotification = async ({ title, isPlay }) => {
-    console.log(`pushNotification: ${title}`);
+    console.log(`pushNotification: ${title}, isPlay: ${isPlay}`);
     const permission = await obtainRemoteNotifPermissionsAsync();
 
     Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
@@ -71,7 +71,7 @@ export const NotificationProvider = ({ children }) => {
     const subscription = Notifications.addNotificationResponseReceivedListener(
       (notification) => {
         if (notification.actionIdentifier == "pause-play") {
-          console.log(action);
+          //   console.log(action);
           action && action();
         }
       }
