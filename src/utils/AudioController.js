@@ -53,7 +53,7 @@ export const playNext = async (playbackObj, uri) => {
   try {
     await playbackObj.stopAsync();
     await playbackObj.unloadAsync();
-    return await play(playbackObj, uri);
+    return play(playbackObj, uri);
   } catch (error) {
     console.log("error inside playNext helper method", error.message);
   }
@@ -74,6 +74,7 @@ export const selectSong = async (context, audio, songData, contextPlaylist) => {
   } = context;
 
   const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
+
   // console.log("🚀 ~ file: AudioController.js:77 ~ selectSong ~ recentID:", recentID)
   try {
     // playing audio for the first time.

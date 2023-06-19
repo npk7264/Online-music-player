@@ -178,6 +178,8 @@ export const fetchRecent = async (docRef) => {
 
 // UPDATE RECENT and update genre
 export const updateRecent = async (userId, audioId, audio, recentID, setRecentID, recentData, setRecentData) => {
+  // const start = performance.now();
+
   const userRef = doc(db, "users/" + userId);
   let data = await fetchRecent(userRef);
   let recentList = recentID.filter((item) => {
@@ -188,7 +190,9 @@ export const updateRecent = async (userId, audioId, audio, recentID, setRecentID
     return item.id != audioId;
   });
 
+
   const songRef = doc(db, "songs/" + audioId);
+
 
   //update thong ke genre
   let songDetail = await fetchDetailSong(songRef);
@@ -201,19 +205,25 @@ export const updateRecent = async (userId, audioId, audio, recentID, setRecentID
         : 1;
   });
 
+
   //update recent
   updateDataUser["recently"] = [audioId, ...recentList];
   setRecentID([audioId, ...recentList]);
   setRecentData([audio, ...recentListData]);
 
+
   try {
-    await updateDoc(userRef, updateDataUser);
-    await updateDoc(songRef, {
+    updateDoc(userRef, updateDataUser);
+    updateDoc(songRef, {
       view: increment(1),
     });
   } catch (e) {
     alert("Failed to save recent song!", e);
   }
+
+  // const end = performance.now();
+  // console.log(`Execution time: ${end - start} ms`);
+
 };
 
 // FETCH USER
