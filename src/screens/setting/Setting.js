@@ -23,10 +23,11 @@ import MiniPlayer from "../../components/MiniPlayer";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext";
-
+import { PlaylistContext } from "../../context/PlaylistContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { selectSong, pause } from "../../utils/AudioController";
+import ChangePassword from "./ChangePassword";
 
 const SECTIONS = [
   {
@@ -106,8 +107,11 @@ const Setting = () => {
     updateState,
   } = context;
 
+  const contextPlaylist = useContext(PlaylistContext);
+
   const navigation = useNavigation();
   const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -149,7 +153,13 @@ const Setting = () => {
   const dangxuat = () => {
     signOut(auth)
       .then(async () => {
-        if (isPlaying) await selectSong(context, currentAudio, [currentAudio]);
+        if (isPlaying)
+          await selectSong(
+            context,
+            currentAudio,
+            [currentAudio],
+            contextPlaylist
+          );
         // await updateState(context, {
         //   currentAudio: null,
         //   currentAudioIndex: null,
@@ -176,6 +186,14 @@ const Setting = () => {
       });
   };
 
+  const handlePressOption = (id) => {
+    if (id == "logOut") dangxuat();
+    if (id == "darkMode") toggleTheme();
+    if (id == "changePassword") {
+      setModalVisible(true);
+    }
+  };
+
   return (
     <SafeAreaView
       style={[styles.container, { backgroundColor: colors.background }]}
@@ -197,7 +215,6 @@ const Setting = () => {
             <Image source={{ uri: avatar }} style={styles.avatar} />
           </TouchableOpacity>
         </View>
-
         {SECTIONS.map(({ header, items }) => {
           return (
             <View style={styles.section} key={header}>
@@ -206,10 +223,7 @@ const Setting = () => {
                 return (
                   <TouchableOpacity
                     key={id}
-                    onPress={() => {
-                      if (id == "logOut") dangxuat();
-                      else if (id == "darkMode") toggleTheme();
-                    }}
+                    onPress={() => handlePressOption(id)}
                   >
                     <View
                       style={[
@@ -255,7 +269,15 @@ const Setting = () => {
             </View>
           );
         })}
+        <View style={{ flex: 1 }}>
+          {/* modal add new playlist */}
+          <ChangePassword
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)}
+          />
+        </View>
       </ScrollView>
+
       {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );
@@ -324,5 +346,34 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     flexShrink: 1,
     flexBasis: 0,
+  },
+  modal: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  input: {
+    width: 300,
+    borderWidth: 1,
+    borderColor: "gray",
+    padding: 10,
+    marginHorizontal: 40,
+    marginVertical: 10,
+    marginBottom: 10,
+  },
+  button: {
+    width: 170,
+    height: 45,
+    marginVertical: 15,
+    backgroundColor: "red",
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 20,
+    // padding: 10
   },
 });
