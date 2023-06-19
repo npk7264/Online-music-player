@@ -260,6 +260,7 @@ export const changeSong = async (context, option, contextNotify) => {
         soundObj: status,
         isPlaying: false,
         playbackPosition: status.positionMillis,
+        playbackDuration: status.durationMillis,
       });
       updateRecentestPositon(
         userId,
@@ -283,6 +284,7 @@ export const changeSong = async (context, option, contextNotify) => {
         songData: songData,
         soundObj: status,
         isPlaying: true,
+        playbackDuration: status.durationMillis,
       });
       setAction(() => pauseFunction);
       return;

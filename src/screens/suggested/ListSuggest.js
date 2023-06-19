@@ -57,9 +57,7 @@ const ListSuggest = ({ title, data, id }) => {
 
   return (
     data && (
-      <SafeAreaView
-        style={[styles.container, { marginTop: id === 1 ? 10 : 0 }]}
-      >
+      <SafeAreaView style={[styles.container]}>
         <View style={styles.title}>
           <Text style={[styles.textTitle, { color: colors.text }]}>
             {title}
@@ -103,7 +101,7 @@ export default ListSuggest;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginBottom: 20,
+    marginTop: 10,
   },
   title: {
     flexDirection: "row",
@@ -118,6 +116,7 @@ const styles = StyleSheet.create({
   },
   viewAll: {
     fontSize: 16,
+    fontWeight: "500",
   },
   modalContainer: {
     flex: 1,

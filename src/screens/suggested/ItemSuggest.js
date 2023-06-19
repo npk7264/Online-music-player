@@ -65,5 +65,7 @@ const styles = StyleSheet.create({
     width: 135,
     marginTop: 5,
     textAlign: "center",
+    fontWeight: "500",
+    color: "gray",
   },
 });
