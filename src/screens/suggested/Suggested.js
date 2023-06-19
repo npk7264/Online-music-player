@@ -5,6 +5,7 @@ import ListSuggest from './ListSuggest'
 
 import { ThemeContext } from '../../context/ThemeContext'
 import { DataContext } from '../../context/DataContext'
+import { PlaylistContext } from '../../context/PlaylistContext'
 
 // test data
 import { songs } from '../../../data'
@@ -20,7 +21,7 @@ const data = [{
 },
 {
     id: 5,
-    title: 'Gợi ý',
+    title: 'Gợi ý cho bạn',
     data: songs
 },
 {
@@ -30,7 +31,7 @@ const data = [{
 },
 {
     id: 3,
-    title: 'Ca sĩ yêu thích',
+    title: 'Ca sĩ nổi bật',
     data: songs
 },
 {
@@ -43,27 +44,29 @@ const data = [{
 const Suggested = () => {
     const { colors } = useContext(ThemeContext);
     const { suggestData, listSong, listSinger, listGenre, ArtistFollowing } = useContext(DataContext);
+    const { recentData } = useContext(PlaylistContext);
 
 
     const updatedData = data.map((item) => {
         if (item.id === 1)
             return {
                 ...item,
+                data: recentData?.slice(0, 6),
             }
         else if (item.id === 2)
             return {
                 ...item,
-                data: listSong.slice(0, 6),
+                data: listSong?.slice(0, 6),
             }
         else if (item.id === 3)
             return {
                 ...item,
-                data: listSinger.slice(0, 6),
+                data: listSinger?.slice(0, 6),
             }
         else if (item.id === 4)
             return {
                 ...item,
-                data: listGenre.slice(0, 6),
+                data: listGenre?.slice(0, 6),
             }
         else if (item.id === 5)
             return {
@@ -73,7 +76,7 @@ const Suggested = () => {
         if (item.id === 6)
             return {
                 ...item,
-                data: ArtistFollowing.slice(0, 6),
+                data: ArtistFollowing?.slice(0, 6),
             }
     }
     )

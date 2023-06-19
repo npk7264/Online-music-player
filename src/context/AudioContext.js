@@ -1,4 +1,5 @@
-import React, { Component, createContext } from "react";
+import React, { Component, createContext, useContext } from "react";
+import { NotificationContext } from "./NotifyContext";
 import { Audio } from "expo-av";
 import { changeSong } from "../utils/AudioController";
 import { fetchSongs, fetchRecent } from "../utils/FirebaseHandler";
@@ -31,6 +32,8 @@ export class AudioProvider extends Component {
     };
   }
 
+  static contextNotify = NotificationContext;
+
   onPlaybackStatusUpdate = async (playbackStatus) => {
     // if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
     //   this.updateState(this, {
@@ -48,7 +51,8 @@ export class AudioProvider extends Component {
       console.log("FINISH:", this.state.currentAudio);
       await changeSong(
         { ...this.state, updateState: this.updateState },
-        "next"
+        "next",
+        this.context
       );
     }
   };

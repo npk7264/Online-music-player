@@ -23,13 +23,10 @@ import { selectSong, changeSong } from "../../utils/AudioController";
 import { useNavigation } from "@react-navigation/native";
 
 import { db } from "../../services/firebaseConfig";
-import {
-  doc,
-  getDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 
 import { ThemeContext } from "../../context/ThemeContext";
+import { NotificationContext } from "../../context/NotifyContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
@@ -48,6 +45,9 @@ const Player = () => {
     updateState,
     songData,
   } = context;
+
+  const contextNotify = useContext(NotificationContext);
+
   const [currentPosition, setCurrentPositon] = useState(
     !soundObj ? playbackPosition : 0
   );
@@ -123,7 +123,7 @@ const Player = () => {
     }
     if (status.didJustFinish && !status.isLooping) {
       console.log("FINISH:", currentAudio);
-      await changeSong(context, "next");
+      await changeSong(context, "next", contextNotify);
     }
   };
 
@@ -298,7 +298,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                changeSong(context, "previous");
+                changeSong(context, "previous", contextNotify);
               }}
             >
               <AntDesign name="stepbackward" size={40} color={colors.text} />
@@ -306,7 +306,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                selectSong(context, currentAudio, songData);
+                selectSong(context, currentAudio, songData, contextNotify);
               }}
             >
               <FontAwesome
@@ -318,7 +318,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                changeSong(context, "next");
+                changeSong(context, "next", contextNotify);
               }}
             >
               <AntDesign name="stepforward" size={40} color={colors.text} />

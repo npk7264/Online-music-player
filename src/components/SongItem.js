@@ -1,16 +1,19 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
-import { useState, useContext, } from "react";
+import { useState, useContext } from "react";
 import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
 
 import { AudioContext } from "../context/AudioContext";
 import { selectSong } from "../utils/AudioController";
 import { ThemeContext } from "../context/ThemeContext";
+import { NotificationContext } from "../context/NotifyContext";
 
 import { useNavigation } from "@react-navigation/native";
 
 const SongItem = (props) => {
   const contextAudio = useContext(AudioContext);
+  const contextNotify = useContext(NotificationContext);
+
   const { colors } = useContext(ThemeContext);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -20,15 +23,13 @@ const SongItem = (props) => {
     setIsPlay(!isPlay);
   };
 
-
   return (
     <TouchableOpacity
       style={[styles.container, { backgroundColor: colors.background }]}
       onPress={async () => {
-        await selectSong(contextAudio, props.info, props.data)
+        await selectSong(contextAudio, props.info, props.data, contextNotify);
         navigation.navigate("Player");
-      }
-      }
+      }}
     >
       <View style={styles.content}>
         <View
@@ -56,21 +57,13 @@ const SongItem = (props) => {
           </View>
         </View>
 
-        {/* Button */}
-        {/* <View style={styles.buttonContainter}> */}
-        {/* PLAY/PAUSE */}
-        {/* <Ionicons
-            name={!isPlay ? "play-circle" : "pause"}
-            size={30}
-            color={colors.primary}
-          /> */}
         {/* OPTION */}
         <TouchableOpacity onPress={props.onPressOptionModal}>
           <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
         </TouchableOpacity>
         {/* </View> */}
       </View>
-    </TouchableOpacity >
+    </TouchableOpacity>
   );
 };
 export default SongItem;
