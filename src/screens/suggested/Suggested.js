@@ -51,22 +51,22 @@ const Suggested = () => {
         if (item.id === 1)
             return {
                 ...item,
-                data: recentData.slice(0, 6),
+                data: recentData?.slice(0, 6),
             }
         else if (item.id === 2)
             return {
                 ...item,
-                data: listSong.slice(0, 6),
+                data: listSong?.slice(0, 6),
             }
         else if (item.id === 3)
             return {
                 ...item,
-                data: listSinger.slice(0, 6),
+                data: listSinger?.slice(0, 6),
             }
         else if (item.id === 4)
             return {
                 ...item,
-                data: listGenre.slice(0, 6),
+                data: listGenre?.slice(0, 6),
             }
         else if (item.id === 5)
             return {
@@ -76,7 +76,7 @@ const Suggested = () => {
         if (item.id === 6)
             return {
                 ...item,
-                data: ArtistFollowing.slice(0, 6),
+                data: ArtistFollowing?.slice(0, 6),
             }
     }
     )
