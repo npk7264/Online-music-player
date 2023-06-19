@@ -3,13 +3,6 @@ import { updateRecent, updateRecentestPositon } from "./FirebaseHandler";
 // play audio
 export const play = async (playbackObj, uri, lastPosition) => {
   try {
-    // return await playbackObj.loadAsync(
-    //   { uri },
-    //   {
-    //     shouldPlay: true,
-    //     progressUpdateIntervalMillis: 1000,
-    //   }
-    // );
     if (!lastPosition)
       return await playbackObj.loadAsync(
         { uri },
@@ -59,7 +52,7 @@ export const playNext = async (playbackObj, uri) => {
   }
 };
 
-export const selectSong = async (context, audio, songData) => {
+export const selectSong = async (context, audio, songData, contextNotify) => {
   const {
     userId,
     // songData,
@@ -72,6 +65,54 @@ export const selectSong = async (context, audio, songData) => {
     onPlaybackStatusUpdate,
     playbackPosition,
   } = context;
+  const { pushNotification, setAction } = contextNotify;
+
+  ///////////////////////////////////////////////////////////
+  // handle Notification play/pause
+
+  let pauseFunction = async () => {
+    pushNotification({
+      title: audio.name + " - " + audio.singer.name,
+      isPlay: false,
+    });
+    const status = await pause(playbackObj);
+    const index = songData?.findIndex(({ id }) => id === audio.id);
+    updateState(context, {
+      currentAudio: audio,
+      currentAudioIndex: index,
+      songData: songData,
+      soundObj: status,
+      isPlaying: false,
+      playbackPosition: status.positionMillis,
+    });
+    updateRecentestPositon(
+      userId,
+      status.positionMillis,
+      status.durationMillis
+    );
+    setAction(() => resumeFunction);
+    return;
+  };
+
+  let resumeFunction = async () => {
+    pushNotification({
+      title: audio.name + " - " + audio.singer.name,
+      isPlay: true,
+    });
+    const status = await resume(playbackObj);
+    const index = songData?.findIndex(({ id }) => id === audio.id);
+    updateState(context, {
+      currentAudio: audio,
+      currentAudioIndex: index,
+      songData: songData,
+      soundObj: status,
+      isPlaying: true,
+    });
+    setAction(() => pauseFunction);
+    return;
+  };
+
+  ///////////////////////////////////////////////////////////
   try {
     // playing audio for the first time.
     if (soundObj === null) {
@@ -93,6 +134,11 @@ export const selectSong = async (context, audio, songData) => {
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       updateRecent(userId, audio.id);
+      pushNotification({
+        title: audio.name + " - " + audio.singer.name,
+        isPlay: true,
+      });
+      setAction(() => pauseFunction);
       return;
     }
 
@@ -109,13 +155,24 @@ export const selectSong = async (context, audio, songData) => {
         status.positionMillis,
         status.durationMillis
       );
+      pushNotification({
+        title: audio.name + " - " + audio.singer.name,
+        isPlay: false,
+      });
+      setAction(() => resumeFunction);
       return;
     }
 
     // resume audio
     if (!isPlaying && currentAudio.id === audio.id) {
       const status = await resume(playbackObj);
-      return updateState(context, { soundObj: status, isPlaying: true });
+      updateState(context, { soundObj: status, isPlaying: true });
+      pushNotification({
+        title: audio.name + " - " + audio.singer.name,
+        isPlay: true,
+      });
+      setAction(() => pauseFunction);
+      return;
     }
 
     // select another audio
@@ -134,6 +191,11 @@ export const selectSong = async (context, audio, songData) => {
         // playbackPosition: 0,
       });
       updateRecent(userId, audio.id);
+      pushNotification({
+        title: audio.name + " - " + audio.singer.name,
+        isPlay: true,
+      });
+      setAction(() => pauseFunction);
       return;
     }
   } catch (error) {
@@ -141,7 +203,7 @@ export const selectSong = async (context, audio, songData) => {
   }
 };
 
-export const changeSong = async (context, option) => {
+export const changeSong = async (context, option, contextNotify) => {
   const {
     userId,
     songData,
@@ -152,6 +214,7 @@ export const changeSong = async (context, option) => {
     isPlaying,
     updateState,
   } = context;
+  const { pushNotification, setAction } = contextNotify;
 
   let nextIndex;
 
@@ -177,6 +240,56 @@ export const changeSong = async (context, option) => {
       playbackDuration: status.durationMillis,
     });
     updateRecent(userId, nextAudio.id);
+    pushNotification({
+      title: nextAudio.name + " - " + nextAudio.singer.name,
+      isPlay: true,
+    });
+
+    //////////////////////////////
+    let pauseFunction = async () => {
+      pushNotification({
+        title: nextAudio.name + " - " + nextAudio.singer.name,
+        isPlay: false,
+      });
+      const status = await pause(playbackObj);
+      const index = songData?.findIndex(({ id }) => id === nextAudio.id);
+      updateState(context, {
+        currentAudio: nextAudio,
+        currentAudioIndex: index,
+        songData: songData,
+        soundObj: status,
+        isPlaying: false,
+        playbackPosition: status.positionMillis,
+      });
+      updateRecentestPositon(
+        userId,
+        status.positionMillis,
+        status.durationMillis
+      );
+      setAction(() => resumeFunction);
+      return;
+    };
+
+    let resumeFunction = async () => {
+      pushNotification({
+        title: nextAudio.name + " - " + nextAudio.singer.name,
+        isPlay: true,
+      });
+      const status = await resume(playbackObj);
+      const index = songData?.findIndex(({ id }) => id === nextAudio.id);
+      updateState(context, {
+        currentAudio: nextAudio,
+        currentAudioIndex: index,
+        songData: songData,
+        soundObj: status,
+        isPlaying: true,
+      });
+      setAction(() => pauseFunction);
+      return;
+    };
+    //////////////////////////////
+
+    setAction(() => pauseFunction);
     return;
   } catch (e) {
     console.log("error inside change audio method", e);
