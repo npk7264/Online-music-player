@@ -8,11 +8,16 @@ import {
   Switch,
   TouchableOpacity,
   Image,
+  Alert,
+  Button,
+  Modal,
+  TextInput,
 } from "react-native";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 
 import { auth, db, storage } from "../../services/firebaseConfig";
+import { updatePassword } from "firebase/auth";
 import { signOut, updateProfile } from "firebase/auth";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { updateDoc, doc } from "firebase/firestore";
@@ -116,6 +121,7 @@ const Setting = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [changeNameVisible, setChangeNameVisible] = useState(false);
 
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -163,7 +169,6 @@ const Setting = () => {
             [currentAudio],
             contextPlaylist
           );
-
         try {
           await AsyncStorage.removeItem("email");
           await AsyncStorage.removeItem("password");
@@ -262,6 +267,7 @@ const Setting = () => {
                   </TouchableOpacity>
                 );
               })}
+
             </View>
           );
         })}
@@ -364,7 +370,7 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     borderWidth: 1,
-    borderColor: "gray",
+    borderColor: 'gray',
     padding: 10,
     marginHorizontal: 40,
     marginVertical: 10,

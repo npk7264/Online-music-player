@@ -10,6 +10,7 @@ import {
   TextInput,
   TouchableOpacity,
   Keyboard,
+  Alert,
 } from "react-native";
 import { ThemeContext } from "../../context/ThemeContext";
 import { db, auth } from "../../services/firebaseConfig";
@@ -47,12 +48,18 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
   //add new playlist
   const handleCreatePlaylist = async () => {
     try {
-      const docRef = await addDoc(collection(db, `users/${userId}/playlist`), {
-        name: namePlaylist,
-        listSong: [],
-        numSong: 0,
-      });
-      console.log("Document written with ID: ", docRef.id);
+      if (namePlaylist !== "") {
+        const playlist = {
+          name: namePlaylist,
+          listSong: [],
+          numSong: 0,
+        };
+        const docRef = await addDoc(collection(db, `users/${userId}/playlist`), playlist);
+        checkPlaylist({ id: docRef.id, ...playlist });
+        console.log("Document written with ID: ", docRef.id);
+      }
+      else
+        Alert.alert('Lỗi Playlist', 'Vui lòng nhập tên Playlist');
     } catch (e) {
       alert("create playlist!", e);
     }
@@ -95,8 +102,8 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
                     ? "#2a221f"
                     : "#fff5ed"
                   : darkMode
-                  ? "#1f222a"
-                  : "#f5f5f6",
+                    ? "#1f222a"
+                    : "#f5f5f6",
                 borderWidth: isFocused ? 1 : 0,
                 color: colors.text,
               },
@@ -124,7 +131,7 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
               style={[styles.button, { backgroundColor: colors.primary }]}
               onPress={() => {
                 handleCreatePlaylist();
-                checkPlaylist();
+                // checkPlaylist();
               }}
             >
               <Text style={{ color: "white", fontSize: 18, fontWeight: 500 }}>

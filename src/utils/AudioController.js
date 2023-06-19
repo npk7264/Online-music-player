@@ -46,13 +46,13 @@ export const playNext = async (playbackObj, uri) => {
   try {
     await playbackObj.stopAsync();
     await playbackObj.unloadAsync();
-    return await play(playbackObj, uri);
+    return play(playbackObj, uri);
   } catch (error) {
     console.log("error inside playNext helper method", error.message);
   }
 };
 
-export const selectSong = async (context, audio, songData, contextNotify) => {
+export const selectSong = async (context, audio, songData, contextPlaylist, contextNotify) => {
   const {
     userId,
     // songData,
@@ -65,9 +65,10 @@ export const selectSong = async (context, audio, songData, contextNotify) => {
     onPlaybackStatusUpdate,
     playbackPosition,
   } = context;
-  const { pushNotification, setAction } = contextNotify;
 
-  ///////////////////////////////////////////////////////////
+  const { pushNotification, setAction } = contextNotify;
+  const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
+
   // handle Notification play/pause
 
   let pauseFunction = async () => {
@@ -112,7 +113,7 @@ export const selectSong = async (context, audio, songData, contextNotify) => {
     return;
   };
 
-  ///////////////////////////////////////////////////////////
+
   try {
     // playing audio for the first time.
     if (soundObj === null) {
@@ -133,12 +134,15 @@ export const selectSong = async (context, audio, songData, contextNotify) => {
         // playbackPosition: 0,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
-      updateRecent(userId, audio.id);
+      // updateRecent(userId, audio.id);
       pushNotification({
         title: audio.name + " - " + audio.singer.name,
         isPlay: true,
       });
       setAction(() => pauseFunction);
+
+      updateRecent(userId, audio.id, audio, recentID, setRecentID, recentData, setRecentData);
+
       return;
     }
 
@@ -190,12 +194,17 @@ export const selectSong = async (context, audio, songData, contextNotify) => {
         playbackDuration: status.durationMillis,
         // playbackPosition: 0,
       });
-      updateRecent(userId, audio.id);
+
+      // updateRecent(userId, audio.id);
       pushNotification({
         title: audio.name + " - " + audio.singer.name,
         isPlay: true,
       });
       setAction(() => pauseFunction);
+
+      // updateRecent(userId, audio.id);
+      updateRecent(userId, audio.id, audio, recentID, setRecentID, recentData, setRecentData);
+
       return;
     }
   } catch (error) {
@@ -203,7 +212,8 @@ export const selectSong = async (context, audio, songData, contextNotify) => {
   }
 };
 
-export const changeSong = async (context, option, contextNotify) => {
+
+export const changeSong = async (context, option, contextPlaylist, contextNotify) => {
   const {
     userId,
     songData,
@@ -215,6 +225,9 @@ export const changeSong = async (context, option, contextNotify) => {
     updateState,
   } = context;
   const { pushNotification, setAction } = contextNotify;
+
+  const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
+
 
   let nextIndex;
 
@@ -239,13 +252,16 @@ export const changeSong = async (context, option, contextNotify) => {
       isLooping: false,
       playbackDuration: status.durationMillis,
     });
-    updateRecent(userId, nextAudio.id);
+
+    updateRecent(userId, nextAudio.id, nextAudio, recentID, setRecentID, recentData, setRecentData);
+
+    // updateRecent(userId, nextAudio.id);
     pushNotification({
       title: nextAudio.name + " - " + nextAudio.singer.name,
       isPlay: true,
     });
 
-    //////////////////////////////
+
     let pauseFunction = async () => {
       pushNotification({
         title: nextAudio.name + " - " + nextAudio.singer.name,
@@ -289,9 +305,11 @@ export const changeSong = async (context, option, contextNotify) => {
       setAction(() => pauseFunction);
       return;
     };
-    //////////////////////////////
+
 
     setAction(() => pauseFunction);
+
+
     return;
   } catch (e) {
     console.log("error inside change audio method", e);

@@ -3,17 +3,20 @@ import React, { useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { AudioContext } from "../../context/AudioContext";
 import { NotificationContext } from "../../context/NotifyContext";
+import { PlaylistContext } from '../../context/PlaylistContext'
 import { useNavigation } from "@react-navigation/native";
 import { selectSong } from "../../utils/AudioController";
 
 const ItemSuggest = ({ item, type, data, onPressOptionModal }) => {
+
   const navigation = useNavigation();
+  const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
   const contextAudio = useContext(AudioContext);
   const contextNotify = useContext(NotificationContext);
   const handlePressItem = async () => {
     if (type === "song") {
-      await selectSong(contextAudio, item, data, contextNotify);
+      await selectSong(contextAudio, item, data, contextPlaylist, contextNotify);
       navigation.navigate("Player");
     }
     if (type === "singer") {

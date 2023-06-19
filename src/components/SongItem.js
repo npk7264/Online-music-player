@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+
 import { useState, useContext } from "react";
 import { Audio } from "expo-av";
 import { Ionicons } from "@expo/vector-icons";
@@ -6,14 +7,17 @@ import { Ionicons } from "@expo/vector-icons";
 import { AudioContext } from "../context/AudioContext";
 import { selectSong } from "../utils/AudioController";
 import { ThemeContext } from "../context/ThemeContext";
+
 import { NotificationContext } from "../context/NotifyContext";
 
+
+import { PlaylistContext } from "../context/PlaylistContext";
 import { useNavigation } from "@react-navigation/native";
 
 const SongItem = (props) => {
   const contextAudio = useContext(AudioContext);
   const contextNotify = useContext(NotificationContext);
-
+  const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
   const [isPlay, setIsPlay] = useState(false);
 
@@ -27,7 +31,7 @@ const SongItem = (props) => {
     <TouchableOpacity
       style={[styles.container, { backgroundColor: colors.background }]}
       onPress={async () => {
-        await selectSong(contextAudio, props.info, props.data, contextNotify);
+        await selectSong(contextAudio, props.info, props.data, contextPlaylist, contextNotify);
         navigation.navigate("Player");
       }}
     >
@@ -57,11 +61,19 @@ const SongItem = (props) => {
           </View>
         </View>
 
-        {/* OPTION */}
-        <TouchableOpacity onPress={props.onPressOptionModal}>
-          <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
-        </TouchableOpacity>
-        {/* </View> */}
+        {/* Button */}
+        <View style={styles.buttonContainter}>
+          {/* PLAY/PAUSE */}
+          <Ionicons
+            name={(contextAudio.isPlaying && contextAudio.currentAudio.id === props.info.id) ? "pause" : "play-circle"}
+            size={30}
+            color={colors.primary}
+          />
+          {/* OPTION */}
+          <TouchableOpacity onPress={props.onPressOptionModal}>
+            <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableOpacity>
   );
