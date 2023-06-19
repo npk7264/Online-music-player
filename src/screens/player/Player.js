@@ -92,7 +92,7 @@ const Player = () => {
     }
     if (status.didJustFinish && !status.isLooping) {
       console.log("FINISH:", currentAudio);
-      await changeSong(context, "next");
+      await changeSong(context, "next", contextPlaylist);
     }
   };
 
@@ -267,7 +267,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                changeSong(context, "previous");
+                changeSong(context, "previous", contextPlaylist);
               }}
             >
               <AntDesign name="stepbackward" size={40} color={colors.text} />
@@ -287,7 +287,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                changeSong(context, "next");
+                changeSong(context, "next", contextPlaylist);
               }}
             >
               <AntDesign name="stepforward" size={40} color={colors.text} />

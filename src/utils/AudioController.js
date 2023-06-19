@@ -74,6 +74,7 @@ export const selectSong = async (context, audio, songData, contextPlaylist) => {
   } = context;
 
   const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
+  // console.log("🚀 ~ file: AudioController.js:77 ~ selectSong ~ recentID:", recentID)
   try {
     // playing audio for the first time.
     if (soundObj === null) {
@@ -157,6 +158,7 @@ export const changeSong = async (context, option, contextPlaylist) => {
   } = context;
 
   const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
+  // console.log("🚀 ~ file: AudioController.js:161 ~ changeSong ~ recentID:", recentID)
 
   let nextIndex;
 

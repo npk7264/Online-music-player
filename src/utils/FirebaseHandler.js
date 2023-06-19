@@ -636,6 +636,8 @@ export const updateFollowArtistAndUser = async (userId, artistId, type, listIDAr
 //fetch Data Artist Followed By User
 export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
   try {
+    if (!listIDArtist)
+      return null;
     const q = query(collection(db, "artists"), where(documentId(), "in", listIDArtist));
     const querySnapshot = await getDocs(q);
     const artistArray = querySnapshot.docs.map((docRef) => ({
