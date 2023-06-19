@@ -636,8 +636,8 @@ export const fetchSongByIDGenre = async (id) => {
 //update artist when is unfollow or follow by user
 export const updateFollowArtistAndUser = async (userId, artistId, type, listIDArtistFollowing) => {
   try {
-    await updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
-    await updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
+    updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
+    updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
   } catch (e) {
     console.log("🚀 ~ file: FirebaseHandler.js:636 ~ updateFollowArtistAndUser ~ e:", e)
   }
@@ -667,7 +667,7 @@ export const saveFavorite = async (userId, currentAudio, favoriteData, setFavori
   try {
     setFavoriteData([currentAudio, ...favoriteData])
     setFavoriteID([currentAudio.id, ...favoriteID]);
-    await updateDoc(docRef, {
+    updateDoc(docRef, {
       favorite: [currentAudio.id, ...favoriteID],
     });
   } catch (e) {
@@ -676,7 +676,7 @@ export const saveFavorite = async (userId, currentAudio, favoriteData, setFavori
 };
 
 // remove from favorite
-export const removeFavorite = async (userId, favoriteID, setFavoriteData, favoriteData, setFavoriteID, currentAudio) => {
+export const removeFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
   const docRef = doc(db, "users/" + userId);
   try {
     const newfavoriteID = favoriteID.filter((item) => {
@@ -687,7 +687,7 @@ export const removeFavorite = async (userId, favoriteID, setFavoriteData, favori
     });
     setFavoriteData(newFavoriteData);
     setFavoriteID(newfavoriteID);
-    await updateDoc(docRef, {
+    updateDoc(docRef, {
       favorite: newfavoriteID,
     });
   } catch (e) {

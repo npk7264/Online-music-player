@@ -212,7 +212,7 @@ const Player = () => {
               onPress={() => {
                 const flag = !isLike;
                 setLike(!isLike);
-                flag ? saveFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) : removeFavorite(userId, favoriteID, setFavoriteID, favoriteData, setFavoriteID, currentAudio);
+                flag ? saveFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) : removeFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID);
               }}
             >
               <FontAwesome

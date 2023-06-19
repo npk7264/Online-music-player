@@ -57,18 +57,18 @@ const SongItem = (props) => {
         </View>
 
         {/* Button */}
-        {/* <View style={styles.buttonContainter}> */}
-        {/* PLAY/PAUSE */}
-        {/* <Ionicons
-            name={!isPlay ? "play-circle" : "pause"}
+        <View style={styles.buttonContainter}>
+          {/* PLAY/PAUSE */}
+          <Ionicons
+            name={(contextAudio.isPlaying && contextAudio.currentAudio.id === props.info.id) ? "pause" : "play-circle"}
             size={30}
             color={colors.primary}
-          /> */}
-        {/* OPTION */}
-        <TouchableOpacity onPress={props.onPressOptionModal}>
-          <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
-        </TouchableOpacity>
-        {/* </View> */}
+          />
+          {/* OPTION */}
+          <TouchableOpacity onPress={props.onPressOptionModal}>
+            <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
+          </TouchableOpacity>
+        </View>
       </View>
     </TouchableOpacity >
   );
