@@ -36,23 +36,19 @@ const Playlist = () => {
   const { playlistArray, setPlaylistArray } = useContext(PlaylistContext);
   const [addPlaylist, setAddPlaylist] = useState(false);
   const { userId, currentAudio } = useContext(AudioContext);
-  // const [playlistData, setPlaylistData] = useState([]);
-  // const [loaded, setLoaded] = useState(false);
+
 
   const fetchPlaylist = async () => {
-    if (playlistArray.length === 0) {
-      const querySnapshot = await getDocs(
-        collection(db, `users/${userId}/playlist`)
-      );
+    const querySnapshot = await getDocs(
+      collection(db, `users/${userId}/playlist`)
+    );
 
-      const playlistData = querySnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+    const playlistData = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
 
-      setPlaylistArray(playlistData);
-      // setLoaded(true);
-    }
+    setPlaylistArray(playlistData);
   };
   const checkPlaylist = (playlist) => {
     setPlaylistArray([{ ...playlist }, ...playlistArray])
@@ -63,10 +59,10 @@ const Playlist = () => {
     const fetchData = async () => {
       await fetchPlaylist();
     };
-    fetchData();
+    if (playlistArray.length === 0)
+      fetchData();
   }, []);
 
-  // console.log("PLAYLIST render");
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -74,12 +70,6 @@ const Playlist = () => {
 
       <SearchBar title={"Playlist"} />
 
-      {/* Màn hình khi đang load dữ liệu */}
-      {/* {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
-      {!loaded && <FlatList />} */}
-
-      {/* Khi load dữ liệu xong */}
-      {/* {loaded && ( */}
       <FlatList
         data={[
           { id: "add", name: "Tạo danh sách phát mới" },
@@ -139,7 +129,7 @@ const Playlist = () => {
           </View>
         )}
       />
-      {/* )} */}
+
 
       {currentAudio && <MiniPlayer />}
     </SafeAreaView>

@@ -182,11 +182,11 @@ export const updateRecent = async (userId, audioId, audio, recentID, setRecentID
 
   const userRef = doc(db, "users/" + userId);
   let data = await fetchRecent(userRef);
-  let recentList = recentID.filter((item) => {
+  let recentList = recentID?.filter((item) => {
     return item != audioId;
   });
 
-  let recentListData = recentData.filter((item) => {
+  let recentListData = recentData?.filter((item) => {
     return item.id != audioId;
   });
 
@@ -679,10 +679,10 @@ export const saveFavorite = async (userId, currentAudio, favoriteData, setFavori
 export const removeFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
   const docRef = doc(db, "users/" + userId);
   try {
-    const newfavoriteID = favoriteID.filter((item) => {
+    const newfavoriteID = favoriteID?.filter((item) => {
       return item != currentAudio.id;
     });
-    const newFavoriteData = favoriteData.filter((item) => {
+    const newFavoriteData = favoriteData?.filter((item) => {
       return item.id != currentAudio.id;
     });
     setFavoriteData(newFavoriteData);

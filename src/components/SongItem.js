@@ -19,13 +19,8 @@ const SongItem = (props) => {
   const contextNotify = useContext(NotificationContext);
   const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
-  const [isPlay, setIsPlay] = useState(false);
 
   const navigation = useNavigation();
-
-  const handlePress = () => {
-    setIsPlay(!isPlay);
-  };
 
   return (
     <TouchableOpacity

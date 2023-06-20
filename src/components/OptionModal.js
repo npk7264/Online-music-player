@@ -11,17 +11,33 @@ import {
 } from 'react-native';
 
 import { MaterialIcons } from "@expo/vector-icons";
+import { DataContext } from "../context/DataContext";
+import { PlaylistContext } from "../context//PlaylistContext";
+import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
+
+import { useNavigation } from "@react-navigation/native";
+
 
 const OptionModal = ({
     visible,
     currentItem,
     onClose,
     options,
-    onPlayPress,
-    onPlayListPress,
+    type,
+    // onPlayPress,
+    // onPlayListPress,
 }) => {
+    const contextPlaylist = useContext(PlaylistContext);
+    const contextData = useContext(DataContext);
+    const contextAudio = useContext(AudioContext);
     const { colors } = useContext(ThemeContext);
+    const navigation = useNavigation();
+
+    const handleClose = () => {
+        onClose(); // Gọi onClose khi cần thiết
+    };
+
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar hidden />
@@ -43,7 +59,10 @@ const OptionModal = ({
                             return (
                                 <TouchableWithoutFeedback
                                     key={optn.title}
-                                    onPress={() => optn.onPress(currentItem)}
+                                    onPress={() => {
+                                        optn.onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation);
+                                        handleClose();
+                                    }}
                                 >
                                     <View style={styles.function} >
                                         <MaterialIcons
@@ -58,7 +77,7 @@ const OptionModal = ({
                         })}
                     </View>
                 </View>
-                <TouchableWithoutFeedback onPress={onClose}>
+                <TouchableWithoutFeedback onPress={handleClose}>
                     <View style={styles.modalBg} />
                 </TouchableWithoutFeedback>
             </Modal>
