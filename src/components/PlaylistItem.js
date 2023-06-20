@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
 import React, { useState, useContext, useEffect } from "react";
 import { AntDesign, FontAwesome, MaterialIcons } from "@expo/vector-icons";
 import { ThemeContext } from "../context/ThemeContext.js";
@@ -7,10 +7,10 @@ import { PlaylistContext } from "../context/PlaylistContext.js";
 import { useIsFocused } from '@react-navigation/native';
 
 
-const PlaylistItem = ({ type, name, id, numSong }) => {
+const PlaylistItem = ({ type, name, id, numSong, action }) => {
   const isFocused = useIsFocused();
   const { colors } = useContext(ThemeContext);
-  const { updatePlaylist, listSong, idPlaylist } = useContext(PlaylistContext);
+  const { updatePlaylist, listSong, idPlaylist, addOneSongToPlaylist } = useContext(PlaylistContext);
   const [numberSong, setNumberSong] = useState(numSong);
   const navigation = useNavigation();
 
@@ -31,7 +31,13 @@ const PlaylistItem = ({ type, name, id, numSong }) => {
         backgroundColor: colors.background,
       }}
       onPress={async () => {
-        if (type == "Favorite") navigation.navigate("Favorite");
+        if (action && action.action === "add") {
+          await addOneSongToPlaylist(action.idSong, action.Playlist);
+          navigation.goBack();
+          return;
+          // Alert.alert("Đã thêm vào playlist thành công");
+        }
+        else if (type == "Favorite") navigation.navigate("Favorite");
         else if (type == "Recent") navigation.navigate("Recent");
         else {
           await updatePlaylist(id);

@@ -65,7 +65,7 @@ const SongItem = (props) => {
             color={colors.primary}
           />
           {/* OPTION */}
-          <TouchableOpacity onPress={props.onPressOptionModal}>
+          <TouchableOpacity onPress={props.onPressOptionModal} style={{ padding: 10 }}>
             <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
           </TouchableOpacity>
         </View>

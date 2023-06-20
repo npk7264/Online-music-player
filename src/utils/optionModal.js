@@ -53,6 +53,7 @@ export const optionSong = [
         icon: "add-circle-outline",
         onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
             console.log(`add playlist ${item.name}`);
+            navigation.navigate('AddOneSong', { item })
         },
     },
     {
