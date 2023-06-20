@@ -29,6 +29,7 @@ import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import { AudioContext } from "../../context/AudioContext";
 import { ThemeContext } from "../../context/ThemeContext";
 import { PlaylistContext } from "../../context/PlaylistContext";
+import { NotificationContext } from "../../context/NotifyContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from "expo-image-picker";
 import { selectSong, pause } from "../../utils/AudioController";
@@ -114,13 +115,13 @@ const Setting = () => {
   } = context;
 
   const contextPlaylist = useContext(PlaylistContext);
+  const contextNotify = useContext(NotificationContext);
 
   const navigation = useNavigation();
   const [username, setUsername] = useState(auth.currentUser?.displayName);
   const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
   const [modalVisible, setModalVisible] = useState(false);
   const [changeNameVisible, setChangeNameVisible] = useState(false);
-
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -167,7 +168,8 @@ const Setting = () => {
             context,
             currentAudio,
             [currentAudio],
-            contextPlaylist
+            contextPlaylist,
+            contextNotify
           );
         try {
           await AsyncStorage.removeItem("email");
@@ -267,7 +269,6 @@ const Setting = () => {
                   </TouchableOpacity>
                 );
               })}
-
             </View>
           );
         })}
@@ -370,7 +371,7 @@ const styles = StyleSheet.create({
   input: {
     width: 300,
     borderWidth: 1,
-    borderColor: 'gray',
+    borderColor: "gray",
     padding: 10,
     marginHorizontal: 40,
     marginVertical: 10,
