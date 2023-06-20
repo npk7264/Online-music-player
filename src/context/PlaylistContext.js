@@ -12,6 +12,7 @@ import {
     documentId
 } from "firebase/firestore";
 import { AudioContext } from './AudioContext';
+import { async } from '@firebase/util';
 
 
 export const PlaylistContext = createContext();
@@ -109,6 +110,7 @@ export const PlaylistProvider = ({ children }) => {
     const AddSongToPlaylist = async (idSong) => {
 
         const docRef = doc(db, `users/${userId}/playlist/${idPlaylist}`);
+
         try {
             setSongs([...songs, idSong]);
             await updateDoc(docRef, {
@@ -133,6 +135,50 @@ export const PlaylistProvider = ({ children }) => {
         }
     }
 
+
+    const addOneSongToPlaylist = async (idSong, Playlist) => {
+        const idPlaylist = Playlist.id;
+        const docRef = doc(db, `users/${userId}/playlist/${idPlaylist}`);
+
+        try {
+            const playlistArray = await getDoc(docRef);
+            console.log({ ...playlistArray.data() })
+            const listSong = playlistArray.data().listSong;
+            const index = listSong.length > 0 ? listSong.indexOf(idSong) : -1;
+            if (index > -1) {
+                listSong.splice(index, 1);
+
+                Playlist.listSong = [...listSong];
+                Playlist.numSong = listSong.length;
+                try {
+                    await updateDoc(docRef, {
+                        listSong: [...listSong],
+                        numSong: listSong.length,
+                    });
+                } catch (e) {
+                    alert("Failed to delete to playlist!", e);
+                }
+                alert("Đã xóa khỏi playlist thành công");
+            }
+            else {
+                try {
+                    Playlist.listSong = [...listSong, idSong];
+                    Playlist.numSong = listSong.length + 1;
+                    await updateDoc(docRef, {
+                        listSong: [...listSong, idSong],
+                        numSong: listSong.length + 1,
+                    });
+                } catch (e) {
+                    alert("Failed to add to playlist!", e);
+                }
+                alert("Đã thêm vào playlist thành công");
+            }
+        } catch (e) {
+            console.log("🚀 ~ file: PlaylistContext.js:156 ~ addOneSongToPlaylist ~ e:", e)
+
+        }
+    }
+
     const theme = {
         recentID, setRecentID,
         favoriteID, setFavoriteID,
@@ -152,7 +198,8 @@ export const PlaylistProvider = ({ children }) => {
         updateListSong,
         handleAddSong,
         setListSong,
-        filterSong
+        filterSong,
+        addOneSongToPlaylist
     };
 
     return (

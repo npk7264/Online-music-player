@@ -27,7 +27,7 @@ const Recent = () => {
   const { userId, currentAudio } = useContext(AudioContext);
   const { recentData, setRecentData } = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
-  const [loaded, setLoaded] = useState(recentData.length !== 0);
+  const [loaded, setLoaded] = useState(recentData?.length !== 0);
 
   const isFocused = useIsFocused();
   useEffect(() => {
@@ -36,7 +36,7 @@ const Recent = () => {
       setRecentData(recent);
       setLoaded(true);
     };
-    if (recentData.length === 0)
+    if (recentData?.length === 0)
       fetchData();
   }, [isFocused]);
 

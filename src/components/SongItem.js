@@ -19,13 +19,8 @@ const SongItem = (props) => {
   const contextNotify = useContext(NotificationContext);
   const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
-  const [isPlay, setIsPlay] = useState(false);
 
   const navigation = useNavigation();
-
-  const handlePress = () => {
-    setIsPlay(!isPlay);
-  };
 
   return (
     <TouchableOpacity
@@ -70,7 +65,7 @@ const SongItem = (props) => {
             color={colors.primary}
           />
           {/* OPTION */}
-          <TouchableOpacity onPress={props.onPressOptionModal}>
+          <TouchableOpacity onPress={props.onPressOptionModal} style={{ padding: 10 }}>
             <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
           </TouchableOpacity>
         </View>

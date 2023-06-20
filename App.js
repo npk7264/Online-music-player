@@ -22,6 +22,7 @@ import Recent from "./src/screens/Recent";
 import Comment from "./src/screens/comment/Comment";
 import SeeAll from "./src/screens/suggested/SeeAll";
 import GenreDetail from "./src/screens/genre/GenreDetail";
+import AddOneSong from "./src/screens/playlist/AddOneSong";
 
 import { AudioProvider } from "./src/context/AudioContext";
 import { ThemeProvider } from "./src/context/ThemeContext";
@@ -125,6 +126,7 @@ export default function App() {
                     initialRouteName="Login"
                     screenOptions={{ headerShown: false }}
                   >
+                    <Stack.Screen name="AddOneSong" component={AddOneSong} />
                     <Stack.Screen name="GenreDetail" component={GenreDetail} />
                     <Stack.Screen name="SeeAll" component={SeeAll} />
                     <Stack.Screen name="AddSong" component={AddSong} />

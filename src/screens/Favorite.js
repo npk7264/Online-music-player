@@ -28,7 +28,7 @@ const Favorite = () => {
 
   const { favoriteData, setFavoriteData } = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
-  const [loaded, setLoaded] = useState(favoriteData.length !== 0);
+  const [loaded, setLoaded] = useState(favoriteData?.length !== 0);
   const isFocused = useIsFocused();
 
   useEffect(() => {
@@ -37,7 +37,7 @@ const Favorite = () => {
       setFavoriteData(favorite);
       setLoaded(true);
     };
-    if (favoriteData.length === 0)
+    if (favoriteData?.length === 0)
       fetchData();
   }, [isFocused]);
 
