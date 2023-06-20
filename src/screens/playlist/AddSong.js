@@ -36,6 +36,7 @@ const AddSong = () => {
         <TouchableOpacity
           style={{ paddingHorizontal: 20 }}
           onPress={() => {
+            setSearchText("");
             navigation.goBack();
           }}
         >
@@ -52,15 +53,15 @@ const AddSong = () => {
                   ? "#2a221f"
                   : "#fff5ed"
                 : darkMode
-                ? "#1f222a"
-                : "#f5f5f6",
+                  ? "#1f222a"
+                  : "#f5f5f6",
               borderWidth: isFocused ? 1 : 0,
               color: colors.text,
             },
           ]}
-          placeholder="Tìm kiếm bài hát, nghệ sĩ,..."
+          placeholder="Tìm kiếm bài hát"
           placeholderTextColor={colors.text}
-          autoFocus={true}
+          // autoFocus={true}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           onChangeText={(text) => {

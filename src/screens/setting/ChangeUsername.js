@@ -106,8 +106,8 @@ const ChangeUsername = ({ visible, onClose, setUsername }) => {
                     ? "#2a221f"
                     : "#fff5ed"
                   : darkMode
-                  ? "#1f222a"
-                  : "#f5f5f6",
+                    ? "#2C3333"
+                    : "#f5f5f6",
                 borderWidth: isFocused ? 1 : 0,
                 color: colors.text,
               },
@@ -118,7 +118,7 @@ const ChangeUsername = ({ visible, onClose, setUsername }) => {
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
             onChangeText={(text) => setName(text)}
-            secureTextEntry={true}
+          // secureTextEntry={true}
           />
 
           <View style={styles.buttons}>
