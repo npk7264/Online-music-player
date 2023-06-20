@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import {
     View,
     StyleSheet,
@@ -6,17 +6,19 @@ import {
     StatusBar,
     Text,
     TouchableWithoutFeedback,
+    TouchableOpacity,
     SafeAreaView,
     Image,
 } from 'react-native';
 
-import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialIcons, FontAwesome } from "@expo/vector-icons";
 import { DataContext } from "../context/DataContext";
 import { PlaylistContext } from "../context//PlaylistContext";
 import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
 
 import { useNavigation } from "@react-navigation/native";
+import { removeFavorite, saveFavorite } from '../utils/FirebaseHandler';
 
 
 const OptionModal = ({
@@ -29,14 +31,20 @@ const OptionModal = ({
     // onPlayListPress,
 }) => {
     const contextPlaylist = useContext(PlaylistContext);
+    const { favoriteData, setFavoriteData, setFavoriteID, favoriteID } = contextPlaylist;
     const contextData = useContext(DataContext);
     const contextAudio = useContext(AudioContext);
     const { colors } = useContext(ThemeContext);
     const navigation = useNavigation();
+    const [isLike, setLike] = useState(false);
 
     const handleClose = () => {
         onClose(); // Gọi onClose khi cần thiết
     };
+
+    useEffect(() => {
+        setLike(contextPlaylist.favoriteID?.includes(currentItem?.id));
+    }, [currentItem])
 
     return (
         <SafeAreaView style={styles.container}>
@@ -45,13 +53,30 @@ const OptionModal = ({
                 <View style={[styles.modal, { backgroundColor: colors.modal }]}>
                     {/* info */}
                     <View style={styles.header}>
-                        <Image
-                            source={{ uri: currentItem?.image }}
-                            style={styles.poster}
-                        />
-                        <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
-                            {currentItem?.name}
-                        </Text>
+                        <View style={styles.info}>
+                            <Image
+                                source={{ uri: currentItem?.image }}
+                                style={styles.poster}
+                            />
+                            <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
+                                {currentItem?.name}
+                            </Text>
+                        </View>
+                        {type === "song" &&
+                            <TouchableOpacity
+                                style={styles.controllerItem}
+                                onPress={() => {
+                                    const flag = !isLike;
+                                    setLike(!isLike);
+                                    flag ? saveFavorite(contextAudio.userId, currentItem, favoriteData, setFavoriteData, setFavoriteID, favoriteID) : removeFavorite(contextAudio.userId, currentItem, favoriteData, setFavoriteData, setFavoriteID, favoriteID);
+                                }}
+                            >
+                                <FontAwesome
+                                    name={isLike ? "heart" : "heart-o"}
+                                    size={25}
+                                    color={!isLike ? colors.text : colors.primary}
+                                />
+                            </TouchableOpacity>}
                     </View>
                     {/* option */}
                     <View style={styles.optionContainer}>
@@ -101,9 +126,17 @@ const styles = StyleSheet.create({
     header: {
         flex: 1,
         flexDirection: "row",
+        // justifyContent: 'space-evenly',
         alignItems: "center",
         borderBottomColor: "#efefef",
         borderBottomWidth: 1,
+        paddingRight: 25,
+    },
+    info: {
+        flex: 1,
+        flexDirection: "row",
+        alignItems: "center",
+
     },
     poster: {
         width: 50,
@@ -115,7 +148,7 @@ const styles = StyleSheet.create({
         padding: 20,
     },
     title: {
-        fontSize: 25,
+        fontSize: 20,
         fontWeight: 'bold',
         padding: 20,
         paddingBottom: 20,

@@ -426,7 +426,8 @@ export const fetchFavorite = async (userId) => {
     const docSnap = await getDoc(doc(db, "users/" + userId));
     const userData = docSnap.data();
     const favorite = userData.favorite;
-
+    if (favorite?.length === 0)
+      return [];
     const songsRef = collection(db, "songs");
     const q = query(songsRef, where(documentId(), "in", favorite));
 

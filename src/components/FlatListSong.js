@@ -33,6 +33,7 @@ const FlatListSong = ({ songs, RenderMoreData, loadAll, handleLoadMore }) => {
         keyExtractor={(item) => item.id}
       />
       <OptionModal
+        type="song"
         options={optionSong}
         currentItem={currentItem}
         onClose={() => setOptionModalVisible(false)}
