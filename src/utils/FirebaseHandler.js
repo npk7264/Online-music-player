@@ -180,44 +180,53 @@ export const fetchRecent = async (docRef) => {
 export const updateRecent = async (userId, audioId, audio, recentID, setRecentID, recentData, setRecentData) => {
   // const start = performance.now();
 
-  const userRef = doc(db, "users/" + userId);
-  let data = await fetchRecent(userRef);
-  let recentList = recentID?.filter((item) => {
-    return item != audioId;
-  });
-
-  let recentListData = recentData?.filter((item) => {
-    return item.id != audioId;
-  });
-
-
-  const songRef = doc(db, "songs/" + audioId);
-
-
-  //update thong ke genre
-  let songDetail = await fetchDetailSong(songRef);
-  const genreCount = data.genre ? data.genre : null;
-  const updateDataUser = {};
-  songDetail.genre.forEach((key) => {
-    updateDataUser[`genre.${key}`] =
-      genreCount !== null && genreCount[key] !== undefined
-        ? genreCount[key] + 1
-        : 1;
-  });
-
-
-  //update recent
-  updateDataUser["recently"] = [audioId, ...recentList];
-  setRecentID([audioId, ...recentList]);
-  setRecentData([audio, ...recentListData]);
-
-
   try {
+    const userRef = doc(db, "users/" + userId);
+    let data = await fetchRecent(userRef);
+    let recentList;
+    let recentListData
+    if (recentID?.length > 0) {
+      recentList = recentID?.filter((item) => {
+        return item != audioId;
+      });
+
+      recentListData = recentData?.filter((item) => {
+        return item.id != audioId;
+      });
+    }
+    else {
+      recentList = [];
+      recentListData = [];
+    }
+
+
+    const songRef = doc(db, "songs/" + audioId);
+
+
+    //update thong ke genre
+    let songDetail = await fetchDetailSong(songRef);
+    const genreCount = data.genre ? data.genre : null;
+    const updateDataUser = {};
+    songDetail.genre.forEach((key) => {
+      updateDataUser[`genre.${key}`] =
+        genreCount !== null && genreCount[key] !== undefined
+          ? genreCount[key] + 1
+          : 1;
+    });
+
+
+    //update recent
+    updateDataUser["recently"] = [audioId, ...recentList];
+    setRecentID([audioId, ...recentList]);
+    setRecentData([audio, ...recentListData]);
+
+
     updateDoc(userRef, updateDataUser);
     updateDoc(songRef, {
       view: increment(1),
     });
   } catch (e) {
+    console.log("🚀 ~ file: FirebaseHandler.js:221 ~ updateRecent ~ e:", e)
     alert("Failed to save recent song!", e);
   }
 
@@ -458,8 +467,13 @@ export const getRecent = async (userId) => {
     const userData = docSnap.data();
     const history = userData.recently;
 
+    if (history?.length === 0)
+      return null;
+
     const songsRef = collection(db, "songs");
     const q = query(songsRef, where(documentId(), "in", history));
+
+
 
     const querySnapshot = await getDocs(q);
 

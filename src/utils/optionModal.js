@@ -1,6 +1,4 @@
 import { Alert, Share } from 'react-native';
-import * as MediaLibrary from 'expo-media-library';
-import * as Permissions from 'expo-permissions';
 
 // Hàm chia sẻ thông tin nhạc
 const onShare = async (song) => {
