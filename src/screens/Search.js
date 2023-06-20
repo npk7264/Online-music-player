@@ -54,8 +54,8 @@ const Search = () => {
                   ? "#2a221f"
                   : "#fff5ed"
                 : darkMode
-                ? "#1f222a"
-                : "#f5f5f6",
+                  ? "#1f222a"
+                  : "#f5f5f6",
               borderWidth: isFocused ? 1 : 0,
               color: colors.text,
             },
@@ -151,7 +151,7 @@ const Search = () => {
               id={item.id}
               name={item.name}
               image={item.image}
-              follower={item.follower}
+              // follower={item.follower}
               onPressOptionModal={() => {
                 setOptionModalVisible(true);
                 setCurrentSinger(item);

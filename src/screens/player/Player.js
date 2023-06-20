@@ -22,16 +22,19 @@ import { convertTime } from "../../utils/helper";
 import { selectSong, changeSong } from "../../utils/AudioController";
 import { useNavigation } from "@react-navigation/native";
 
-import { db } from "../../services/firebaseConfig";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-
 import { ThemeContext } from "../../context/ThemeContext";
+
 import { NotificationContext } from "../../context/NotifyContext";
+import { PlaylistContext } from "../../context/PlaylistContext";
+import { saveFavorite, removeFavorite } from "../../utils/FirebaseHandler";
+
 
 const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
+// const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
+  const contextPlaylist = useContext(PlaylistContext)
+  const { setFavoriteData, favoriteData, favoriteID, setFavoriteID } = contextPlaylist;
   const context = useContext(AudioContext);
   const {
     userId,
@@ -54,7 +57,7 @@ const Player = () => {
   const [currentTime, setCurrentTime] = useState("00:00");
   const [isRepeat, setRepeat] = useState(isLooping);
   const [isLike, setLike] = useState(false);
-  const [favoriteList, setFavoriteList] = useState([]);
+  // const [favoriteID, setFavoriteID] = useState([]);
   const navigation = useNavigation();
 
   const { colors } = useContext(ThemeContext);
@@ -76,45 +79,9 @@ const Player = () => {
     });
   };
 
-  // fetch favorite songs
-  const fetchFavorite = async () => {
-    const docRef = doc(db, "users/" + userId);
-    try {
-      const docSnap = await getDoc(docRef);
-      setFavoriteList(docSnap.data().favorite);
-      setLike(docSnap.data().favorite.includes(currentAudio.id));
-    } catch (error) {
-      console.log("Fail to fetch favorite songs", error);
-    }
-  };
-
-  // save to favorite
-  const saveFavorite = async () => {
-    const docRef = doc(db, "users/" + userId);
-    try {
-      setFavoriteList([currentAudio.id, ...favoriteList]);
-      await updateDoc(docRef, {
-        favorite: [currentAudio.id, ...favoriteList],
-      });
-    } catch (e) {
-      alert("Failed to save favorite song!", e);
-    }
-  };
-
-  // remove from favorite
-  const removeFavorite = async () => {
-    const docRef = doc(db, "users/" + userId);
-    try {
-      const newFavoriteList = favoriteList.filter((item) => {
-        return item != currentAudio.id;
-      });
-      setFavoriteList(newFavoriteList);
-      await updateDoc(docRef, {
-        favorite: newFavoriteList,
-      });
-    } catch (e) {
-      alert("Failed to remove favorite song!", e);
-    }
+  // check favorite songs
+  const checkFavorite = async () => {
+    setLike(favoriteID.includes(currentAudio.id));
   };
 
   const onPlaybackStatusUpdate = async (status) => {
@@ -123,7 +90,7 @@ const Player = () => {
     }
     if (status.didJustFinish && !status.isLooping) {
       console.log("FINISH:", currentAudio);
-      await changeSong(context, "next", contextNotify);
+      await changeSong(context, "next", contextPlaylist, contextNotify);
     }
   };
 
@@ -134,7 +101,7 @@ const Player = () => {
   useEffect(() => {
     playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
     setRepeat(isLooping);
-    fetchFavorite();
+    checkFavorite();
   }, [currentAudio, soundObj]);
 
   return (
@@ -243,7 +210,7 @@ const Player = () => {
               onPress={() => {
                 const flag = !isLike;
                 setLike(!isLike);
-                flag ? saveFavorite() : removeFavorite();
+                flag ? saveFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) : removeFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID);
               }}
             >
               <FontAwesome
@@ -298,7 +265,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                changeSong(context, "previous", contextNotify);
+                changeSong(context, "previous", contextPlaylist, contextNotify);
               }}
             >
               <AntDesign name="stepbackward" size={40} color={colors.text} />
@@ -306,7 +273,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                selectSong(context, currentAudio, songData, contextNotify);
+                selectSong(context, currentAudio, songData, contextPlaylist, contextNotify);
               }}
             >
               <FontAwesome
@@ -318,7 +285,7 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                changeSong(context, "next", contextNotify);
+                changeSong(context, "next", contextPlaylist, contextNotify);
               }}
             >
               <AntDesign name="stepforward" size={40} color={colors.text} />

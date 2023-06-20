@@ -116,8 +116,8 @@ const ChangePassword = ({ visible, onClose }) => {
                     ? "#2a221f"
                     : "#fff5ed"
                   : darkMode
-                  ? "#1f222a"
-                  : "#f5f5f6",
+                    ? "#2C3333"
+                    : "#f5f5f6",
                 borderWidth: isFocused ? 1 : 0,
                 color: colors.text,
               },
@@ -140,8 +140,8 @@ const ChangePassword = ({ visible, onClose }) => {
                     ? "#2a221f"
                     : "#fff5ed"
                   : darkMode
-                  ? "#1f222a"
-                  : "#f5f5f6",
+                    ? "#2C3333"
+                    : "#f5f5f6",
                 borderWidth: !isFocused ? 1 : 0,
                 color: colors.text,
               },

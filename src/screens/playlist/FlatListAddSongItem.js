@@ -3,7 +3,13 @@ import React, { useContext } from 'react'
 import AddSongItem from './AddSongItem'
 
 
-const FlatListAddSongItem = ({ data }) => {
+const FlatListAddSongItem = ({ data, RenderMoreData, loadAll, handleLoadMore }) => {
+    const renderMoreData = () => {
+        if (RenderMoreData) {
+            return <RenderMoreData loadAll={loadAll} handleLoadMore={handleLoadMore} />;
+        }
+        return null;
+    };
     return (
         <>
             <FlatList
@@ -13,6 +19,7 @@ const FlatListAddSongItem = ({ data }) => {
                         info={item}
                     />
                 )}
+                ListFooterComponent={renderMoreData}
                 keyExtractor={(item) => item.id}
             />
         </>

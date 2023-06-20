@@ -2,7 +2,7 @@ import React, { useContext, useMemo } from "react";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { NotificationContext } from "../context/NotifyContext";
-
+import { PlaylistContext } from "../context/PlaylistContext";
 import { selectSong } from "../utils/AudioController";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
@@ -13,6 +13,7 @@ const MiniPlayer = () => {
   const contextNotify = useContext(NotificationContext);
 
   const { currentAudio, isPlaying, songData } = contextAudio;
+  const contextPlaylist = useContext(PlaylistContext);
   const { colors } = useContext(ThemeContext);
   const navigation = useNavigation();
 
@@ -57,6 +58,7 @@ const MiniPlayer = () => {
                 contextAudio,
                 currentAudio,
                 songData,
+                contextPlaylist,
                 contextNotify
               );
               navigation.navigate("Player");

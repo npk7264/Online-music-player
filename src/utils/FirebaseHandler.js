@@ -177,14 +177,22 @@ export const fetchRecent = async (docRef) => {
 };
 
 // UPDATE RECENT and update genre
-export const updateRecent = async (userId, audioId) => {
+export const updateRecent = async (userId, audioId, audio, recentID, setRecentID, recentData, setRecentData) => {
+  // const start = performance.now();
+
   const userRef = doc(db, "users/" + userId);
   let data = await fetchRecent(userRef);
-  let recentList = data.recently.filter((item) => {
+  let recentList = recentID.filter((item) => {
     return item != audioId;
   });
 
+  let recentListData = recentData.filter((item) => {
+    return item.id != audioId;
+  });
+
+
   const songRef = doc(db, "songs/" + audioId);
+
 
   //update thong ke genre
   let songDetail = await fetchDetailSong(songRef);
@@ -197,17 +205,25 @@ export const updateRecent = async (userId, audioId) => {
         : 1;
   });
 
+
   //update recent
   updateDataUser["recently"] = [audioId, ...recentList];
+  setRecentID([audioId, ...recentList]);
+  setRecentData([audio, ...recentListData]);
+
 
   try {
-    await updateDoc(userRef, updateDataUser);
-    await updateDoc(songRef, {
+    updateDoc(userRef, updateDataUser);
+    updateDoc(songRef, {
       view: increment(1),
     });
   } catch (e) {
     alert("Failed to save recent song!", e);
   }
+
+  // const end = performance.now();
+  // console.log(`Execution time: ${end - start} ms`);
+
 };
 
 // FETCH USER
@@ -617,28 +633,21 @@ export const fetchSongByIDGenre = async (id) => {
   }
 }
 
-//fetch list ID artist is followed by user
-export const fetchIDFollowArtistByUser = async (userId) => {
-  try {
-    const userData = await fetchUser(userId);
-    return userData.follow;
-  } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:624 ~ fetchIDFollowArtistByUser ~ e:", e)
-  }
-}
-
 //update artist when is unfollow or follow by user
 export const updateFollowArtistAndUser = async (userId, artistId, type, listIDArtistFollowing) => {
   try {
-    await updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
-    await updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
+    updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
+    updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
   } catch (e) {
     console.log("🚀 ~ file: FirebaseHandler.js:636 ~ updateFollowArtistAndUser ~ e:", e)
   }
 }
 
+//fetch Data Artist Followed By User
 export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
   try {
+    if (!listIDArtist)
+      return null;
     const q = query(collection(db, "artists"), where(documentId(), "in", listIDArtist));
     const querySnapshot = await getDocs(q);
     const artistArray = querySnapshot.docs.map((docRef) => ({
@@ -651,3 +660,37 @@ export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
     console.log("🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:", e)
   }
 }
+
+// save to favorite
+export const saveFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
+  const docRef = doc(db, "users/" + userId);
+  try {
+    setFavoriteData([currentAudio, ...favoriteData])
+    setFavoriteID([currentAudio.id, ...favoriteID]);
+    updateDoc(docRef, {
+      favorite: [currentAudio.id, ...favoriteID],
+    });
+  } catch (e) {
+    alert("Failed to save favorite song!", e);
+  }
+};
+
+// remove from favorite
+export const removeFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
+  const docRef = doc(db, "users/" + userId);
+  try {
+    const newfavoriteID = favoriteID.filter((item) => {
+      return item != currentAudio.id;
+    });
+    const newFavoriteData = favoriteData.filter((item) => {
+      return item.id != currentAudio.id;
+    });
+    setFavoriteData(newFavoriteData);
+    setFavoriteID(newfavoriteID);
+    updateDoc(docRef, {
+      favorite: newfavoriteID,
+    });
+  } catch (e) {
+    alert("Failed to remove favorite song!", e);
+  }
+};

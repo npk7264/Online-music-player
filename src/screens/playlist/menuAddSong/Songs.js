@@ -12,9 +12,11 @@ import {
     setDoc,
     updateDoc,
 } from "firebase/firestore";
-
-
+import { searchSong } from '../../../utils/FirebaseHandler'
+import MoreData from '../../../components/MoreData'
+import { DataContext } from '../../../context/DataContext'
 const Songs = () => {
+    const { listSong, loadedAllSongs, handleLoadMoreSong } = useContext(DataContext);
     const { colors } = useContext(ThemeContext);
     const { searchText } = useContext(PlaylistContext);
     const [songData, setSongData] = useState([]);
@@ -22,32 +24,33 @@ const Songs = () => {
 
     useEffect(() => {
 
-        const data = songData.filter((item) => {
-            if (searchText != "")
-                return item.name?.toLowerCase().includes(searchText?.toLowerCase());
-        });
-        setSearchResult(data);
+        // const data = songData.filter((item) => {
+        //     if (searchText != "")
+        //         return item.name?.toLowerCase().includes(searchText?.toLowerCase());
+        // });
+        // setSearchResult(data);
+        searchSong(searchText, setSearchResult);
     }, [searchText]);
 
     // fetch song
-    const fetchSongs = async () => {
-        const querySnapshot = await getDocs(collection(db, "songs"));
-        const songsArray = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
-            ...doc.data(),
-            singer: doc.data().artists
-        }));
-        setSongData(songsArray);
-    };
+    // const fetchSongs = async () => {
+    //     const querySnapshot = await getDocs(collection(db, "songs"));
+    //     const songsArray = querySnapshot.docs.map((doc) => ({
+    //         id: doc.id,
+    //         ...doc.data(),
+    //         singer: doc.data().artists
+    //     }));
+    //     setSongData(songsArray);
+    // };
 
-    useEffect(() => {
-        fetchSongs();
-    }, []);
+    // useEffect(() => {
+    //     fetchSongs();
+    // }, []);
 
     return (
         <View style={[styles.container, { backgroundColor: colors.background }]}>
             {searchResult.length != 0 && searchText != "" && <FlatListAddSongItem data={searchResult} />}
-            {searchText == "" && <FlatListAddSongItem data={songData} />}
+            {searchText == "" && <FlatListAddSongItem data={listSong} RenderMoreData={MoreData} loadAll={loadedAllSongs} handleLoadMore={handleLoadMoreSong} />}
             {searchText != "" && searchResult.length === 0 &&
                 <View style={styles.nothingSearch}>
                     <Text style={[styles.textType, { color: colors.text }]}>Không tìm thấy kết quả nào</Text>
