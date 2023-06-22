@@ -16,6 +16,7 @@ import { DataContext } from "../context/DataContext";
 import { PlaylistContext } from "../context//PlaylistContext";
 import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
+import { NotificationContext } from '../context/NotifyContext';
 
 import { useNavigation } from "@react-navigation/native";
 import { removeFavorite, saveFavorite, updateFollowArtistAndUser } from '../utils/FirebaseHandler';
@@ -36,6 +37,7 @@ const OptionModal = ({
     const { listIDArtistFollowing, setListIDArtistFollowing, setArtistFollowing, ArtistFollowing } = contextData;
     const contextAudio = useContext(AudioContext);
     const { colors } = useContext(ThemeContext);
+    const contextNotify = useContext(NotificationContext);
     const navigation = useNavigation();
     const [isLike, setLike] = useState(false);
     const [isFollowed, setIsFollowed] = useState(false);
@@ -142,7 +144,7 @@ const OptionModal = ({
                                 <TouchableWithoutFeedback
                                     key={optn.title}
                                     onPress={() => {
-                                        optn.onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation);
+                                        optn.onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation, contextNotify);
                                         handleClose();
                                     }}
                                 >
