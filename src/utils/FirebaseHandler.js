@@ -669,7 +669,13 @@ export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
       id: docRef.id,
       ...docRef.data(),
     }));
-    return artistArray;
+
+    const sortedArtist = artistArray.sort((a, b) => {
+      const indexA = listIDArtist.indexOf(a.id);
+      const indexB = listIDArtist.indexOf(b.id);
+      return indexA - indexB;
+    });
+    return sortedArtist;
 
   } catch (e) {
     console.log("🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:", e)

@@ -13,7 +13,6 @@ import {
   fetchSongOfArtist,
   fetchFollowArtist,
   updateFollowArtistAndUser,
-  fetchDataArtistFollowedByUser,
 } from "../utils/FirebaseHandler";
 import { Ionicons, SimpleLineIcons } from "@expo/vector-icons";
 
@@ -30,6 +29,7 @@ const ArtistDetail = ({ route }) => {
     listIDArtistFollowing,
     setListIDArtistFollowing,
     setArtistFollowing,
+    ArtistFollowing
   } = useContext(DataContext);
   const { userId, currentAudio } = useContext(AudioContext);
   const [artist, setArtist] = useState({});
@@ -41,13 +41,13 @@ const ArtistDetail = ({ route }) => {
   const artistImage = route.params.image;
 
   //check Follow
-  const checkFollow = async () => {
+  const checkFollow = () => {
     if (listIDArtistFollowing) {
       setIsFollowed(listIDArtistFollowing?.includes(id));
-      console.log(true);
+      // console.log(true);
     } else {
       setIsFollowed(false);
-      console.log(false);
+      // console.log(false);
     }
   };
 
@@ -62,12 +62,8 @@ const ArtistDetail = ({ route }) => {
         setListIDArtistFollowing([...newListFollow]);
         setArtist({ ...artist, follower: artist.follower - 1 });
         updateFollowArtistAndUser(userId, id, "unfollow", newListFollow);
-
-        const listInfArtist = await fetchDataArtistFollowedByUser(
-          newListFollow
-        );
-        setArtistFollowing(listInfArtist);
-        console.log("unfollow");
+        const listInfArtist = ArtistFollowing?.filter((item) => item?.id !== id);
+        setArtistFollowing([...listInfArtist]);
       } else {
         const newListFollow = listIDArtistFollowing
           ? [...listIDArtistFollowing, id]
@@ -76,15 +72,10 @@ const ArtistDetail = ({ route }) => {
         setListIDArtistFollowing([...newListFollow]);
         setArtist({ ...artist, follower: artist.follower + 1 });
         updateFollowArtistAndUser(userId, id, "follow", newListFollow);
-
-        const listInfArtist = await fetchDataArtistFollowedByUser(
-          newListFollow
-        );
-        setArtistFollowing(listInfArtist);
-        console.log("follow");
+        setArtistFollowing([...ArtistFollowing, { ...artist, follower: artist.follower + 1 }]);
       }
     } catch (e) {
-      console.log("Fail to follow artist: ", e);
+      console.log("Fail to follow artist artistDetail: ", e);
     }
   };
 
@@ -99,7 +90,7 @@ const ArtistDetail = ({ route }) => {
         follower,
       });
       //   console.log(listIDArtistFollowing);
-      await checkFollow();
+      checkFollow();
       const songData = await fetchSongOfArtist(id);
       setListSong(songData);
     };
