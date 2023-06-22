@@ -233,7 +233,8 @@ const Player = () => {
                 color={colors.text}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.controllerItem}>
+            <TouchableOpacity style={styles.controllerItem}
+              onPress={() => navigation.navigate('AddOneSong', { item: currentAudio })}>
               <MaterialCommunityIcons
                 name="playlist-plus"
                 size={25}
