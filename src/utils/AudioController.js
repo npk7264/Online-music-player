@@ -52,7 +52,13 @@ export const playNext = async (playbackObj, uri) => {
   }
 };
 
-export const selectSong = async (context, audio, songData, contextPlaylist, contextNotify) => {
+export const selectSong = async (
+  context,
+  audio,
+  songData,
+  contextPlaylist,
+  contextNotify
+) => {
   const {
     userId,
     // songData,
@@ -66,7 +72,8 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
     playbackPosition,
   } = context;
 
-  const { pushNotification, setAction } = contextNotify;
+  const { pushNotification, setActionPrev, setAction, setActionNext } =
+    contextNotify;
   const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
 
   // handle Notification play/pause
@@ -91,7 +98,9 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
       status.positionMillis,
       status.durationMillis
     );
+    // setActionNext(() => nextFunction);
     setAction(() => resumeFunction);
+    // setActionNext(() => nextFunction);
     return;
   };
 
@@ -109,10 +118,21 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
       soundObj: status,
       isPlaying: true,
     });
+    // setActionNext(() => nextFunction);
     setAction(() => pauseFunction);
+    // setActionNext(() => nextFunction);
     return;
   };
 
+  let prevFunction = async () => {
+    console.log("prevFunction");
+    return;
+  };
+
+  let nextFunction = async () => {
+    console.log("nextFunction");
+    return;
+  };
 
   try {
     // playing audio for the first time.
@@ -139,9 +159,19 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
         title: audio.name + " - " + audio.singer.name,
         isPlay: true,
       });
+      setActionPrev(() => prevFunction);
       setAction(() => pauseFunction);
+      setActionNext(() => nextFunction);
 
-      updateRecent(userId, audio.id, audio, recentID, setRecentID, recentData, setRecentData);
+      updateRecent(
+        userId,
+        audio.id,
+        audio,
+        recentID,
+        setRecentID,
+        recentData,
+        setRecentData
+      );
 
       return;
     }
@@ -164,6 +194,7 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
         isPlay: false,
       });
       setAction(() => resumeFunction);
+      // setActionNext(() => nextFunction);
       return;
     }
 
@@ -176,6 +207,7 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
         isPlay: true,
       });
       setAction(() => pauseFunction);
+      // setActionNext(() => nextFunction);
       return;
     }
 
@@ -200,10 +232,20 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
         title: audio.name + " - " + audio.singer.name,
         isPlay: true,
       });
+      setActionPrev(() => prevFunction);
       setAction(() => pauseFunction);
+      setActionNext(() => nextFunction);
 
       // updateRecent(userId, audio.id);
-      updateRecent(userId, audio.id, audio, recentID, setRecentID, recentData, setRecentData);
+      updateRecent(
+        userId,
+        audio.id,
+        audio,
+        recentID,
+        setRecentID,
+        recentData,
+        setRecentData
+      );
 
       return;
     }
@@ -212,8 +254,12 @@ export const selectSong = async (context, audio, songData, contextPlaylist, cont
   }
 };
 
-
-export const changeSong = async (context, option, contextPlaylist, contextNotify) => {
+export const changeSong = async (
+  context,
+  option,
+  contextPlaylist,
+  contextNotify
+) => {
   const {
     userId,
     songData,
@@ -224,10 +270,10 @@ export const changeSong = async (context, option, contextPlaylist, contextNotify
     isPlaying,
     updateState,
   } = context;
-  const { pushNotification, setAction } = contextNotify;
+  const { pushNotification, setActionPrev, setAction, setActionNext } =
+    contextNotify;
 
   const { recentID, setRecentID, recentData, setRecentData } = contextPlaylist;
-
 
   let nextIndex;
 
@@ -253,14 +299,21 @@ export const changeSong = async (context, option, contextPlaylist, contextNotify
       playbackDuration: status.durationMillis,
     });
 
-    updateRecent(userId, nextAudio.id, nextAudio, recentID, setRecentID, recentData, setRecentData);
+    updateRecent(
+      userId,
+      nextAudio.id,
+      nextAudio,
+      recentID,
+      setRecentID,
+      recentData,
+      setRecentData
+    );
 
     // updateRecent(userId, nextAudio.id);
     pushNotification({
       title: nextAudio.name + " - " + nextAudio.singer.name,
       isPlay: true,
     });
-
 
     let pauseFunction = async () => {
       pushNotification({
@@ -284,6 +337,7 @@ export const changeSong = async (context, option, contextPlaylist, contextNotify
         status.durationMillis
       );
       setAction(() => resumeFunction);
+      setActionNext(() => nextFunction);
       return;
     };
 
@@ -303,12 +357,22 @@ export const changeSong = async (context, option, contextPlaylist, contextNotify
         playbackDuration: status.durationMillis,
       });
       setAction(() => pauseFunction);
+      setActionNext(() => nextFunction);
       return;
     };
 
+    let prevFunction = async () => {
+      console.log("prevFunction");
+      return;
+    };
+
+    let nextFunction = async () => {
+      console.log("nextFunction");
+      return;
+    };
 
     setAction(() => pauseFunction);
-
+    // setActionNext(() => nextFunction);
 
     return;
   } catch (e) {

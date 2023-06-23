@@ -19,7 +19,9 @@ Notifications.setNotificationHandler({
 export const NotificationContext = createContext();
 
 export const NotificationProvider = ({ children }) => {
+  const [actionPrev, setActionPrev] = useState();
   const [action, setAction] = useState();
+  const [actionNext, setActionNext] = useState();
 
   const obtainRemoteNotifPermissionsAsync = async () => {
     let permission = await Notifications.getPermissionsAsync();
@@ -86,21 +88,23 @@ export const NotificationProvider = ({ children }) => {
       (notification) => {
         if (notification.actionIdentifier == "prev-track") {
           console.log("prev-track");
-          action && action();
+          actionPrev && actionPrev();
         } else if (notification.actionIdentifier == "pause-play") {
           console.log("pause-play");
           action && action();
         } else if (notification.actionIdentifier == "next-track") {
           console.log("next-track");
-          action && action();
+          actionNext && actionNext();
         }
       }
     );
     return () => subscription.remove();
-  }, [action]);
+  }, [actionPrev, action, actionNext]);
 
   return (
-    <NotificationContext.Provider value={{ pushNotification, setAction }}>
+    <NotificationContext.Provider
+      value={{ pushNotification, setActionPrev, setAction, setActionNext }}
+    >
       {children}
     </NotificationContext.Provider>
   );
