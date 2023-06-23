@@ -30,7 +30,7 @@ import {
     setDoc,
     updateDoc,
 } from "firebase/firestore";
-import { async } from "@firebase/util";
+// import { async } from "@firebase/util";
 
 import { useNavigation } from "@react-navigation/native";
 

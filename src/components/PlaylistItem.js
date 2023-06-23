@@ -5,15 +5,34 @@ import { ThemeContext } from "../context/ThemeContext.js";
 import { useNavigation } from "@react-navigation/native";
 import { PlaylistContext } from "../context/PlaylistContext.js";
 import { useIsFocused } from '@react-navigation/native';
-
+import { doc, deleteDoc } from "firebase/firestore";
+import { db, auth } from "../services/firebaseConfig.js";
 
 const PlaylistItem = ({ type, name, id, numSong, action }) => {
   const isFocused = useIsFocused();
   const { colors } = useContext(ThemeContext);
-  const { updatePlaylist, listSong, idPlaylist, addOneSongToPlaylist } = useContext(PlaylistContext);
+  const { updatePlaylist, listSong, idPlaylist, addOneSongToPlaylist, setPlaylistArray, playlistArray } = useContext(PlaylistContext);
   const [numberSong, setNumberSong] = useState(numSong);
   const navigation = useNavigation();
 
+  const handleLongPressDeletePlaylist = async () => {
+    Alert.alert("Thông báo", "Bạn có chắc muốn xóa playlist " + name, [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {
+        text: 'OK', onPress: async () => {
+          console.log('OK Pressed')
+          const newPlaylist = playlistArray?.filter((item) => item.id !== id);
+          setPlaylistArray([...newPlaylist]);
+          await deleteDoc(doc(db, `users/${auth.currentUser.uid}/playlist/${id}`));
+          alert("Đã xóa playlist thành công");
+        }
+      },
+    ]);
+  }
   useEffect(() => {
     if (id === idPlaylist) {
       setNumberSong(listSong.length)
@@ -44,6 +63,7 @@ const PlaylistItem = ({ type, name, id, numSong, action }) => {
           navigation.navigate("DetailPlaylist");
         }
       }}
+      onLongPress={handleLongPressDeletePlaylist}
     >
       <View style={styles.content}>
         <View

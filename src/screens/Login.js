@@ -51,7 +51,7 @@ const Login = () => {
   }
 
 
-  const LoginFirebase = (auth, email, password) => {
+  const LoginFirebase = (auth, email, password, type) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
@@ -68,14 +68,19 @@ const Login = () => {
         navigation.replace("BottomMenu");
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorMessage);
+        if (type === "Auto") {
+          alert("Phiên đăng nhập đã hết hạn!! Vui lòng đăng nhập lại!");
+        }
+        // const errorCode = error.code;
+        // const errorMessage = error.message;
+        else
+          alert("Sai mật khẩu hoặc email!!");
+        setLoaded(true);
       });
   };
 
   const handleLogin = () => {
-    LoginFirebase(auth, email, password);
+    LoginFirebase(auth, email, password, "logIn");
   };
 
   const forgotPasswrod = (email) => {
@@ -99,7 +104,7 @@ const Login = () => {
         const mail = await AsyncStorage.getItem("email");
         const pass = await AsyncStorage.getItem("password");
         if (mail !== null && pass !== null) {
-          LoginFirebase(auth, mail, pass);
+          LoginFirebase(auth, mail, pass, "Auto");
           console.log("auto login complete");
         } else setLoaded(true);
       } catch (error) {

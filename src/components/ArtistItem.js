@@ -37,6 +37,7 @@ const ArtistItem = ({ id, name, image, follower, onPressOptionModal }) => {
                 {/* OPTION */}
                 <TouchableOpacity
                     onPress={onPressOptionModal}
+                    style={{ padding: 10 }}
                 >
                     <Ionicons name="ellipsis-vertical" size={20} color={colors.text} />
                 </TouchableOpacity>

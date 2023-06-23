@@ -75,6 +75,7 @@ const Artist = () => {
       />
 
       <OptionModal
+        type="singer"
         options={optionSinger}
         currentItem={currentSinger}
         onClose={() => setOptionModalVisible(false)}

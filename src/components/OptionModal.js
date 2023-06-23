@@ -16,9 +16,10 @@ import { DataContext } from "../context/DataContext";
 import { PlaylistContext } from "../context//PlaylistContext";
 import { AudioContext } from '../context/AudioContext';
 import { ThemeContext } from '../context/ThemeContext';
+import { NotificationContext } from '../context/NotifyContext';
 
 import { useNavigation } from "@react-navigation/native";
-import { removeFavorite, saveFavorite } from '../utils/FirebaseHandler';
+import { removeFavorite, saveFavorite, updateFollowArtistAndUser } from '../utils/FirebaseHandler';
 
 
 const OptionModal = ({
@@ -33,17 +34,60 @@ const OptionModal = ({
     const contextPlaylist = useContext(PlaylistContext);
     const { favoriteData, setFavoriteData, setFavoriteID, favoriteID } = contextPlaylist;
     const contextData = useContext(DataContext);
+    const { listIDArtistFollowing, setListIDArtistFollowing, setArtistFollowing, ArtistFollowing } = contextData;
     const contextAudio = useContext(AudioContext);
     const { colors } = useContext(ThemeContext);
+    const contextNotify = useContext(NotificationContext);
     const navigation = useNavigation();
     const [isLike, setLike] = useState(false);
+    const [isFollowed, setIsFollowed] = useState(false);
+
+    //check Follow
+    const checkFollow = () => {
+        if (listIDArtistFollowing) {
+            setIsFollowed(listIDArtistFollowing?.includes(currentItem?.id));
+        } else {
+            setIsFollowed(false);
+        }
+    };
+
+    const handleFollow = async () => {
+        try {
+            //Thêm hoặc bớt singer ra khỏi danh sách đang follow
+            if (isFollowed) {
+                const newListFollow = listIDArtistFollowing?.filter(
+                    (item) => item !== currentItem?.id
+                );
+                setIsFollowed(false);
+                setListIDArtistFollowing([...newListFollow]);
+                // setArtist({ ...currentItem, follower: currentItem?.follower - 1 });
+                updateFollowArtistAndUser(contextAudio.userId, currentItem?.id, "unfollow", newListFollow);
+                const listInfArtist = ArtistFollowing?.filter((item) => item?.id !== currentItem?.id);
+                setArtistFollowing([...listInfArtist]);
+            } else {
+                const newListFollow = listIDArtistFollowing
+                    ? [...listIDArtistFollowing, currentItem?.id]
+                    : [currentItem?.id];
+                setIsFollowed(true);
+                setListIDArtistFollowing([...newListFollow]);
+                // setArtist({ ...currentItem, follower: currentItem?.follower + 1 });
+                updateFollowArtistAndUser(contextAudio.userId, currentItem?.id, "follow", newListFollow);
+                setArtistFollowing([...ArtistFollowing, { ...currentItem, follower: currentItem?.follower + 1 }]);
+            }
+        } catch (e) {
+            console.log("Fail to follow artist option modal: ", e);
+        }
+    }
 
     const handleClose = () => {
         onClose(); // Gọi onClose khi cần thiết
     };
 
     useEffect(() => {
-        setLike(contextPlaylist.favoriteID?.includes(currentItem?.id));
+        if (type === "song")
+            setLike(contextPlaylist.favoriteID?.includes(currentItem?.id));
+        else
+            checkFollow();
     }, [currentItem])
 
     return (
@@ -77,6 +121,21 @@ const OptionModal = ({
                                     color={!isLike ? colors.text : colors.primary}
                                 />
                             </TouchableOpacity>}
+                        {type === "singer" &&
+                            <TouchableOpacity
+                                style={styles.controllerItem}
+                                onPress={() => {
+                                    // const flag = !isFollowed;
+                                    setIsFollowed(!isFollowed);
+                                    handleFollow();
+                                }}
+                            >
+                                <FontAwesome
+                                    name={isFollowed ? "heart" : "heart-o"}
+                                    size={25}
+                                    color={!isFollowed ? colors.text : colors.primary}
+                                />
+                            </TouchableOpacity>}
                     </View>
                     {/* option */}
                     <View style={styles.optionContainer}>
@@ -85,7 +144,7 @@ const OptionModal = ({
                                 <TouchableWithoutFeedback
                                     key={optn.title}
                                     onPress={() => {
-                                        optn.onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation);
+                                        optn.onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation, contextNotify);
                                         handleClose();
                                     }}
                                 >

@@ -1,22 +1,22 @@
 import { Alert, Share } from 'react-native';
+import { fetchSongOfArtist } from "../utils/FirebaseHandler";
+import { selectSong } from "../utils/AudioController"
 
 // Hàm chia sẻ thông tin nhạc
-const onShare = async (song) => {
+const onShare = async (item, type) => {
     try {
         const result = await Share.share({
-            message:
-                `Bài hát: ${song.name}
+            message: type === "song" ?
+                `My Music App 🎵🥁\nBài hát: ${song.name}
           \nCa sĩ trình bày: ${song.singer.name}
-          \nlinkApp:https://github.com/npk7264/OfflineMusicPlayer`,
+          \nlinkApp:https://github.com/npk7264/OfflineMusicPlayer`: `My Music App 🎵🥁\nCa sĩ: ${item.name}\nlinkApp:https://github.com/npk7264/OfflineMusicPlayer`,
             title: "My Music App 🎵🥁"
         },);
         if (result.action === Share.sharedAction) {
             if (result.activityType) {
-                console.log("🚀 ~ file: optionModal.js:14 ~ onShare ~ result.activityType:", result.activityType)
                 // shared with activity type of result.activityType
             } else {
                 // shared
-                console.log("🚀 ~ file: optionModal.js:18 ~ onShare ~ result.activityType 2:", result.activityType)
             }
         } else if (result.action === Share.dismissedAction) {
             // dismissed
@@ -31,7 +31,7 @@ export const optionSong = [
     {
         title: "Play Next",
         icon: "keyboard-tab",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
+        onPress: (item, contextAudio) => {
             console.log(`play next ${item.name}`);
             const { currentAudioIndex, updateState, songData } = contextAudio;
             const newSongData = [...songData]
@@ -42,7 +42,7 @@ export const optionSong = [
     {
         title: "Add to Playing queue",
         icon: "add-to-queue",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
+        onPress: (item, contextAudio) => {
             console.log(`add queue ${item.name}`);
             const { updateState, songData } = contextAudio;
             updateState(contextAudio, { songData: [...songData, item] })
@@ -82,9 +82,9 @@ export const optionSong = [
     {
         title: "Share",
         icon: "share",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
+        onPress: (item) => {
             console.log(`share ${item.name}`);
-            onShare(item);
+            onShare(item, "song");
         },
     },
 ];
@@ -93,29 +93,45 @@ export const optionSinger = [
     {
         title: "Play",
         icon: "play-circle-fill",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
-            console.log(`play ${item.name}`);
+        onPress: (item, contextAudio, contextData, contextPlaylist, navigation, contextNotify) => {
+            const startFunction = async () => {
+                console.log(`play ${item.name}`);
+                const listSong = await fetchSongOfArtist(item.id);
+                console.log(listSong[0]);
+                selectSong(contextAudio, listSong[0], listSong, contextPlaylist, contextNotify);
+            }
+            startFunction();
         },
     },
-    {
-        title: "Play Next",
-        icon: "keyboard-tab",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
-            console.log(`play next ${item.name}`);
-        },
-    },
+    // {
+    //     title: "Play Next",
+    //     icon: "keyboard-tab",
+    //     onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
+    //         console.log(`play next ${item.name}`);
+    //     },
+    // },
     {
         title: "Add to Playing queue",
         icon: "add-to-queue",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
+        onPress: async (item, contextAudio) => {
             console.log(`add queue ${item.name}`);
+            const listSong = await fetchSongOfArtist(item.id);
+            contextAudio.updateState(contextAudio, { songData: [...contextAudio.songData, ...listSong] });
         },
     },
+    // {
+    //     title: "Add to playlist",
+    //     icon: "add-circle-outline",
+    //     onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
+    //         console.log(`add playlist ${item.name}`);
+    //     },
+    // },
     {
-        title: "Add to playlist",
-        icon: "add-circle-outline",
-        onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
-            console.log(`add playlist ${item.name}`);
+        title: "Share",
+        icon: "share",
+        onPress: (item) => {
+            console.log(`share ${item.name}`);
+            onShare(item, "singer");
         },
     },
 
