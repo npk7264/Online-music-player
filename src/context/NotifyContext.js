@@ -41,8 +41,22 @@ export const NotificationProvider = ({ children }) => {
     Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
     await Notifications.setNotificationCategoryAsync("musicActions", [
       {
+        buttonTitle: "PREV",
+        identifier: "prev-track",
+        options: {
+          opensAppToForeground: false,
+        },
+      },
+      {
         buttonTitle: isPlay ? "PAUSE" : "PLAY",
         identifier: "pause-play",
+        options: {
+          opensAppToForeground: false,
+        },
+      },
+      {
+        buttonTitle: "NEXT",
+        identifier: "next-track",
         options: {
           opensAppToForeground: false,
         },
@@ -70,8 +84,14 @@ export const NotificationProvider = ({ children }) => {
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(
       (notification) => {
-        if (notification.actionIdentifier == "pause-play") {
-          //   console.log(action);
+        if (notification.actionIdentifier == "prev-track") {
+          console.log("prev-track");
+          action && action();
+        } else if (notification.actionIdentifier == "pause-play") {
+          console.log("pause-play");
+          action && action();
+        } else if (notification.actionIdentifier == "next-track") {
+          console.log("next-track");
           action && action();
         }
       }
