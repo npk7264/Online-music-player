@@ -90,11 +90,9 @@ const Player = () => {
       setCurrentPositon(status.positionMillis);
     }
     if (status.didJustFinish && !status.isLooping) {
-      console.log("FINISH:", currentAudio);
       await changeSong(context, "next", contextPlaylist, contextNotify);
     }
     const currentDate = new Date();
-    console.log("haha")
     if (context.timeEnd !== null && context.timeEnd - currentDate <= 0) {
       if (status.isPlaying)
         selectSong(context, currentAudio, songData, contextPlaylist, contextNotify)

@@ -1,6 +1,5 @@
 import React, { Component, createContext, useContext } from "react";
-import { NotificationContext } from "./NotifyContext";
-import { PlaylistContext } from "./PlaylistContext";
+import { CombinedContext } from "./CombinedContext";
 import { Audio } from "expo-av";
 import { changeSong, selectSong } from "../utils/AudioController";
 
@@ -24,8 +23,8 @@ export class AudioProvider extends Component {
   }
 
 
-  static contextNotify = NotificationContext;
-  static contextPlaylist = PlaylistContext;
+  static contextType = CombinedContext;
+  // static contextPlaylist = PlaylistContext;
 
 
   onPlaybackStatusUpdate = async (playbackStatus) => {
@@ -46,16 +45,14 @@ export class AudioProvider extends Component {
       await changeSong(
         { ...this.state, updateState: this.updateState },
         "next",
-        this.contextPlaylist, this.contextNotify
+        this.context.contextPlaylist, this.context.contextNotify
       );
     }
-    console.log("hjhj", this.state.timeEnd)
     const currentDate = new Date();
-    console.log("🚀 ~ file: AudioContext.js:58 ~ AudioProvider ~ onPlaybackStatusUpdate= ~ this.state.isPlaying:", this.state.isPlaying)
 
     if (this.state.timeEnd !== null && this.state.timeEnd - currentDate <= 0) {
       if (this.state.isPlaying)
-        await selectSong({ ...this.state, updateState: this.updateState }, this.state.currentAudio, this.state.songData, this.contextPlaylist, this.contextNotify)
+        await selectSong({ ...this.state, updateState: this.updateState }, this.state.currentAudio, this.state.songData, this.context.contextPlaylist, this.context.contextNotify)
       this.setState({ ...this.state, timeEnd: null })
     }
   };

@@ -29,6 +29,7 @@ import { ThemeProvider } from "./src/context/ThemeContext";
 import { PlaylistProvider } from "./src/context/PlaylistContext";
 import { NotificationProvider } from "./src/context/NotifyContext";
 import { DataProvider } from "./src/context/DataContext";
+import { CombinedProvider } from "./src/context/CombinedContext";
 
 import {
   loadSinger,
@@ -118,41 +119,44 @@ export default function App() {
       <ThemeProvider>
         <PlaylistProvider>
           <NotificationProvider>
-            <AudioProvider>
-              <SafeAreaProvider onLayout={onLayoutRootView}>
-                <StatusBar hidden={true} />
-                <NavigationContainer>
-                  <Stack.Navigator
-                    initialRouteName="Login"
-                    screenOptions={{ headerShown: false }}
-                  >
-                    <Stack.Screen name="AddOneSong" component={AddOneSong} />
-                    <Stack.Screen name="GenreDetail" component={GenreDetail} />
-                    <Stack.Screen name="SeeAll" component={SeeAll} />
-                    <Stack.Screen name="AddSong" component={AddSong} />
-                    <Stack.Screen name="Login" component={Login} />
-                    <Stack.Screen name="Register" component={Register} />
-                    <Stack.Screen name="BottomMenu" component={BottomMenu} />
-                    <Stack.Screen name="Player" component={Player} />
-                    <Stack.Screen name="Lyric" component={Lyric} />
-                    <Stack.Screen name="Search" component={Search} />
-                    <Stack.Screen
-                      name="ArtistDetail"
-                      component={ArtistDetail}
-                    />
-                    <Stack.Screen name="AlbumDetail" component={AlbumDetail} />
-                    <Stack.Screen name="Comment" component={Comment} />
-                    <Stack.Screen
-                      name="DetailPlaylist"
-                      component={DetailPlaylist}
-                    />
-                    <Stack.Screen name="Chart" component={Chart} />
-                    <Stack.Screen name="Favorite" component={Favorite} />
-                    <Stack.Screen name="Recent" component={Recent} />
-                  </Stack.Navigator>
-                </NavigationContainer>
-              </SafeAreaProvider>
-            </AudioProvider>
+            <CombinedProvider>
+
+              <AudioProvider>
+                <SafeAreaProvider onLayout={onLayoutRootView}>
+                  <StatusBar hidden={true} />
+                  <NavigationContainer>
+                    <Stack.Navigator
+                      initialRouteName="Login"
+                      screenOptions={{ headerShown: false }}
+                    >
+                      <Stack.Screen name="AddOneSong" component={AddOneSong} />
+                      <Stack.Screen name="GenreDetail" component={GenreDetail} />
+                      <Stack.Screen name="SeeAll" component={SeeAll} />
+                      <Stack.Screen name="AddSong" component={AddSong} />
+                      <Stack.Screen name="Login" component={Login} />
+                      <Stack.Screen name="Register" component={Register} />
+                      <Stack.Screen name="BottomMenu" component={BottomMenu} />
+                      <Stack.Screen name="Player" component={Player} />
+                      <Stack.Screen name="Lyric" component={Lyric} />
+                      <Stack.Screen name="Search" component={Search} />
+                      <Stack.Screen
+                        name="ArtistDetail"
+                        component={ArtistDetail}
+                      />
+                      <Stack.Screen name="AlbumDetail" component={AlbumDetail} />
+                      <Stack.Screen name="Comment" component={Comment} />
+                      <Stack.Screen
+                        name="DetailPlaylist"
+                        component={DetailPlaylist}
+                      />
+                      <Stack.Screen name="Chart" component={Chart} />
+                      <Stack.Screen name="Favorite" component={Favorite} />
+                      <Stack.Screen name="Recent" component={Recent} />
+                    </Stack.Navigator>
+                  </NavigationContainer>
+                </SafeAreaProvider>
+              </AudioProvider>
+            </CombinedProvider>
           </NotificationProvider>
         </PlaylistProvider>
       </ThemeProvider>

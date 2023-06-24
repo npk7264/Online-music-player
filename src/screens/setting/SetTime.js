@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Modal, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, StatusBar } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { StyleSheet, SafeAreaView } from 'react-native'
+import React, { useContext } from 'react'
 import { ThemeContext } from "../../context/ThemeContext";
 import { AudioContext } from '../../context/AudioContext';
+
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 const SetTime = ({ visible, onClose }) => {
@@ -12,7 +13,9 @@ const SetTime = ({ visible, onClose }) => {
         console.log("🚀 ~ file: SetTime.js:12 ~ onChange ~ event:", event)
         if (event.type == "set") {
             const currentDate = selectedDate;
-            await updateState(contextAudio, { timeEnd: currentDate });
+            await updateState(contextAudio, {
+                timeEnd: currentDate,
+            });
         }
 
         onClose();
