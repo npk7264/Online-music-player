@@ -61,7 +61,7 @@ const MiniPlayer = () => {
                 contextPlaylist,
                 contextNotify
               );
-              navigation.navigate("Player");
+              // navigation.navigate("Player");
             }}
           >
             <Ionicons

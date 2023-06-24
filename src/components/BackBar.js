@@ -1,12 +1,15 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React, { useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
+import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { FontAwesome } from "@expo/vector-icons";
 
 const BackBar = ({ title, isSearch }) => {
   const navigation = useNavigation();
   const { colors } = useContext(ThemeContext);
+  const contextAudio = useContext(AudioContext);
+  const { onPlaybackStatusUpdate, playbackObj } = contextAudio;
   return (
     <View style={[styles.backBar, { backgroundColor: colors.background }]}>
       {/* title */}
@@ -14,13 +17,16 @@ const BackBar = ({ title, isSearch }) => {
         <TouchableOpacity
           style={{ paddingHorizontal: 20 }}
           onPress={() => {
+            if (title === "player") {
+              playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
+            }
             navigation.goBack();
           }}
         >
           <FontAwesome name="arrow-left" size={24} color={colors.text} />
         </TouchableOpacity>
         <Text style={[styles.title, { color: colors.text }]} numberOfLines={1}>
-          {title}
+          {title !== "player" ? title : ""}
         </Text>
       </View>
       {/* search button */}

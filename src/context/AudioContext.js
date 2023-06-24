@@ -2,7 +2,7 @@ import React, { Component, createContext, useContext } from "react";
 import { NotificationContext } from "./NotifyContext";
 import { PlaylistContext } from "./PlaylistContext";
 import { Audio } from "expo-av";
-import { changeSong } from "../utils/AudioController";
+import { changeSong, selectSong } from "../utils/AudioController";
 
 export const AudioContext = createContext();
 export class AudioProvider extends Component {
@@ -19,11 +19,14 @@ export class AudioProvider extends Component {
       isLooping: false,
       playbackPosition: null,
       playbackDuration: null,
+      timeEnd: null,
     };
   }
 
 
   static contextNotify = NotificationContext;
+  static contextPlaylist = PlaylistContext;
+
 
   onPlaybackStatusUpdate = async (playbackStatus) => {
     // if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
@@ -43,8 +46,17 @@ export class AudioProvider extends Component {
       await changeSong(
         { ...this.state, updateState: this.updateState },
         "next",
-        this.context
+        this.contextPlaylist, this.contextNotify
       );
+    }
+    console.log("hjhj", this.state.timeEnd)
+    const currentDate = new Date();
+    console.log("🚀 ~ file: AudioContext.js:58 ~ AudioProvider ~ onPlaybackStatusUpdate= ~ this.state.isPlaying:", this.state.isPlaying)
+
+    if (this.state.timeEnd !== null && this.state.timeEnd - currentDate <= 0) {
+      if (this.state.isPlaying)
+        await selectSong({ ...this.state, updateState: this.updateState }, this.state.currentAudio, this.state.songData, this.contextPlaylist, this.contextNotify)
+      this.setState({ ...this.state, timeEnd: null })
     }
   };
 
@@ -83,6 +95,7 @@ export class AudioProvider extends Component {
       isLooping,
       playbackPosition,
       playbackDuration,
+      timeEnd,
     } = this.state;
 
     return (

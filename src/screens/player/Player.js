@@ -47,6 +47,7 @@ const Player = () => {
     playbackDuration,
     updateState,
     songData,
+    timeEnd,
   } = context;
 
   const contextNotify = useContext(NotificationContext);
@@ -92,6 +93,14 @@ const Player = () => {
       console.log("FINISH:", currentAudio);
       await changeSong(context, "next", contextPlaylist, contextNotify);
     }
+    const currentDate = new Date();
+    console.log("haha")
+    if (context.timeEnd !== null && context.timeEnd - currentDate <= 0) {
+      if (status.isPlaying)
+        selectSong(context, currentAudio, songData, contextPlaylist, contextNotify)
+      updateState(context, { timeEnd: null })
+    }
+
   };
 
   useEffect(() => {
@@ -107,7 +116,7 @@ const Player = () => {
   return (
     <SafeAreaView style={{ backgroundColor: colors.background, flex: 1 }}>
       <StatusBar></StatusBar>
-      <BackBar />
+      <BackBar title={"player"} />
       <View style={{ justifyContent: "center", alignItems: "center", flex: 1 }}>
         <Image style={styles.thumbnail} source={{ uri: currentAudio.image }} />
         {/* Song name */}

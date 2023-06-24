@@ -11,7 +11,7 @@ import {
     where,
     documentId
 } from "firebase/firestore";
-import { AudioContext } from './AudioContext';
+// import { AudioContext } from './AudioContext';
 import { async } from '@firebase/util';
 
 
@@ -19,8 +19,8 @@ export const PlaylistContext = createContext();
 
 
 export const PlaylistProvider = ({ children }) => {
-    const { userId } = useContext(AudioContext);
-
+    // const { userId } = useContext(AudioContext);
+    const userId = auth?.currentUser?.uid;
     const [idPlaylist, setIdPlaylist] = useState('');
     const [songs, setSongs] = useState([]);
     const [playlistData, setPlaylistData] = useState({});
