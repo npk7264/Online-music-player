@@ -26,7 +26,7 @@ import { useNavigation } from "@react-navigation/native";
 
 const ListSuggest = ({ title, data, id }) => {
   const navigation = useNavigation();
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   // const { recentData } = useContext(PlaylistContext);
   const contextData = useContext(DataContext);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
@@ -65,7 +65,7 @@ const ListSuggest = ({ title, data, id }) => {
           </Text>
           <TouchableOpacity onPress={handleSeeALl}>
             <Text style={[styles.viewAll, { color: colors.primary }]}>
-              Xem tất cả
+              {language?.seeAll}
             </Text>
           </TouchableOpacity>
         </View>

@@ -34,7 +34,7 @@ import { fetchTopSong } from "../utils/FirebaseHandler";
 const Chart = () => {
   const context = useContext(AudioContext);
   const { songData, soundObj, currentAudio, updateState } = context;
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const [optionModalVisible, setOptionModalVisible] = useState(false);
   const [currentItem, setCurrentItem] = useState(null);
   const [songs, setSongs] = useState([]);
@@ -63,7 +63,7 @@ const Chart = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
 
-      <SearchBar title={"Thịnh hành"} />
+      <SearchBar title={language.chart} />
 
       {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
       {loaded && (
@@ -112,7 +112,7 @@ const Chart = () => {
                   style={{ fontSize: 12 }}
                 />
               }
-              // labelComponent={<SongBarLabel />}
+            // labelComponent={<SongBarLabel />}
             />
           </VictoryChart>
         </View>

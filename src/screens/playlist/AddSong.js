@@ -22,7 +22,7 @@ import { useNavigation } from "@react-navigation/native";
 const Tab = createMaterialTopTabNavigator();
 
 const AddSong = () => {
-  const { colors, darkMode } = useContext(ThemeContext);
+  const { colors, darkMode, language } = useContext(ThemeContext);
   const { searchText, setSearchText } = useContext(PlaylistContext);
   const [isFocused, setIsFocused] = useState(false);
   const navigation = useNavigation();
@@ -59,7 +59,7 @@ const AddSong = () => {
               color: colors.text,
             },
           ]}
-          placeholder="Tìm kiếm bài hát"
+          placeholder={language.searchSong}
           placeholderTextColor={colors.text}
           // autoFocus={true}
           onFocus={() => setIsFocused(true)}
@@ -71,7 +71,7 @@ const AddSong = () => {
       </View>
 
       <Tab.Navigator
-        initialRouteName="Bài hát"
+        initialRouteName={language.song}
         screenOptions={{
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: "#ccc",
@@ -81,10 +81,10 @@ const AddSong = () => {
           tabBarStyle: { backgroundColor: colors.background },
         }}
       >
-        <Tab.Screen name="Bài hát" component={Songs} />
+        <Tab.Screen name={language.song} component={Songs} />
         <Tab.Screen name="Playlist" component={SongInPlayList} />
-        <Tab.Screen name="Gần đây" component={Recent} />
-        <Tab.Screen name="Yêu thích" component={Favorites} />
+        <Tab.Screen name={language.recent} component={Recent} />
+        <Tab.Screen name={language.favorite} component={Favorites} />
       </Tab.Navigator>
     </SafeAreaView>
   );

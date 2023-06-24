@@ -31,7 +31,7 @@ const BackBar = ({ title, isSearch }) => {
       </View>
       {/* search button */}
       {isSearch && (
-        <TouchableOpacity onPress={() => { }}>
+        <TouchableOpacity onPress={() => { navigation.navigate("Search") }}>
           <FontAwesome
             name="search"
             size={24}

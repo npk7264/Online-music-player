@@ -14,17 +14,17 @@ import Chart from "../screens/Chart";
 import Setting from "../screens/setting/Setting";
 
 const BottomMenu = () => {
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   return (
     <Tab.Navigator
-      initialRouteName="Home"
+      initialRouteName={language.home}
       screenOptions={{
         headerShown: false,
         tabBarStyle: { backgroundColor: colors.background },
       }}
     >
       <Tab.Screen
-        name="Home"
+        name={language.home}
         component={TopMenu}
         options={{
           tabBarLabelStyle: styles.menuTitle,
@@ -57,7 +57,7 @@ const BottomMenu = () => {
         }}
       />
       <Tab.Screen
-        name="Xếp hạng"
+        name={language.chart}
         component={Chart}
         options={{
           tabBarLabelStyle: styles.menuTitle,
@@ -74,7 +74,7 @@ const BottomMenu = () => {
         }}
       />
       <Tab.Screen
-        name="Cài đặt"
+        name={language.setting}
         component={Setting}
         options={{
           tabBarLabelStyle: styles.menuTitle,

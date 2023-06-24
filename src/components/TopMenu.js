@@ -18,7 +18,7 @@ import { AudioContext } from "../context/AudioContext";
 
 const TopMenu = () => {
   const { soundObj, currentAudio } = useContext(AudioContext);
-  const { colors, darkMode } = useContext(ThemeContext);
+  const { colors, darkMode, language } = useContext(ThemeContext);
 
   return (
     <SafeAreaView
@@ -29,7 +29,7 @@ const TopMenu = () => {
       <SearchBar title={"mymusic"} />
 
       <Tab.Navigator
-        initialRouteName="Khám phá"
+        initialRouteName={language.suggested}
         screenOptions={{
           tabBarActiveTintColor: colors.primary,
           tabBarInactiveTintColor: "#ccc",
@@ -43,11 +43,11 @@ const TopMenu = () => {
           tabBarStyle: { backgroundColor: colors.background },
         }}
       >
-        <Tab.Screen name="Khám phá" component={Suggested} />
-        <Tab.Screen name="Bài hát" component={Song} />
-        <Tab.Screen name="Ca sĩ" component={Artist} />
-        <Tab.Screen name="Albums" component={Albums} />
-        <Tab.Screen name="Thể loại" component={Genre} />
+        <Tab.Screen name={language.suggested} component={Suggested} />
+        <Tab.Screen name={language.song} component={Song} />
+        <Tab.Screen name={language.artist} component={Artist} />
+        <Tab.Screen name={language.album} component={Albums} />
+        <Tab.Screen name={language.genre} component={Genre} />
       </Tab.Navigator>
 
       {currentAudio && <MiniPlayer />}

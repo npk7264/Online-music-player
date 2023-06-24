@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { color } from "../constants/color";
@@ -14,8 +14,11 @@ import { color } from "../constants/color";
 import { auth, db } from "../services/firebaseConfig";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { ThemeContext } from "../context/ThemeContext";
+
 
 const Register = () => {
+  const { colors, language } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,7 +68,7 @@ const Register = () => {
       style={{
         flex: 1,
         alignItems: "center",
-        backgroundColor: "white",
+        backgroundColor: colors.background,
       }}
     >
       <View
@@ -77,7 +80,7 @@ const Register = () => {
         }}
       >
         <Text
-          style={{ fontSize: 40, fontWeight: "bold", color: color.primary }}
+          style={{ fontSize: 50, fontWeight: "bold", color: color.primary }}
         >
           mymusic
         </Text>
@@ -86,7 +89,7 @@ const Register = () => {
       {/* Input */}
       <TextInput
         style={styles.textInput}
-        placeholder="Tên"
+        placeholder={language.name}
         placeholderTextColor={"gray"}
         onChangeText={(text) => {
           setName(text);
@@ -103,7 +106,7 @@ const Register = () => {
       <TextInput
         style={[styles.textInput, { marginBottom: 20 }]}
         placeholderTextColor={"gray"}
-        placeholder="Mật khẩu"
+        placeholder={language.password}
         onChangeText={(text) => {
           setPassword(text);
         }}
@@ -113,11 +116,11 @@ const Register = () => {
       {/* Button */}
       <TouchableOpacity style={styles.button} onPress={handleRegister}>
         <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
-          Đăng ký
+          {language.signUp}
         </Text>
       </TouchableOpacity>
       <Text style={{ fontSize: 16, fontWeight: "500", marginBottom: 10 }}>
-        Bạn đã có tài khoản?
+        {language.hasAccount}?
       </Text>
       <TouchableOpacity
         style={[styles.button, { backgroundColor: "#006edc", width: "70%" }]}
@@ -128,7 +131,7 @@ const Register = () => {
             navigation.replace("Login");
           }}
         >
-          Đăng nhập
+          {language.login}
         </Text>
       </TouchableOpacity>
     </SafeAreaView>

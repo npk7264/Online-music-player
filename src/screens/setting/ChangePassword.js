@@ -20,7 +20,7 @@ import { AudioContext } from "../../context/AudioContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChangePassword = ({ visible, onClose }) => {
-  const { colors, darkMode } = useContext(ThemeContext);
+  const { colors, darkMode, language, checkLanguage } = useContext(ThemeContext);
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -64,14 +64,14 @@ const ChangePassword = ({ visible, onClose }) => {
           .then(async () => {
             // Update successful.
             await AsyncStorage.setItem("password", newPassword);
-            Alert.alert("Thành công", "Bạn đã đổi mật khẩu thành công");
+            Alert.alert(checkLanguage === "en" ? "Complete" : "Thành công", checkLanguage === "en" ? "Change password successfully" : "Bạn đã đổi mật khẩu thành công");
           })
           .catch((error) => {
             // An error ocurred
             // ...
             Alert.alert("197 setting", error);
           });
-      } else Alert.alert("Thất bại", "Bạn nhập sai mật khẩu");
+      } else checkLanguage === "en" ? Alert.alert("Fail", "wrong password") : Alert.alert("Thất bại", "Bạn nhập sai mật khẩu");
       setCurrentPassword("");
       setNewPassword("");
     } catch (error) {
@@ -103,7 +103,7 @@ const ChangePassword = ({ visible, onClose }) => {
               style={[styles.title, { color: colors.text }]}
               numberOfLines={1}
             >
-              Đặt mật khẩu mới
+              {checkLanguage === "en" ? "New Password" : "Đặt mật khẩu mới"}
             </Text>
           </View>
           <TextInput
@@ -122,7 +122,7 @@ const ChangePassword = ({ visible, onClose }) => {
                 color: colors.text,
               },
             ]}
-            placeholder="Mật khẩu hiện tại"
+            placeholder={checkLanguage === "en" ? "Current Password" : "Mật khẩu hiện tại"}
             placeholderTextColor={"gray"}
             autoFocus={true}
             onFocus={() => setIsFocused(true)}
@@ -146,7 +146,7 @@ const ChangePassword = ({ visible, onClose }) => {
                 color: colors.text,
               },
             ]}
-            placeholder="Mật khẩu mới"
+            placeholder={checkLanguage === "en" ? "New Password" : "Mật khẩu mới"}
             placeholderTextColor={"gray"}
             autoFocus={false}
             onFocus={() => setIsFocused(false)}
@@ -163,7 +163,7 @@ const ChangePassword = ({ visible, onClose }) => {
               <Text
                 style={{ color: colors.primary, fontSize: 18, fontWeight: 500 }}
               >
-                Hủy
+                {language?.cancel}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -173,7 +173,7 @@ const ChangePassword = ({ visible, onClose }) => {
               }}
             >
               <Text style={{ color: "white", fontSize: 18, fontWeight: 500 }}>
-                Cập nhật
+                {language?.update}
               </Text>
             </TouchableOpacity>
           </View>

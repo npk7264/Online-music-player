@@ -32,7 +32,7 @@ import {
 } from "firebase/firestore";
 
 const Playlist = () => {
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const { playlistArray, setPlaylistArray } = useContext(PlaylistContext);
   const [addPlaylist, setAddPlaylist] = useState(false);
   const { userId, currentAudio } = useContext(AudioContext);
@@ -72,9 +72,9 @@ const Playlist = () => {
 
       <FlatList
         data={[
-          { id: "add", name: "Tạo danh sách phát mới" },
-          { id: "Favorite", name: "Yêu thích" },
-          { id: "Recent", name: "Nghe gần đây" },
+          { id: "add", name: language.addPlaylist },
+          { id: "Favorite", name: language.favorite },
+          { id: "Recent", name: language.recentlyPlayed },
           ...playlistArray,
         ]}
         renderItem={({ item }) => {

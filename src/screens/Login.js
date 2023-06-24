@@ -23,8 +23,10 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataContext } from "../context/DataContext";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { AudioContext } from "../context/AudioContext";
+import { ThemeContext } from "../context/ThemeContext";
 
 const Login = () => {
+  const { colors, language } = useContext(ThemeContext);
   const context = useContext(AudioContext);
   const { updateState } = context;
   const contextPlaylist = useContext(PlaylistContext);
@@ -123,7 +125,7 @@ const Login = () => {
       style={{
         flex: 1,
         alignItems: "center",
-        backgroundColor: "white",
+        backgroundColor: colors.background,
       }}
     >
       <View
@@ -135,7 +137,7 @@ const Login = () => {
         }}
       >
         <Text
-          style={{ fontSize: 40, fontWeight: "bold", color: color.primary }}
+          style={{ fontSize: 50, fontWeight: "bold", color: color.primary }}
         >
           mymusic
         </Text>
@@ -157,7 +159,7 @@ const Login = () => {
           <TextInput
             style={[styles.textInput, { marginBottom: 20 }]}
             placeholderTextColor={"gray"}
-            placeholder="Mật khẩu"
+            placeholder={language.password}
             onChangeText={(text) => {
               setPassword(text);
             }}
@@ -167,7 +169,7 @@ const Login = () => {
           {/* Button */}
           <TouchableOpacity style={styles.button} onPress={handleLogin}>
             <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
-              Đăng nhập
+              {language.login}
             </Text>
           </TouchableOpacity>
           <Text
@@ -176,10 +178,11 @@ const Login = () => {
               fontWeight: "500",
               marginBottom: 20,
               padding: 5,
+              color: colors.text
             }}
             onPress={() => forgotPasswrod(email)}
           >
-            Quên mật khẩu?
+            {language.forgotPassword + "?"}
           </Text>
           <TouchableOpacity
             style={[
@@ -191,7 +194,7 @@ const Login = () => {
             }}
           >
             <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
-              Tạo tài khoản mới
+              {language.signUp}
             </Text>
           </TouchableOpacity>
         </View>

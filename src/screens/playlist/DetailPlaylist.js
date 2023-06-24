@@ -19,7 +19,7 @@ import { PlaylistContext } from "../../context/PlaylistContext";
 import { AudioContext } from "../../context/AudioContext";
 import { useIsFocused } from "@react-navigation/native";
 const DetailPlaylist = () => {
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const { listSong, filterSong, renderSong, playlistData } =
     useContext(PlaylistContext);
   const { userId, currentAudio } = useContext(AudioContext);
@@ -44,7 +44,7 @@ const DetailPlaylist = () => {
         <Text style={[styles.singer, { color: colors.text }]}>
           {playlistData?.name}
         </Text>
-        <Text style={styles.numSong}>{listSong?.length} bài hát</Text>
+        <Text style={styles.numSong}>{listSong?.length} {language.song}</Text>
         {/* button */}
         <View style={styles.buttons}>
           {/* <TouchableOpacity
@@ -60,7 +60,7 @@ const DetailPlaylist = () => {
           >
             <Ionicons name="play-circle" size={20} color={colors.primary} />
             <Text style={[styles.buttonText, { color: colors.primary }]}>
-              Phát
+              {language.play}
             </Text>
           </TouchableOpacity>
         </View>
@@ -71,7 +71,7 @@ const DetailPlaylist = () => {
       {/* add songs */}
       <View style={[styles.addSong]}>
         <Text style={{ fontSize: 20, color: colors.text, fontWeight: 500 }}>
-          Bài hát
+          {language.song}
         </Text>
         <TouchableOpacity onPress={() => navigation.navigate("AddSong")}>
           <FontAwesome name="plus-square" size={30} color={colors.primary} />

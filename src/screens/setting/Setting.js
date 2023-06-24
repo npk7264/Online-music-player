@@ -39,10 +39,10 @@ import SetTime from "./SetTime";
 
 const SECTIONS = [
   {
-    header: "Thông tin tài khoản",
+    header: "accountInformation",
     items: [
       {
-        id: "changeName",
+        id: "changeNickName",
         icon: "person-circle-outline",
         label: "Đổi tên hiển thị",
         type: "modal",
@@ -56,19 +56,13 @@ const SECTIONS = [
     ],
   },
   {
-    header: "Điều khiển",
+    header: "control",
     items: [
-      // {
-      //   id: "notification",
-      //   icon: "md-notifications-outline",
-      //   label: "Thông báo",
-      //   type: "link",
-      // },
       {
         id: "language",
         icon: "trail-sign-outline",
         label: "Ngôn ngữ",
-        type: "link",
+        type: "toggle",
       },
       {
         id: "darkMode",
@@ -77,7 +71,7 @@ const SECTIONS = [
         type: "toggle",
       },
       {
-        id: "time",
+        id: "timer",
         icon: "timer-outline",
         label: "Hẹn giờ",
         type: "link",
@@ -94,7 +88,7 @@ const SECTIONS = [
         type: "button",
       },
       {
-        id: "quit",
+        id: "exit",
         icon: "md-phone-portrait-outline",
         label: "Thoát",
         type: "button",
@@ -104,7 +98,7 @@ const SECTIONS = [
 ];
 
 const Setting = () => {
-  const { colors, darkMode, toggleTheme } = useContext(ThemeContext);
+  const { colors, darkMode, toggleTheme, language, toggleLanguage, checkLanguage } = useContext(ThemeContext);
   const context = useContext(AudioContext);
   const {
     userId,
@@ -191,11 +185,11 @@ const Setting = () => {
   };
 
   const handlePressOption = (id) => {
-    if (id == "changeName") setChangeNameVisible(true);
+    if (id == "changeNickName") setChangeNameVisible(true);
     if (id == "logOut") dangxuat();
     if (id == "darkMode") toggleTheme();
     if (id == "changePassword") setModalVisible(true);
-    if (id == "time") setOffTimeVisible(true);
+    if (id == "timer") setOffTimeVisible(true);
   };
 
   return (
@@ -203,7 +197,7 @@ const Setting = () => {
       style={[styles.container, { backgroundColor: colors.background }]}
     >
       <StatusBar></StatusBar>
-      <SearchBar title={"Cài đặt"} />
+      <SearchBar title={language["setting"]} />
 
       <ScrollView>
         <View style={styles.userInfoSection}>
@@ -222,7 +216,7 @@ const Setting = () => {
         {SECTIONS.map(({ header, items }) => {
           return (
             <View style={styles.section} key={header}>
-              <Text style={styles.sectionHeader}>{header}</Text>
+              <Text style={styles.sectionHeader}>{language[header]}</Text>
               {items.map(({ id, label, icon, type }) => {
                 return (
                   <TouchableOpacity
@@ -244,12 +238,12 @@ const Setting = () => {
                       </View>
 
                       <Text style={[styles.rowLabel, { color: colors.text }]}>
-                        {label}
+                        {language[id]}
                       </Text>
 
                       <View style={styles.rowSpacer} />
 
-                      {type === "toggle" && (
+                      {type === "toggle" && id === "darkMode" && (
                         <Switch
                           trackColor={{ false: "#767577", true: "#767577" }}
                           thumbColor={darkMode ? colors.primary : "#f4f3f4"}
@@ -257,6 +251,20 @@ const Setting = () => {
                           onValueChange={toggleTheme}
                           value={darkMode}
                         />
+                      )}
+
+                      {type === "toggle" && id === "language" && (
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                          <Image source={checkLanguage === "en" ? require('../../../assets/USA.png') : require('../../../assets/vietNam.png')}
+                            style={{ width: 40, height: 30, marginRight: 10 }} />
+                          <Switch
+                            trackColor={{ false: "red", true: "red" }}
+                            thumbColor={"#f4f3f4"}
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={toggleLanguage}
+                            value={checkLanguage === "en"}
+                          />
+                        </View>
                       )}
 
                       {(type === "link" || type === "modal") && (
