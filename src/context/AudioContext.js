@@ -1,18 +1,8 @@
 import React, { Component, createContext, useContext } from "react";
 import { NotificationContext } from "./NotifyContext";
+import { PlaylistContext } from "./PlaylistContext";
 import { Audio } from "expo-av";
 import { changeSong } from "../utils/AudioController";
-import { fetchSongs, fetchRecent } from "../utils/FirebaseHandler";
-import { auth, db } from "../services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  addDoc,
-  updateDoc,
-} from "firebase/firestore";
 
 export const AudioContext = createContext();
 export class AudioProvider extends Component {
@@ -31,6 +21,7 @@ export class AudioProvider extends Component {
       playbackDuration: null,
     };
   }
+
 
   static contextNotify = NotificationContext;
 
@@ -66,13 +57,14 @@ export class AudioProvider extends Component {
       staysActiveInBackground: true,
     });
     if (this.state.playbackObj === null) {
-      await this.setState({
+      this.setState({
         ...this.state,
         // songData: songs,
         playbackObj: new Audio.Sound(),
       });
     }
   }
+
 
   updateState = (prevState, newState = {}) => {
     this.setState({ ...prevState, ...newState });

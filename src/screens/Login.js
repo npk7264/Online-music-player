@@ -71,11 +71,12 @@ const Login = () => {
         if (type === "Auto") {
           alert("Phiên đăng nhập đã hết hạn!! Vui lòng đăng nhập lại!");
         }
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
         else
           alert("Sai mật khẩu hoặc email!!");
         setLoaded(true);
+        // const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("🚀 ~ file: Login.js:79 ~ LoginFirebase ~ errorMessage:", errorMessage)
       });
   };
 

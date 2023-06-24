@@ -1,31 +1,19 @@
 import {
   StyleSheet,
-  Text,
   View,
-  FlatList,
-  TouchableOpacity,
 } from "react-native";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useContext } from "react";
 
-import SongItem from "../components/SongItem.js";
-import OptionModal from "../components/OptionModal.js";
-
-import { FontAwesome } from "@expo/vector-icons";
 
 import FlatListSong from "../components/FlatListSong.js";
 
-import { AudioContext } from "../context/AudioContext.js";
 import { ThemeContext } from "../context/ThemeContext.js";
 import { DataContext } from "../context/DataContext.js";
 
 import MoreData from "../components/MoreData.js";
 
 const Song = () => {
-  const [optionModalVisible, setOptionModalVisible] = useState(false);
-  const [currentItem, setCurrentItem] = useState(null);
   const { colors } = useContext(ThemeContext);
-  const context = useContext(AudioContext);
-  const { songData, soundObj, userId, updateState } = context;
   const { listSong, loadedAllSongs, handleLoadMoreSong } = useContext(DataContext);
 
   return (
