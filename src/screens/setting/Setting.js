@@ -35,6 +35,7 @@ import * as ImagePicker from "expo-image-picker";
 import { selectSong, pause } from "../../utils/AudioController";
 import ChangePassword from "./ChangePassword";
 import ChangeUsername from "./ChangeUsername";
+import SetTime from "./SetTime";
 
 const SECTIONS = [
   {
@@ -122,6 +123,7 @@ const Setting = () => {
   const [avatar, setAvatar] = useState(auth.currentUser?.photoURL);
   const [modalVisible, setModalVisible] = useState(false);
   const [changeNameVisible, setChangeNameVisible] = useState(false);
+  const [OffTimeVisible, setOffTimeVisible] = useState(false);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -142,7 +144,7 @@ const Setting = () => {
       try {
         const snapshot = await uploadBytes(avtref, bytes);
         const url = await getDownloadURL(snapshot.ref);
-        await setAvatar(url);
+        setAvatar(url);
         await updateProfile(auth.currentUser, {
           photoURL: url,
         });
@@ -192,9 +194,8 @@ const Setting = () => {
     if (id == "changeName") setChangeNameVisible(true);
     if (id == "logOut") dangxuat();
     if (id == "darkMode") toggleTheme();
-    if (id == "changePassword") {
-      setModalVisible(true);
-    }
+    if (id == "changePassword") setModalVisible(true);
+    if (id == "time") setOffTimeVisible(true);
   };
 
   return (
@@ -287,6 +288,15 @@ const Setting = () => {
             setUsername={setUsername}
           />
         </View>
+        {
+          OffTimeVisible &&
+          <View style={{ flex: 1 }}>
+            <SetTime
+              visible={OffTimeVisible}
+              onClose={() => setOffTimeVisible(false)}
+            />
+          </View>
+        }
       </ScrollView>
 
       {currentAudio && <MiniPlayer />}

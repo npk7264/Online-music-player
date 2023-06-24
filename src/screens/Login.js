@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
-import { AudioContext } from "../context/AudioContext";
+
 import { color } from "../constants/color";
 
 import { auth, db } from "../services/firebaseConfig";
@@ -22,12 +22,15 @@ import { fetchRecentestSong, fetchSongListFromGenreStatistics, fetchDataArtistFo
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataContext } from "../context/DataContext";
 import { PlaylistContext } from "../context/PlaylistContext";
+import { AudioContext } from "../context/AudioContext";
 
 const Login = () => {
   const context = useContext(AudioContext);
-  const { setFavoriteID, setRecentID, setRecentData } = useContext(PlaylistContext);
-  const { setSuggestData, listSong, setListIDArtistFollowing, setArtistFollowing } = useContext(DataContext);
   const { updateState } = context;
+  const contextPlaylist = useContext(PlaylistContext);
+  const { setFavoriteID, setRecentID, setRecentData } = contextPlaylist;
+  const { setSuggestData, listSong, setListIDArtistFollowing, setArtistFollowing } = useContext(DataContext);
+
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -71,11 +74,12 @@ const Login = () => {
         if (type === "Auto") {
           alert("Phiên đăng nhập đã hết hạn!! Vui lòng đăng nhập lại!");
         }
-        // const errorCode = error.code;
-        // const errorMessage = error.message;
         else
           alert("Sai mật khẩu hoặc email!!");
         setLoaded(true);
+        // const errorCode = error.code;
+        const errorMessage = error.message;
+        console.log("🚀 ~ file: Login.js:79 ~ LoginFirebase ~ errorMessage:", errorMessage)
       });
   };
 
@@ -91,15 +95,15 @@ const Login = () => {
   };
 
   useEffect(() => {
-    updateState(context, {
-      currentAudio: null,
-      currentAudioIndex: null,
-      isPlaying: false,
-      isLooping: false,
-      playbackPosition: null,
-      playbackDuration: null,
-    });
     const signInAuto = async () => {
+      await updateState(context, {
+        currentAudio: null,
+        currentAudioIndex: null,
+        isPlaying: false,
+        isLooping: false,
+        playbackPosition: null,
+        playbackDuration: null,
+      });
       try {
         const mail = await AsyncStorage.getItem("email");
         const pass = await AsyncStorage.getItem("password");

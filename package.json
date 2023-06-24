@@ -19,8 +19,10 @@
     "expo": "~48.0.10",
     "expo-av": "~13.2.1",
     "expo-image-picker": "~14.1.1",
+    "expo-notifications": "~0.18.1",
     "expo-splash-screen": "~0.18.2",
     "expo-status-bar": "~1.4.4",
+    "expo-task-manager": "~11.1.1",
     "firebase": "^9.19.1",
     "jsrmvi": "^1.0.0",
     "react": "18.2.0",
@@ -37,8 +39,7 @@
     "react-native-web": "~0.18.10",
     "victory": "^36.6.10",
     "victory-native": "^36.6.10",
-    "expo-task-manager": "~11.1.1",
-    "expo-notifications": "~0.18.1"
+    "@react-native-community/datetimepicker": "6.7.3"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

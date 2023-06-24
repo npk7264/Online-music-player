@@ -1,18 +1,7 @@
 import React, { Component, createContext, useContext } from "react";
-import { NotificationContext } from "./NotifyContext";
+import { CombinedContext } from "./CombinedContext";
 import { Audio } from "expo-av";
-import { changeSong } from "../utils/AudioController";
-import { fetchSongs, fetchRecent } from "../utils/FirebaseHandler";
-import { auth, db } from "../services/firebaseConfig";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  setDoc,
-  addDoc,
-  updateDoc,
-} from "firebase/firestore";
+import { changeSong, selectSong } from "../utils/AudioController";
 
 export const AudioContext = createContext();
 export class AudioProvider extends Component {
@@ -29,10 +18,14 @@ export class AudioProvider extends Component {
       isLooping: false,
       playbackPosition: null,
       playbackDuration: null,
+      timeEnd: null,
     };
   }
 
-  static contextNotify = NotificationContext;
+
+  static contextType = CombinedContext;
+  // static contextPlaylist = PlaylistContext;
+
 
   onPlaybackStatusUpdate = async (playbackStatus) => {
     // if (playbackStatus.isLoaded && playbackStatus.isPlaying) {
@@ -52,8 +45,15 @@ export class AudioProvider extends Component {
       await changeSong(
         { ...this.state, updateState: this.updateState },
         "next",
-        this.context
+        this.context.contextPlaylist, this.context.contextNotify
       );
+    }
+    const currentDate = new Date();
+
+    if (this.state.timeEnd !== null && this.state.timeEnd - currentDate <= 0) {
+      if (this.state.isPlaying)
+        await selectSong({ ...this.state, updateState: this.updateState }, this.state.currentAudio, this.state.songData, this.context.contextPlaylist, this.context.contextNotify)
+      this.setState({ ...this.state, timeEnd: null })
     }
   };
 
@@ -66,13 +66,14 @@ export class AudioProvider extends Component {
       staysActiveInBackground: true,
     });
     if (this.state.playbackObj === null) {
-      await this.setState({
+      this.setState({
         ...this.state,
         // songData: songs,
         playbackObj: new Audio.Sound(),
       });
     }
   }
+
 
   updateState = (prevState, newState = {}) => {
     this.setState({ ...prevState, ...newState });
@@ -91,6 +92,7 @@ export class AudioProvider extends Component {
       isLooping,
       playbackPosition,
       playbackDuration,
+      timeEnd,
     } = this.state;
 
     return (
