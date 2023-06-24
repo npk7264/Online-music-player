@@ -19,7 +19,7 @@ import { AudioContext } from "../../context/AudioContext";
 
 const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
   const { userId } = useContext(AudioContext);
-  const { colors, darkMode } = useContext(ThemeContext);
+  const { colors, darkMode, language } = useContext(ThemeContext);
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
   const [namePlaylist, setNamePlaylist] = useState("");
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -56,7 +56,7 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
         };
         const docRef = await addDoc(collection(db, `users/${userId}/playlist`), playlist);
         checkPlaylist({ id: docRef.id, ...playlist });
-        console.log("Document written with ID: ", docRef.id);
+        // console.log("Document written with ID: ", docRef.id);
       }
       else
         Alert.alert('Lỗi Playlist', 'Vui lòng nhập tên Playlist');
@@ -89,7 +89,7 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
               style={[styles.title, { color: colors.text }]}
               numberOfLines={1}
             >
-              Tạo danh sách phát
+              {language.newPlaylist}
             </Text>
           </View>
           <TextInput
@@ -108,7 +108,7 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
                 color: colors.text,
               },
             ]}
-            placeholder="Tên danh sách phát"
+            placeholder={language.namePlaylist}
             placeholderTextColor={"gray"}
             autoFocus={true}
             onFocus={() => setIsFocused(true)}
@@ -124,7 +124,7 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
               <Text
                 style={{ color: colors.primary, fontSize: 18, fontWeight: 500 }}
               >
-                Hủy
+                {language.cancel}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -135,7 +135,7 @@ const AddPlaylist = ({ visible, onClose, checkPlaylist }) => {
               }}
             >
               <Text style={{ color: "white", fontSize: 18, fontWeight: 500 }}>
-                Tạo
+                {language.create}
               </Text>
             </TouchableOpacity>
           </View>

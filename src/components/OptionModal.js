@@ -36,7 +36,7 @@ const OptionModal = ({
     const contextData = useContext(DataContext);
     const { listIDArtistFollowing, setListIDArtistFollowing, setArtistFollowing, ArtistFollowing } = contextData;
     const contextAudio = useContext(AudioContext);
-    const { colors } = useContext(ThemeContext);
+    const { colors, language } = useContext(ThemeContext);
     const contextNotify = useContext(NotificationContext);
     const navigation = useNavigation();
     const [isLike, setLike] = useState(false);
@@ -139,22 +139,22 @@ const OptionModal = ({
                     </View>
                     {/* option */}
                     <View style={styles.optionContainer}>
-                        {options.map(optn => {
+                        {options.map(({ title, icon, onPress }) => {
                             return (
                                 <TouchableWithoutFeedback
-                                    key={optn.title}
+                                    key={title}
                                     onPress={() => {
-                                        optn.onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation, contextNotify);
+                                        onPress(currentItem, contextAudio, contextData, contextPlaylist, navigation, contextNotify);
                                         handleClose();
                                     }}
                                 >
                                     <View style={styles.function} >
                                         <MaterialIcons
-                                            name={optn.icon}
+                                            name={icon}
                                             size={30}
                                             color={colors.text}
                                         ></MaterialIcons>
-                                        <Text style={[styles.option, { color: colors.text }]} >{optn.title}</Text>
+                                        <Text style={[styles.option, { color: colors.text }]} >{language[title]}</Text>
                                     </View>
                                 </TouchableWithoutFeedback>
                             );

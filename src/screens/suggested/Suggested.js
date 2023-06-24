@@ -42,7 +42,7 @@ const data = [{
 ]
 
 const Suggested = () => {
-    const { colors } = useContext(ThemeContext);
+    const { colors, language } = useContext(ThemeContext);
     const { suggestData, listSong, listSinger, listGenre, ArtistFollowing } = useContext(DataContext);
     const { recentData } = useContext(PlaylistContext);
 
@@ -52,16 +52,19 @@ const Suggested = () => {
             return {
                 ...item,
                 data: recentData?.slice(0, 6),
+                title: language.recentlyPlayed
             }
         else if (item.id === 2)
             return {
                 ...item,
                 data: listSong?.slice(0, 6),
+                title: language.popular
             }
         else if (item.id === 3)
             return {
                 ...item,
                 data: listSinger?.slice(0, 6),
+                title: language.featuredSinger
             }
         else if (item.id === 4)
             return {
@@ -72,11 +75,13 @@ const Suggested = () => {
             return {
                 ...item,
                 data: suggestData,
+                title: language.suggestionsForYou
             }
         if (item.id === 6)
             return {
                 ...item,
                 data: ArtistFollowing?.slice(0, 6),
+                title: language.following
             }
     }
     )

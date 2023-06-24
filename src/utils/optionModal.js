@@ -29,7 +29,7 @@ const onShare = async (item, type) => {
 //Con thieu tha yeu thich
 export const optionSong = [
     {
-        title: "Play Next",
+        title: "playNext",
         icon: "keyboard-tab",
         onPress: (item, contextAudio) => {
             console.log(`play next ${item.name}`);
@@ -40,7 +40,7 @@ export const optionSong = [
         },
     },
     {
-        title: "Add to Playing queue",
+        title: "addToQueue",
         icon: "add-to-queue",
         onPress: (item, contextAudio) => {
             console.log(`add queue ${item.name}`);
@@ -49,7 +49,7 @@ export const optionSong = [
         },
     },
     {
-        title: "Add to playlist",
+        title: "addToPlaylist",
         icon: "add-circle-outline",
         onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
             console.log(`add playlist ${item.name}`);
@@ -57,7 +57,7 @@ export const optionSong = [
         },
     },
     {
-        title: "Go to Artist",
+        title: "goToArtist",
         icon: "person-outline",
         onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
             console.log(`go artist ${item.name}`);
@@ -65,7 +65,7 @@ export const optionSong = [
         },
     },
     {
-        title: "Go to Album",
+        title: "goToAlbum",
         icon: "album",
         onPress: (item, contextAudio, contextData, contextPlaylist, navigation) => {
             console.log(`go album ${item.name}`);
@@ -80,7 +80,7 @@ export const optionSong = [
     //     },
     // },
     {
-        title: "Share",
+        title: "share",
         icon: "share",
         onPress: (item) => {
             console.log(`share ${item.name}`);
@@ -91,7 +91,7 @@ export const optionSong = [
 
 export const optionSinger = [
     {
-        title: "Play",
+        title: "play",
         icon: "play-circle-fill",
         onPress: (item, contextAudio, contextData, contextPlaylist, navigation, contextNotify) => {
             const startFunction = async () => {
@@ -111,7 +111,7 @@ export const optionSinger = [
     //     },
     // },
     {
-        title: "Add to Playing queue",
+        title: "addToQueue",
         icon: "add-to-queue",
         onPress: async (item, contextAudio) => {
             console.log(`add queue ${item.name}`);
@@ -127,7 +127,7 @@ export const optionSinger = [
     //     },
     // },
     {
-        title: "Share",
+        title: "share",
         icon: "share",
         onPress: (item) => {
             console.log(`share ${item.name}`);

@@ -20,7 +20,7 @@ import { AudioContext } from "../../context/AudioContext";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const ChangeUsername = ({ visible, onClose, setUsername }) => {
-  const { colors, darkMode } = useContext(ThemeContext);
+  const { colors, darkMode, language, checkLanguage } = useContext(ThemeContext);
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
 
   const [isKeyboardVisible, setKeyboardVisible] = useState(false);
@@ -93,7 +93,7 @@ const ChangeUsername = ({ visible, onClose, setUsername }) => {
               style={[styles.title, { color: colors.text }]}
               numberOfLines={1}
             >
-              Cập nhật tên hiển thị
+              {checkLanguage === "en" ? "Update Nickname" : "Cập nhật biệt danh"}
             </Text>
           </View>
           <TextInput
@@ -112,7 +112,7 @@ const ChangeUsername = ({ visible, onClose, setUsername }) => {
                 color: colors.text,
               },
             ]}
-            placeholder="Tên hiển thị"
+            placeholder={checkLanguage === "en" ? "Nickname" : "Nhập biệt danh"}
             placeholderTextColor={"gray"}
             autoFocus={true}
             onFocus={() => setIsFocused(true)}
@@ -129,7 +129,7 @@ const ChangeUsername = ({ visible, onClose, setUsername }) => {
               <Text
                 style={{ color: colors.primary, fontSize: 18, fontWeight: 500 }}
               >
-                Hủy
+                {language?.cancel}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -139,7 +139,7 @@ const ChangeUsername = ({ visible, onClose, setUsername }) => {
               }}
             >
               <Text style={{ color: "white", fontSize: 18, fontWeight: 500 }}>
-                Cập nhật
+                {language?.update}
               </Text>
             </TouchableOpacity>
           </View>

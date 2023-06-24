@@ -27,7 +27,7 @@ const Favorite = () => {
   const { userId, currentAudio } = useContext(AudioContext);
 
   const { favoriteData, setFavoriteData } = useContext(PlaylistContext);
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const [loaded, setLoaded] = useState(favoriteData?.length !== 0);
   const isFocused = useIsFocused();
 
@@ -45,7 +45,7 @@ const Favorite = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
 
-      <BackBar title={"Yêu thích"} />
+      <BackBar title={language.favorite} />
 
       {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
 
@@ -58,25 +58,25 @@ const Favorite = () => {
               style={styles.poster}
             />
             <Text style={[styles.singer, { color: colors.text }]}>
-              Bài hát yêu thích
+              {language.favorite}
             </Text>
-            <Text style={styles.numSong}>{favoriteData?.length} bài hát</Text>
+            <Text style={styles.numSong}>{favoriteData?.length} {language.song}</Text>
             {/* button */}
             <View style={styles.buttons}>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 style={[styles.button, { backgroundColor: colors.primary }]}
               >
                 <Ionicons name="shuffle" size={20} color="white" />
                 <Text style={[styles.buttonText, { color: "white" }]}>
                   Trộn bài
                 </Text>
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: colors.frame }]}
               >
                 <Ionicons name="play-circle" size={20} color={colors.primary} />
                 <Text style={[styles.buttonText, { color: colors.primary }]}>
-                  Phát
+                  {language.play}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -86,7 +86,7 @@ const Favorite = () => {
 
           {/* add songs */}
           <View style={[styles.addSong]}>
-            <Text style={{ fontSize: 20, color: colors.text, fontWeight: 500 }}>Bài hát</Text>
+            <Text style={{ fontSize: 20, color: colors.text, fontWeight: 500 }}>{language.song}</Text>
           </View>
           {/*  */}
         </View>

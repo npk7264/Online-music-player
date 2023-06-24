@@ -1,12 +1,13 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import { color } from '../constants/color';
-
+import { ThemeContext } from '../context/ThemeContext';
 const MoreData = ({ loadAll, handleLoadMore }) => {
+    const theme = useContext(ThemeContext);
     if (!loadAll) {
         return (
             <TouchableOpacity style={styles.loadMoreButton} onPress={handleLoadMore}>
-                <Text style={styles.loadMoreButtonText}>Xem thêm</Text>
+                <Text style={styles.loadMoreButtonText}>{theme.language.seeMore}</Text>
             </TouchableOpacity>
         );
     }

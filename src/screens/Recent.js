@@ -26,7 +26,7 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 const Recent = () => {
   const { userId, currentAudio } = useContext(AudioContext);
   const { recentData, setRecentData } = useContext(PlaylistContext);
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const [loaded, setLoaded] = useState(recentData?.length !== 0);
 
   const isFocused = useIsFocused();
@@ -44,7 +44,7 @@ const Recent = () => {
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
 
-      <BackBar title={"Gần đây"} />
+      <BackBar title={language.recentlyPlayed} />
 
       {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
 
@@ -57,9 +57,9 @@ const Recent = () => {
               style={styles.poster}
             />
             <Text style={[styles.singer, { color: colors.text }]}>
-              Nghe gần đây
+              {language.recentlyPlayed}
             </Text>
-            <Text style={styles.numSong}>{recentData?.length} bài hát</Text>
+            <Text style={styles.numSong}>{recentData?.length} {language.song}</Text>
             {/* button */}
             <View style={styles.buttons}>
               {/* <TouchableOpacity
@@ -75,7 +75,7 @@ const Recent = () => {
               >
                 <Ionicons name="play-circle" size={20} color={colors.primary} />
                 <Text style={[styles.buttonText, { color: colors.primary }]}>
-                  Phát
+                  {language.play}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -86,7 +86,7 @@ const Recent = () => {
           {/* add songs */}
           <View style={[styles.addSong]}>
             <Text style={{ fontSize: 20, color: colors.text, fontWeight: 500 }}>
-              Bài hát
+              {language.song}
             </Text>
           </View>
           {/*  */}
