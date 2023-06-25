@@ -21,9 +21,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ff8216"
-      },
-      "googleServicesFile":"./src/services/firebaseConfig.js",
-      "package": "com.kienvo.musicapp"
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -32,7 +30,6 @@
       "eas": {
         "projectId": "03766359-b72b-4255-9b08-234fa5f2bcc8"
       }
-    },
-    "owner": "kienvo"
+    }
   }
 }
