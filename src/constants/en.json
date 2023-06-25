@@ -52,5 +52,11 @@
     "seeMore":"See More",
     "accountInformation":"Account Information",
     "control":"Control",
-    "update":"Update"
+    "update":"Update",
+    "follower":"follower",
+    "follow":"Follow",
+    "unFollow":"UnFollow",
+    "lyric":"Lyric",
+    "yourComment":"Your comment",
+    "post":"Post"
 }

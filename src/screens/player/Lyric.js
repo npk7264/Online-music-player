@@ -8,7 +8,7 @@ import { AudioContext } from '../../context/AudioContext';
 const Lyric = () => {
     const { currentAudio } = useContext(AudioContext)
     const [fileContent, setFileContent] = useState('');
-    const { colors } = useContext(ThemeContext);
+    const { colors, language } = useContext(ThemeContext);
     useEffect(() => {
 
         const fetchFile = async () => {
@@ -25,7 +25,7 @@ const Lyric = () => {
     }, []);
     return (
         <SafeAreaView style={[styles.container, { backgroundColor: colors.background }]}>
-            <BackBar title={'Lời bài hát'}></BackBar>
+            <BackBar title={language.lyric}></BackBar>
             <ScrollView>
                 <View style={[styles.borderLyric, { backgroundColor: colors.frame }]}>
                     <Text style={[styles.text, { color: colors.text }]}>{fileContent}</Text>

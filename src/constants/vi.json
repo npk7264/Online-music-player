@@ -51,6 +51,12 @@
     "seeMore":"Xem thêm",
     "accountInformation":"Thông tin tài khoản",
     "control":"Điều khiển",
-    "update":"Cập nhật"
+    "update":"Cập nhật",
+    "follower":"người theo dõi",
+    "follow":"Theo dõi",
+    "unFollow":"Hủy theo dõi",
+    "lyric":"Lời bài hát",
+    "yourComment":"Bình luận của bạn",
+    "post":"Đăng"
 
 }

@@ -11,8 +11,7 @@ import {
     where,
     documentId
 } from "firebase/firestore";
-// import { AudioContext } from './AudioContext';
-import { async } from '@firebase/util';
+import { ThemeContext } from './ThemeContext';
 
 
 export const PlaylistContext = createContext();
@@ -20,6 +19,7 @@ export const PlaylistContext = createContext();
 
 export const PlaylistProvider = ({ children }) => {
     // const { userId } = useContext(AudioContext);
+    const { checkLanguage } = useContext(ThemeContext);
     const userId = auth?.currentUser?.uid;
     const [idPlaylist, setIdPlaylist] = useState('');
     const [songs, setSongs] = useState([]);
@@ -158,7 +158,7 @@ export const PlaylistProvider = ({ children }) => {
                 } catch (e) {
                     alert("Failed to delete to playlist!", e);
                 }
-                alert("Đã xóa khỏi playlist thành công");
+                alert(checkLanguage === "vi" ? "Đã xóa khỏi playlist thành công" : "Complete remove from Playlist");
             }
             else {
                 try {
@@ -171,7 +171,7 @@ export const PlaylistProvider = ({ children }) => {
                 } catch (e) {
                     alert("Failed to add to playlist!", e);
                 }
-                alert("Đã thêm vào playlist thành công");
+                alert(checkLanguage === "vi" ? "Đã thêm vào playlist thành công" : "added to playlist");
             }
         } catch (e) {
             console.log("🚀 ~ file: PlaylistContext.js:156 ~ addOneSongToPlaylist ~ e:", e)

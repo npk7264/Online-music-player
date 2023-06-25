@@ -24,7 +24,7 @@ import { ThemeContext } from "../context/ThemeContext";
 import { DataContext } from "../context/DataContext";
 
 const ArtistDetail = ({ route }) => {
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const {
     listIDArtistFollowing,
     setListIDArtistFollowing,
@@ -108,7 +108,7 @@ const ArtistDetail = ({ route }) => {
         <Text style={[styles.singer, { color: colors.text }]}>
           {artist?.name}
         </Text>
-        <Text style={styles.numSong}>{artist?.follower} người theo dõi</Text>
+        <Text style={styles.numSong}>{artist?.follower} {language.follower}</Text>
         {/* button */}
         <View style={styles.buttons}>
           <TouchableOpacity
@@ -121,7 +121,7 @@ const ArtistDetail = ({ route }) => {
               color="white"
             />
             <Text style={[styles.buttonText, { color: "white" }]}>
-              {!isFollowed ? "Theo dõi" : "Đã theo dõi"}
+              {!isFollowed ? language.follow : language.unFollow}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -129,7 +129,7 @@ const ArtistDetail = ({ route }) => {
           >
             <Ionicons name="play-circle" size={20} color={colors.primary} />
             <Text style={[styles.buttonText, { color: colors.primary }]}>
-              Play
+              {language.play}
             </Text>
           </TouchableOpacity>
         </View>
