@@ -27,7 +27,7 @@ import {
 } from "firebase/firestore";
 
 const Comment = () => {
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
   const { currentAudio, userId } = useContext(AudioContext);
 
   const [loaded, setLoaded] = useState(false);
@@ -45,7 +45,7 @@ const Comment = () => {
         created_at: serverTimestamp(),
       });
 
-      console.log("Comment đã được thêm thành công với ID: ", docRef.id);
+      // console.log("Comment đã được thêm thành công với ID: ", docRef.id);
     } catch (error) {
       console.error("Lỗi khi thêm comment: ", error);
     }
@@ -126,7 +126,7 @@ const Comment = () => {
             color: colors.text,
           }}
           value={input}
-          placeholder="Bình luận của bạn"
+          placeholder={language.yourComment}
           placeholderTextColor={colors.text}
           numberOfLines={1}
           onChangeText={(text) => setInput(text)}
@@ -146,7 +146,7 @@ const Comment = () => {
           }}
         >
           <Text style={{ color: "white", fontSize: 18, fontWeight: "bold" }}>
-            Đăng
+            {language.post}
           </Text>
         </TouchableOpacity>
       </View>

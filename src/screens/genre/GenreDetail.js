@@ -9,7 +9,7 @@ import { AudioContext } from '../../context/AudioContext';
 import { fetchTopSongByGenre, fetchSongByIDGenre } from '../../utils/FirebaseHandler';
 
 const GenreDetail = ({ route }) => {
-    const { colors } = useContext(ThemeContext);
+    const { colors, language } = useContext(ThemeContext);
     const { currentAudio } = useContext(AudioContext);
     const [listSong, setListSong] = useState([]);
 
@@ -32,16 +32,16 @@ const GenreDetail = ({ route }) => {
                     source={{ uri: image }}
                     style={styles.poster} />
                 <Text style={[styles.nameGenre, { color: colors.text }]}>{name?.search("Top") === true ? name : `Nhạc ${name}`}</Text>
-                <Text style={styles.numSong}>{listSong?.length + " bài hát"} </Text>
+                <Text style={styles.numSong}>{listSong?.length + " " + language.song} </Text>
                 {/* button */}
                 <View style={styles.buttons}>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
+                    {/* <TouchableOpacity style={[styles.button, { backgroundColor: colors.primary }]}>
                         <Ionicons name='shuffle' size={20} color='white' />
                         <Text style={[styles.buttonText, { color: 'white' }]}>Shuffle</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
                         <Ionicons name='play-circle' size={20} color={colors.primary} />
-                        <Text style={[styles.buttonText, { color: colors.primary }]}>Play</Text>
+                        <Text style={[styles.buttonText, { color: colors.primary }]}>{language.play}</Text>
                     </TouchableOpacity>
                 </View>
             </View>

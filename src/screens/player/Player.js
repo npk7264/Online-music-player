@@ -61,7 +61,7 @@ const Player = () => {
   // const [favoriteID, setFavoriteID] = useState([]);
   const navigation = useNavigation();
 
-  const { colors } = useContext(ThemeContext);
+  const { colors, language } = useContext(ThemeContext);
 
   //hàm tính value cho thanh slider
   const convertValueSlider = () => {
@@ -315,7 +315,7 @@ const Player = () => {
               fontSize: 20,
             }}
           >
-            Lời bài hát
+            {language.lyric}
           </Text>
         </TouchableOpacity>
       </View>

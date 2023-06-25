@@ -37,7 +37,7 @@ import { useNavigation } from "@react-navigation/native";
 const AddOneSong = ({ route }) => {
     const song = route.params.item;
     const navigation = useNavigation();
-    const { colors } = useContext(ThemeContext);
+    const { colors, language } = useContext(ThemeContext);
     const { playlistArray, setPlaylistArray, addOneSongToPlaylist } = useContext(PlaylistContext);
     const [addPlaylist, setAddPlaylist] = useState(false);
     const { userId, currentAudio } = useContext(AudioContext);
@@ -75,11 +75,11 @@ const AddOneSong = ({ route }) => {
         <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
             <StatusBar></StatusBar>
 
-            <BackBar title={"Add To Playlist"} />
+            <BackBar title={language.addToPlaylist} />
 
             <FlatList
                 data={[
-                    { id: "add", name: "Tạo danh sách phát mới" },
+                    { id: "add", name: language.addPlaylist },
                     ...playlistArray,
                 ]}
                 renderItem={({ item }) => {
