@@ -42,27 +42,27 @@ export const NotificationProvider = ({ children }) => {
 
     Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
     await Notifications.setNotificationCategoryAsync("musicActions", [
+      // {
+      //   buttonTitle: "PREV",
+      //   identifier: "prev-track",
+      //   options: {
+      //     opensAppToForeground: false,
+      //   },
+      // },
       {
-        buttonTitle: "PREV",
-        identifier: "prev-track",
-        options: {
-          opensAppToForeground: false,
-        },
-      },
-      {
-        buttonTitle: isPlay ? "PAUSE" : "PLAY",
+        buttonTitle: isPlay ? "TẠM DỪNG" : "PHÁT TIẾP",
         identifier: "pause-play",
         options: {
           opensAppToForeground: false,
         },
       },
-      {
-        buttonTitle: "NEXT",
-        identifier: "next-track",
-        options: {
-          opensAppToForeground: false,
-        },
-      },
+      // {
+      //   buttonTitle: "NEXT",
+      //   identifier: "next-track",
+      //   options: {
+      //     opensAppToForeground: false,
+      //   },
+      // },
     ])
       .then((_category) => {})
       .catch((error) =>
@@ -86,16 +86,18 @@ export const NotificationProvider = ({ children }) => {
   useEffect(() => {
     const subscription = Notifications.addNotificationResponseReceivedListener(
       (notification) => {
-        if (notification.actionIdentifier == "prev-track") {
-          console.log("prev-track");
-          actionPrev && actionPrev();
-        } else if (notification.actionIdentifier == "pause-play") {
+        // if (notification.actionIdentifier == "prev-track") {
+        //   console.log("prev-track");
+        //   actionPrev && actionPrev();
+        // } else 
+        if (notification.actionIdentifier == "pause-play") {
           console.log("pause-play");
           action && action();
-        } else if (notification.actionIdentifier == "next-track") {
-          console.log("next-track");
-          actionNext && actionNext();
-        }
+        } 
+        // else if (notification.actionIdentifier == "next-track") {
+        //   console.log("next-track");
+        //   actionNext && actionNext();
+        // }
       }
     );
     return () => subscription.remove();

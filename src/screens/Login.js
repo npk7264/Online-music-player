@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { useState, useEffect, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -17,13 +18,20 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
-import { fetchRecentestSong, fetchSongListFromGenreStatistics, fetchDataArtistFollowedByUser, fetchUser, getRecent } from "../utils/FirebaseHandler";
+import {
+  fetchRecentestSong,
+  fetchSongListFromGenreStatistics,
+  fetchDataArtistFollowedByUser,
+  fetchUser,
+  getRecent,
+} from "../utils/FirebaseHandler";
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DataContext } from "../context/DataContext";
 import { PlaylistContext } from "../context/PlaylistContext";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { convertErrorCodeToMessage } from "../utils/helper";
 
 const Login = () => {
   const { colors, language } = useContext(ThemeContext);
@@ -31,7 +39,12 @@ const Login = () => {
   const { updateState } = context;
   const contextPlaylist = useContext(PlaylistContext);
   const { setFavoriteID, setRecentID, setRecentData } = contextPlaylist;
-  const { setSuggestData, listSong, setListIDArtistFollowing, setArtistFollowing } = useContext(DataContext);
+  const {
+    setSuggestData,
+    listSong,
+    setListIDArtistFollowing,
+    setArtistFollowing,
+  } = useContext(DataContext);
 
   const navigation = useNavigation();
   const [email, setEmail] = useState("");
@@ -40,9 +53,9 @@ const Login = () => {
 
   //fetch list song suggest for screen home
   const setSuggestDataForScreenHone = async (userId) => {
-    const data = await (fetchSongListFromGenreStatistics(userId, 6));
+    const data = await fetchSongListFromGenreStatistics(userId, 6);
     setSuggestData(data ? data : listSong);
-  }
+  };
   //fetch list artist following by user
   const fetchArtistFollowingAndFavoriteIDAndRecentIDByUser = async (userId) => {
     const userData = await fetchUser(userId);
@@ -53,12 +66,12 @@ const Login = () => {
     setFavoriteID(userData.favorite);
     setRecentID(userData.recently);
     setRecentData(recentData);
-  }
-
+  };
 
   const LoginFirebase = (auth, email, password, type) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
+        setLoaded(false);
         const user = userCredential.user;
         try {
           await AsyncStorage.setItem("email", email);
@@ -68,20 +81,26 @@ const Login = () => {
           console.error("Lỗi khi save email and password user login:", error);
         }
         // fetch data
-        const promiseFunction = [fetchRecentestSong(user.uid, context), setSuggestDataForScreenHone(user.uid), fetchArtistFollowingAndFavoriteIDAndRecentIDByUser(user.uid)]
+        const promiseFunction = [
+          fetchRecentestSong(user.uid, context),
+          setSuggestDataForScreenHone(user.uid),
+          fetchArtistFollowingAndFavoriteIDAndRecentIDByUser(user.uid),
+        ];
         await Promise.all(promiseFunction);
         navigation.replace("BottomMenu");
       })
       .catch((error) => {
         if (type === "Auto") {
           alert("Phiên đăng nhập đã hết hạn!! Vui lòng đăng nhập lại!");
-        }
-        else
-          alert("Sai mật khẩu hoặc email!!");
+        } else
+          Alert.alert("Lỗi đăng nhập", convertErrorCodeToMessage(error.code));
         setLoaded(true);
         // const errorCode = error.code;
         const errorMessage = error.message;
-        console.log("🚀 ~ file: Login.js:79 ~ LoginFirebase ~ errorMessage:", errorMessage)
+        console.log(
+          "🚀 ~ file: Login.js:79 ~ LoginFirebase ~ errorMessage:",
+          errorMessage
+        );
       });
   };
 
@@ -178,7 +197,7 @@ const Login = () => {
               fontWeight: "500",
               marginBottom: 20,
               padding: 5,
-              color: colors.text
+              color: colors.text,
             }}
             onPress={() => forgotPasswrod(email)}
           >

@@ -98,7 +98,14 @@ const SECTIONS = [
 ];
 
 const Setting = () => {
-  const { colors, darkMode, toggleTheme, language, toggleLanguage, checkLanguage } = useContext(ThemeContext);
+  const {
+    colors,
+    darkMode,
+    toggleTheme,
+    language,
+    toggleLanguage,
+    checkLanguage,
+  } = useContext(ThemeContext);
   const context = useContext(AudioContext);
   const {
     userId,
@@ -232,7 +239,11 @@ const Setting = () => {
                       <View style={styles.rowIcon}>
                         <Ionicons
                           color={darkMode ? "white" : "black"}
-                          name={type === "toggle" && darkMode ? "moon" : icon}
+                          name={
+                            type === "toggle" && id === "darkMode" && darkMode
+                              ? "moon"
+                              : icon
+                          }
                           size={25}
                         />
                       </View>
@@ -254,12 +265,24 @@ const Setting = () => {
                       )}
 
                       {type === "toggle" && id === "language" && (
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                          <Image source={checkLanguage === "en" ? require('../../../assets/USA.png') : require('../../../assets/vietNam.png')}
-                            style={{ width: 40, height: 30, marginRight: 10 }} />
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
+                        >
+                          <Image
+                            source={
+                              checkLanguage === "en"
+                                ? require("../../../assets/USA.png")
+                                : require("../../../assets/vietNam.png")
+                            }
+                            style={{ width: 40, height: 30, marginRight: 10 }}
+                          />
                           <Switch
-                            trackColor={{ false: "red", true: "red" }}
-                            thumbColor={"#f4f3f4"}
+                            trackColor={{ false: "#767577", true: "#767577" }}
+                            thumbColor={
+                              checkLanguage === "en"
+                                ? colors.primary
+                                : "#f4f3f4"
+                            }
                             ios_backgroundColor="#3e3e3e"
                             onValueChange={toggleLanguage}
                             value={checkLanguage === "en"}
@@ -296,15 +319,14 @@ const Setting = () => {
             setUsername={setUsername}
           />
         </View>
-        {
-          OffTimeVisible &&
+        {OffTimeVisible && (
           <View style={{ flex: 1 }}>
             <SetTime
               visible={OffTimeVisible}
               onClose={() => setOffTimeVisible(false)}
             />
           </View>
-        }
+        )}
       </ScrollView>
 
       {currentAudio && <MiniPlayer />}
