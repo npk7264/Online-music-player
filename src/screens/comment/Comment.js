@@ -13,6 +13,7 @@ import BackBar from "../../components/BackBar";
 import { ThemeContext } from "../../context/ThemeContext";
 import { AudioContext } from "../../context/AudioContext";
 import CommentItem from "./CommentItem";
+import { color } from "../../constants/color";
 
 import { auth, db } from "../../services/firebaseConfig";
 import {
@@ -35,6 +36,7 @@ const Comment = () => {
   const [list, setList] = useState([]);
   const [input, setInput] = useState("");
   const [flag, setFlag] = useState(false);
+  const [searchType, setSearchType] = useState(0);
 
   async function addComment(newComment) {
     const songRef = doc(db, "songs/" + currentAudio.id);
@@ -57,7 +59,10 @@ const Comment = () => {
     setList([]);
     const songRef = doc(db, "songs/" + currentAudio.id);
     const commentsRef = collection(songRef, "comments");
-    const q = query(commentsRef, orderBy("created_at", "desc"));
+    const q = query(
+      commentsRef,
+      orderBy("created_at", searchType == 0 ? "desc" : "asc")
+    );
 
     try {
       const querySnapshot = await getDocs(q);
@@ -102,13 +107,73 @@ const Comment = () => {
 
   useEffect(() => {
     getComments();
-  }, [flag, currentAudio]);
+  }, [flag, currentAudio, searchType]);
 
   return (
     <View style={{ flex: 1, backgroundColor: colors.background }}>
       <StatusBar></StatusBar>
       <BackBar />
       {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
+
+      {loaded && (
+        <View style={[styles.searchType]}>
+          <View
+            style={{
+              // height: 36,
+              // width: 100,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={[styles.textType, { fontWeight: "bold" }]}>
+              Sắp xếp
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[
+              styles.searchTypeItem,
+              {
+                backgroundColor:
+                  searchType === 0 ? colors.primary : colors.background,
+              },
+            ]}
+            onPress={() => {
+              setSearchType(0);
+            }}
+          >
+            <Text
+              style={[
+                styles.textType,
+                { color: searchType === 0 ? "white" : colors.primary },
+              ]}
+            >
+              Mới nhất
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.searchTypeItem,
+              {
+                backgroundColor:
+                  searchType === 1 ? colors.primary : colors.background,
+              },
+            ]}
+            onPress={() => {
+              setSearchType(1);
+            }}
+          >
+            <Text
+              style={[
+                styles.textType,
+                { color: searchType === 1 ? "white" : colors.primary },
+              ]}
+            >
+              Cũ nhất
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       <FlatList
         data={list}
         renderItem={({ item }) => (
@@ -172,4 +237,24 @@ const Comment = () => {
 
 export default Comment;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  searchType: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    marginBottom: 20,
+    paddingHorizontal: 20,
+  },
+  searchTypeItem: {
+    borderColor: color.primary,
+    borderWidth: 2,
+    borderRadius: 15,
+    height: 36,
+    width: 100,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  textType: {
+    fontSize: 15,
+    fontWeight: 500,
+  },
+});
