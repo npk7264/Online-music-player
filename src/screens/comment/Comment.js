@@ -103,6 +103,7 @@ const Comment = () => {
             userName={item.user.name}
             content={item.content}
             avatar={item.user.avatar}
+            time={item.createdAt}
           />
         )}
         keyExtractor={(item, index) => index}

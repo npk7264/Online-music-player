@@ -258,8 +258,8 @@ const Setting = () => {
                           <Image source={checkLanguage === "en" ? require('../../../assets/USA.png') : require('../../../assets/vietNam.png')}
                             style={{ width: 40, height: 30, marginRight: 10 }} />
                           <Switch
-                            trackColor={{ false: "red", true: "red" }}
-                            thumbColor={"#f4f3f4"}
+                            trackColor={{ false: "#767577", true: "#767577" }}
+                            thumbColor={checkLanguage === "en" ? colors.primary : "#f4f3f4"}
                             ios_backgroundColor="#3e3e3e"
                             onValueChange={toggleLanguage}
                             value={checkLanguage === "en"}
