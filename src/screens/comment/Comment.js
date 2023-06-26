@@ -115,7 +115,7 @@ const Comment = () => {
       <BackBar />
       {!loaded && <ActivityIndicator size="large" color={colors.primary} />}
 
-      {loaded && (
+      {loaded && list.length > 0 && (
         <View style={[styles.searchType]}>
           <View
             style={{
