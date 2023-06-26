@@ -14,15 +14,23 @@ import { songs } from "../../../data";
 import FlatListSong from "../../components/FlatListSong";
 import MiniPlayer from "../../components/MiniPlayer";
 import { useNavigation } from "@react-navigation/native";
-
-import { PlaylistContext } from "../../context/PlaylistContext";
+import { PlaylistContext } from '../../context/PlaylistContext';
+import { NotificationContext } from '../../context/NotifyContext';
 import { AudioContext } from "../../context/AudioContext";
 import { useIsFocused } from "@react-navigation/native";
+import { selectSong } from '../../utils/AudioController';
+
+
+
+
+
 const DetailPlaylist = () => {
+  const contextPlaylist = useContext(PlaylistContext);
+  const contextNotify = useContext(NotificationContext);
+  const contextAudio = useContext(AudioContext)
   const { colors, language } = useContext(ThemeContext);
-  const { listSong, filterSong, renderSong, playlistData } =
-    useContext(PlaylistContext);
-  const { userId, currentAudio } = useContext(AudioContext);
+  const { listSong, filterSong, renderSong, playlistData } = contextPlaylist
+  const { userId, currentAudio } = contextAudio
   const navigation = useNavigation();
   const isFocused = useIsFocused();
 
@@ -57,6 +65,7 @@ const DetailPlaylist = () => {
           </TouchableOpacity> */}
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.frame }]}
+            onPress={() => selectSong(contextAudio, renderSong[0], renderSong, contextPlaylist, contextNotify)}
           >
             <Ionicons name="play-circle" size={20} color={colors.primary} />
             <Text style={[styles.buttonText, { color: colors.primary }]}>
@@ -79,8 +88,9 @@ const DetailPlaylist = () => {
       </View>
 
       {/* list song */}
-      {renderSong.length > 0 && <FlatListSong songs={renderSong} />}
-      {renderSong.length == 0 && (
+      <FlatListSong songs={renderSong} />
+      {/* {renderSong.length > 0 && <FlatListSong songs={renderSong} />} */}
+      {/* {renderSong.length == 0 && (
         <View
           style={{
             flex: 1,
@@ -90,7 +100,7 @@ const DetailPlaylist = () => {
         >
           <Text style={{ fontSize: 16 }}>Không có bài hát nào</Text>
         </View>
-      )}
+      )} */}
       {currentAudio && <MiniPlayer />}
     </SafeAreaView>
   );

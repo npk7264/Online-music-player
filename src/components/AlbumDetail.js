@@ -6,12 +6,18 @@ import { Ionicons } from "@expo/vector-icons";
 import FlatListSong from './FlatListSong';
 import { ThemeContext } from '../context/ThemeContext';
 import { AudioContext } from '../context/AudioContext';
+import { PlaylistContext } from '../context/PlaylistContext';
+import { NotificationContext } from '../context/NotifyContext';
 import { fetchOneAlbum, fetchSongOfAlbum } from '../utils/FirebaseHandler';
 import MiniPlayer from './MiniPlayer';
+import { selectSong } from '../utils/AudioController';
 
 const AlbumDetail = ({ route }) => {
+    const contextPlaylist = useContext(PlaylistContext);
+    const contextNotify = useContext(NotificationContext);
+    const contextAudio = useContext(AudioContext)
     const { colors, language } = useContext(ThemeContext);
-    const { currentAudio } = useContext(AudioContext);
+    const { currentAudio } = contextAudio
     const [album, setAlbum] = useState({});
     const [listSong, setListSong] = useState([]);
     // const name = route.params.name;
@@ -47,7 +53,9 @@ const AlbumDetail = ({ route }) => {
                         <Ionicons name='shuffle' size={20} color='white' />
                         <Text style={[styles.buttonText, { color: 'white' }]}>Shuffle</Text>
                     </TouchableOpacity> */}
-                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
+                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}
+                        onPress={() => selectSong(contextAudio, listSong[0], listSong, contextPlaylist, contextNotify)}
+                    >
                         <Ionicons name='play-circle' size={20} color={colors.primary} />
                         <Text style={[styles.buttonText, { color: colors.primary }]}>{language.play}</Text>
                     </TouchableOpacity>

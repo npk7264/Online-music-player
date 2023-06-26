@@ -82,7 +82,7 @@ export const PlaylistProvider = ({ children }) => {
         setSongs([...list])
 
     }
-    const handleAddSong = async (idSong) => {
+    const handleAddSong = (idSong) => {
 
         const index = songs.indexOf(idSong);
         if (index > -1) {
@@ -90,7 +90,7 @@ export const PlaylistProvider = ({ children }) => {
             newSongs.splice(index, 1);
             setSongs(newSongs);
 
-            await DeleteSongToPlaylist(newSongs);
+            DeleteSongToPlaylist(newSongs);
         }
         else {
             AddSongToPlaylist(idSong);
@@ -113,7 +113,7 @@ export const PlaylistProvider = ({ children }) => {
 
         try {
             setSongs([...songs, idSong]);
-            await updateDoc(docRef, {
+            updateDoc(docRef, {
                 listSong: [...songs, idSong],
                 numSong: songs.length + 1,
             });
@@ -126,7 +126,7 @@ export const PlaylistProvider = ({ children }) => {
         const docRef = doc(db, `users/${userId}/playlist/${idPlaylist}`);
         try {
             //setSongs([...songs, idSong]);
-            await updateDoc(docRef, {
+            updateDoc(docRef, {
                 listSong: [...newListSong],
                 numSong: newListSong.length,
             });

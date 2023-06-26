@@ -16,6 +16,9 @@ import MiniPlayer from "../components/MiniPlayer";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { PlaylistContext } from "../context/PlaylistContext";
+import { NotificationContext } from "../context/NotifyContext";
+
+import { selectSong } from "../utils/AudioController";
 
 import FlatListSong from "../components/FlatListSong";
 import { fetchFavorite } from "../utils/FirebaseHandler";
@@ -25,8 +28,10 @@ import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const Favorite = () => {
   const { userId, currentAudio } = useContext(AudioContext);
-
-  const { favoriteData, setFavoriteData } = useContext(PlaylistContext);
+  const contextPlaylist = useContext(PlaylistContext);
+  const contextNotify = useContext(NotificationContext);
+  const contextAudio = useContext(AudioContext)
+  const { favoriteData, setFavoriteData } = contextPlaylist
   const { colors, language } = useContext(ThemeContext);
   const [loaded, setLoaded] = useState(favoriteData?.length !== 0);
   const isFocused = useIsFocused();
@@ -73,6 +78,8 @@ const Favorite = () => {
               </TouchableOpacity> */}
               <TouchableOpacity
                 style={[styles.button, { backgroundColor: colors.frame }]}
+                onPress={() => selectSong(contextAudio, favoriteData[0], favoriteData, contextPlaylist, contextNotify)}
+
               >
                 <Ionicons name="play-circle" size={20} color={colors.primary} />
                 <Text style={[styles.buttonText, { color: colors.primary }]}>

@@ -87,12 +87,12 @@ const SECTIONS = [
         label: "Đăng xuất",
         type: "button",
       },
-      {
-        id: "exit",
-        icon: "md-phone-portrait-outline",
-        label: "Thoát",
-        type: "button",
-      },
+      // {
+      //   id: "exit",
+      //   icon: "md-phone-portrait-outline",
+      //   label: "Thoát",
+      //   type: "button",
+      // },
     ],
   },
 ];

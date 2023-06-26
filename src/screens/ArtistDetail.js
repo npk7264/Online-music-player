@@ -22,8 +22,15 @@ import MiniPlayer from "../components/MiniPlayer";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { DataContext } from "../context/DataContext";
+import { PlaylistContext } from "../context/PlaylistContext";
+import { NotificationContext } from "../context/NotifyContext";
+
+import { selectSong } from "../utils/AudioController";
 
 const ArtistDetail = ({ route }) => {
+  const contextPlaylist = useContext(PlaylistContext);
+  const contextNotify = useContext(NotificationContext);
+  const contextAudio = useContext(AudioContext)
   const { colors, language } = useContext(ThemeContext);
   const {
     listIDArtistFollowing,
@@ -31,7 +38,7 @@ const ArtistDetail = ({ route }) => {
     setArtistFollowing,
     ArtistFollowing
   } = useContext(DataContext);
-  const { userId, currentAudio } = useContext(AudioContext);
+  const { userId, currentAudio } = contextAudio;
   const [artist, setArtist] = useState({});
   const [listSong, setListSong] = useState([]);
   const [isFollowed, setIsFollowed] = useState(false);
@@ -126,6 +133,7 @@ const ArtistDetail = ({ route }) => {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.frame }]}
+            onPress={() => selectSong(contextAudio, listSong[0], listSong, contextPlaylist, contextNotify)}
           >
             <Ionicons name="play-circle" size={20} color={colors.primary} />
             <Text style={[styles.buttonText, { color: colors.primary }]}>
