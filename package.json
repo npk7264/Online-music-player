@@ -39,7 +39,9 @@
     "react-native-web": "~0.18.10",
     "victory": "^36.6.10",
     "victory-native": "^36.6.10",
-    "@react-native-community/datetimepicker": "6.7.3"
+    "@react-native-community/datetimepicker": "6.7.3",
+    "expo-media-library": "~15.2.3",
+    "expo-file-system": "~15.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

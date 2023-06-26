@@ -28,13 +28,18 @@ import { NotificationContext } from "../../context/NotifyContext";
 import { PlaylistContext } from "../../context/PlaylistContext";
 import { saveFavorite, removeFavorite } from "../../utils/FirebaseHandler";
 
+import { auth, storage } from "../../services/firebaseConfig";
+import * as MediaLibrary from "expo-media-library";
+import * as FileSystem from "expo-file-system";
+import { Alert } from "react-native";
 
 const windowWidth = Dimensions.get("window").width;
 // const windowHeight = Dimensions.get("window").height;
 
 const Player = () => {
-  const contextPlaylist = useContext(PlaylistContext)
-  const { setFavoriteData, favoriteData, favoriteID, setFavoriteID } = contextPlaylist;
+  const contextPlaylist = useContext(PlaylistContext);
+  const { setFavoriteData, favoriteData, favoriteID, setFavoriteID } =
+    contextPlaylist;
   const context = useContext(AudioContext);
   const {
     userId,
@@ -62,6 +67,27 @@ const Player = () => {
   const navigation = useNavigation();
 
   const { colors, language } = useContext(ThemeContext);
+
+  const downloadMusic = async (uri) => {
+    try {
+      Alert.alert("Đang tải nhạc", "Chờ chút.....");
+      const downloadInstance = FileSystem.createDownloadResumable(
+        uri,
+        FileSystem.documentDirectory + currentAudio.id + ".mp3"
+      );
+      const result = await downloadInstance.downloadAsync();
+      const asset = await MediaLibrary.createAssetAsync(result.uri);
+
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        throw new Error("Permission not granted for media library");
+      }
+      const file = await MediaLibrary.createAlbumAsync("Mymusicapp", asset);
+      Alert.alert("Đã tải xong", "Bài hát đã được lưu trên máy");
+    } catch (error) {
+      console.log("Fail to download: ", error);
+    }
+  };
 
   //hàm tính value cho thanh slider
   const convertValueSlider = () => {
@@ -95,10 +121,15 @@ const Player = () => {
     const currentDate = new Date();
     if (context.timeEnd !== null && context.timeEnd - currentDate <= 0) {
       if (status.isPlaying)
-        selectSong(context, currentAudio, songData, contextPlaylist, contextNotify)
-      updateState(context, { timeEnd: null })
+        selectSong(
+          context,
+          currentAudio,
+          songData,
+          contextPlaylist,
+          contextNotify
+        );
+      updateState(context, { timeEnd: null });
     }
-
   };
 
   useEffect(() => {
@@ -217,7 +248,23 @@ const Player = () => {
               onPress={() => {
                 const flag = !isLike;
                 setLike(!isLike);
-                flag ? saveFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) : removeFavorite(userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID);
+                flag
+                  ? saveFavorite(
+                      userId,
+                      currentAudio,
+                      favoriteData,
+                      setFavoriteData,
+                      setFavoriteID,
+                      favoriteID
+                    )
+                  : removeFavorite(
+                      userId,
+                      currentAudio,
+                      favoriteData,
+                      setFavoriteData,
+                      setFavoriteID,
+                      favoriteID
+                    );
               }}
             >
               <FontAwesome
@@ -240,8 +287,12 @@ const Player = () => {
                 color={colors.text}
               />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.controllerItem}
-              onPress={() => navigation.navigate('AddOneSong', { item: currentAudio })}>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={() =>
+                navigation.navigate("AddOneSong", { item: currentAudio })
+              }
+            >
               <MaterialCommunityIcons
                 name="playlist-plus"
                 size={25}
@@ -256,6 +307,24 @@ const Player = () => {
             >
               <MaterialCommunityIcons
                 name="comment-text-outline"
+                size={25}
+                color={colors.text}
+              />
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.controllerItem}
+              onPress={async () => {
+                try {
+                  downloadMusic(currentAudio.uri);
+                } catch (error) {
+                  console.error(
+                    `Error occurred while uploading or updating avatar: ${error}`
+                  );
+                }
+              }}
+            >
+              <MaterialCommunityIcons
+                name="download"
                 size={25}
                 color={colors.text}
               />
@@ -281,7 +350,13 @@ const Player = () => {
             <TouchableOpacity
               style={styles.controllerItem}
               onPress={() => {
-                selectSong(context, currentAudio, songData, contextPlaylist, contextNotify);
+                selectSong(
+                  context,
+                  currentAudio,
+                  songData,
+                  contextPlaylist,
+                  contextNotify
+                );
               }}
             >
               <FontAwesome
