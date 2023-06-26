@@ -16,6 +16,9 @@ import BackBar from "../components/BackBar";
 import MiniPlayer from "../components/MiniPlayer";
 
 import { PlaylistContext } from "../context/PlaylistContext";
+import { NotificationContext } from "../context/NotifyContext";
+
+import { selectSong } from "../utils/AudioController";
 import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import FlatListSong from "../components/FlatListSong";
@@ -24,8 +27,11 @@ import { getRecent } from "../utils/FirebaseHandler";
 import { Ionicons, FontAwesome } from "@expo/vector-icons";
 
 const Recent = () => {
-  const { userId, currentAudio } = useContext(AudioContext);
-  const { recentData, setRecentData } = useContext(PlaylistContext);
+  const contextPlaylist = useContext(PlaylistContext);
+  const contextNotify = useContext(NotificationContext);
+  const contextAudio = useContext(AudioContext)
+  const { userId, currentAudio } = contextAudio;
+  const { recentData, setRecentData } = contextPlaylist
   const { colors, language } = useContext(ThemeContext);
   const [loaded, setLoaded] = useState(recentData?.length !== 0);
 
@@ -71,6 +77,7 @@ const Recent = () => {
                 </Text>
               </TouchableOpacity> */}
               <TouchableOpacity
+                onPress={() => selectSong(contextAudio, recentData[0], recentData, contextPlaylist, contextNotify)}
                 style={[styles.button, { backgroundColor: colors.frame }]}
               >
                 <Ionicons name="play-circle" size={20} color={colors.primary} />

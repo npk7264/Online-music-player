@@ -6,11 +6,18 @@ import MiniPlayer from '../../components/MiniPlayer'
 import FlatListSong from '../../components/FlatListSong'
 import { ThemeContext } from '../../context/ThemeContext';
 import { AudioContext } from '../../context/AudioContext';
+import { PlaylistContext } from '../../context/PlaylistContext';
+import { NotificationContext } from '../../context/NotifyContext';
 import { fetchTopSongByGenre, fetchSongByIDGenre } from '../../utils/FirebaseHandler';
 
+import { selectSong } from '../../utils/AudioController';
+
 const GenreDetail = ({ route }) => {
+    const contextPlaylist = useContext(PlaylistContext);
+    const contextNotify = useContext(NotificationContext);
+    const contextAudio = useContext(AudioContext)
     const { colors, language } = useContext(ThemeContext);
-    const { currentAudio } = useContext(AudioContext);
+    const { currentAudio } = contextAudio
     const [listSong, setListSong] = useState([]);
 
     const { id, name, image, type } = route.params;
@@ -39,7 +46,9 @@ const GenreDetail = ({ route }) => {
                         <Ionicons name='shuffle' size={20} color='white' />
                         <Text style={[styles.buttonText, { color: 'white' }]}>Shuffle</Text>
                     </TouchableOpacity> */}
-                    <TouchableOpacity style={[styles.button, { backgroundColor: colors.frame }]}>
+                    <TouchableOpacity
+                        onPress={() => selectSong(contextAudio, listSong[0], listSong, contextPlaylist, contextNotify)}
+                        style={[styles.button, { backgroundColor: colors.frame }]}>
                         <Ionicons name='play-circle' size={20} color={colors.primary} />
                         <Text style={[styles.buttonText, { color: colors.primary }]}>{language.play}</Text>
                     </TouchableOpacity>
