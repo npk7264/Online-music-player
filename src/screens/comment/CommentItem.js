@@ -1,8 +1,16 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import { useState, useContext } from "react";
 import { ThemeContext } from "../../context/ThemeContext";
+import { auth } from "../../services/firebaseConfig";
 
-const CommentItem = ({ userName, content, avatar }) => {
+const CommentItem = ({ id, user, content, avatar, time, deleteComment }) => {
   const { colors } = useContext(ThemeContext);
 
   return (
@@ -25,19 +33,40 @@ const CommentItem = ({ userName, content, avatar }) => {
           marginRight: 10,
         }}
       />
-      <View
-        style={{
-          flex: 1,
-          backgroundColor: colors.frame,
-          borderRadius: 15,
-          paddingVertical: 5,
-          paddingHorizontal: 10,
-        }}
-      >
-        <Text style={{ fontSize: 16, fontWeight: "bold", color: colors.text }}>
-          {userName}
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          style={{
+            backgroundColor: colors.frame,
+            borderRadius: 15,
+            paddingVertical: 5,
+            paddingHorizontal: 10,
+          }}
+          onLongPress={() => {
+            if (auth.currentUser.uid == user.id)
+              Alert.alert("Xóa bình luận", "Xóa bình luận này", [
+                {
+                  text: "Đóng",
+                  onPress: () => console.log("Cancel Pressed"),
+                  style: "cancel",
+                },
+                {
+                  text: "OK",
+                  onPress: () => deleteComment(id),
+                },
+              ]);
+          }}
+        >
+          <Text
+            style={{ fontSize: 16, fontWeight: "bold", color: colors.text }}
+          >
+            {user.name}
+          </Text>
+          <Text style={{ fontSize: 16, color: colors.text }}>{content}</Text>
+        </TouchableOpacity>
+
+        <Text style={{ fontSize: 13, color: colors.text, paddingLeft: 10 }}>
+          {time ? time.toDate().toLocaleString() : new Date().toLocaleString()}
         </Text>
-        <Text style={{ fontSize: 16, color: colors.text }}>{content}</Text>
       </View>
     </View>
   );

@@ -71,6 +71,7 @@ const Login = () => {
   const LoginFirebase = (auth, email, password, type) => {
     signInWithEmailAndPassword(auth, email, password)
       .then(async (userCredential) => {
+        setLoaded(false);
         const user = userCredential.user;
         try {
           await AsyncStorage.setItem("email", email);
