@@ -22,7 +22,7 @@ import { color } from "../constants/color";
 import { searchSinger, searchSong } from "../utils/FirebaseHandler";
 
 const Search = () => {
-  const { colors, darkMode } = useContext(ThemeContext);
+  const { colors, darkMode, language } = useContext(ThemeContext);
   const navigation = useNavigation();
   const [isFocused, setIsFocused] = useState(false); // focus TextInput
   const [searchText, setSearchText] = useState("");
@@ -54,8 +54,8 @@ const Search = () => {
                   ? "#2a221f"
                   : "#fff5ed"
                 : darkMode
-                  ? "#1f222a"
-                  : "#f5f5f6",
+                ? "#1f222a"
+                : "#f5f5f6",
               borderWidth: isFocused ? 1 : 0,
               color: colors.text,
             },
@@ -94,7 +94,7 @@ const Search = () => {
               { color: searchType === 0 ? "white" : colors.primary },
             ]}
           >
-            Bài hát
+            {language.song}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -117,7 +117,7 @@ const Search = () => {
               { color: searchType === 1 ? "white" : colors.primary },
             ]}
           >
-            Nghệ sĩ
+            {language.artist}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
