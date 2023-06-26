@@ -14,7 +14,6 @@ import {
   startAfter,
   documentId,
   increment,
-
 } from "firebase/firestore";
 
 import { getTopGenre } from "./helper";
@@ -117,10 +116,12 @@ export const fetchSingerAllLimit = async (limitSinger) => {
     }));
     return singerArray;
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:119 ~ fetchSingerAllLimit ~ e:", e)
-
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:119 ~ fetchSingerAllLimit ~ e:",
+      e
+    );
   }
-}
+};
 
 //fetch limit album
 export const loadAlbum = async (listAlbum, limitAlbum, lastVisibleAlbum) => {
@@ -177,14 +178,22 @@ export const fetchRecent = async (docRef) => {
 };
 
 // UPDATE RECENT and update genre
-export const updateRecent = async (userId, audioId, audio, recentID, setRecentID, recentData, setRecentData) => {
+export const updateRecent = async (
+  userId,
+  audioId,
+  audio,
+  recentID,
+  setRecentID,
+  recentData,
+  setRecentData
+) => {
   // const start = performance.now();
 
   try {
     const userRef = doc(db, "users/" + userId);
     let data = await fetchRecent(userRef);
     let recentList;
-    let recentListData
+    let recentListData;
     if (recentID?.length > 0) {
       recentList = recentID?.filter((item) => {
         return item != audioId;
@@ -193,15 +202,12 @@ export const updateRecent = async (userId, audioId, audio, recentID, setRecentID
       recentListData = recentData?.filter((item) => {
         return item.id != audioId;
       });
-    }
-    else {
+    } else {
       recentList = [];
       recentListData = [];
     }
 
-
     const songRef = doc(db, "songs/" + audioId);
-
 
     //update thong ke genre
     let songDetail = await fetchDetailSong(songRef);
@@ -214,25 +220,22 @@ export const updateRecent = async (userId, audioId, audio, recentID, setRecentID
           : 1;
     });
 
-
     //update recent
     updateDataUser["recently"] = [audioId, ...recentList];
     setRecentID([audioId, ...recentList]);
     setRecentData([audio, ...recentListData]);
-
 
     updateDoc(userRef, updateDataUser);
     updateDoc(songRef, {
       view: increment(1),
     });
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:221 ~ updateRecent ~ e:", e)
+    console.log("🚀 ~ file: FirebaseHandler.js:221 ~ updateRecent ~ e:", e);
     alert("Failed to save recent song!", e);
   }
 
   // const end = performance.now();
   // console.log(`Execution time: ${end - start} ms`);
-
 };
 
 // FETCH USER
@@ -349,7 +352,10 @@ export const fetchSongOfAlbum = async (idAlbum) => {
     // console.log(songsArray);
     return songsArray;
   } catch (error) {
-    console.log("🚀 ~ file: FirebaseHandler.js:302 ~ fetchSongOfAlbum ~ error:", error)
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:302 ~ fetchSongOfAlbum ~ error:",
+      error
+    );
   }
 };
 
@@ -361,7 +367,13 @@ export const fetchSongListFromGenreStatistics = async (userId, limitSong) => {
     //lấy danh sách bài hát từ thể loại đã tìm được
     if (userSnap.data().genre) {
       const topGenre = getTopGenre(userSnap.data().genre, 3);
-      const querySong = query(collection(db, 'songs'), where("genre", "array-contains-any", topGenre), orderBy("view", "desc"), orderBy("public", "desc"), limit(limitSong));
+      const querySong = query(
+        collection(db, "songs"),
+        where("genre", "array-contains-any", topGenre),
+        orderBy("view", "desc"),
+        orderBy("public", "desc"),
+        limit(limitSong)
+      );
       const querySnapshot = await getDocs(querySong);
       const songsArray = querySnapshot.docs.map((docRef) => ({
         id: docRef.id,
@@ -373,28 +385,31 @@ export const fetchSongListFromGenreStatistics = async (userId, limitSong) => {
         uri: docRef.data().url,
         lyric: docRef.data().lyric,
         view: docRef.data().view,
-      }))
+      }));
       return songsArray;
     }
     return null;
   } catch (error) {
-    console.log("🚀 ~ file: FirebaseHandler.js:314 ~ fetchSongListFromGenreStatistics ~ error:", error);
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:314 ~ fetchSongListFromGenreStatistics ~ error:",
+      error
+    );
   }
-
-}
+};
 
 //fetch one album
 export const fetchOneAlbum = async (idAlbum) => {
   try {
-    const ref = doc(db, 'albums/' + idAlbum);
+    const ref = doc(db, "albums/" + idAlbum);
     const snapShot = await getDoc(ref);
     return { image: snapShot.data().image, name: snapShot.data().name };
+  } catch (error) {
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:321 ~ fetchOneAlbum ~ error:",
+      error
+    );
   }
-  catch (error) {
-    console.log("🚀 ~ file: FirebaseHandler.js:321 ~ fetchOneAlbum ~ error:", error)
-  }
-}
-
+};
 
 //fetch top song
 export const fetchTopSong = async () => {
@@ -426,8 +441,7 @@ export const fetchFavorite = async (userId) => {
     const docSnap = await getDoc(doc(db, "users/" + userId));
     const userData = docSnap.data();
     const favorite = userData.favorite;
-    if (favorite?.length === 0)
-      return [];
+    if (favorite?.length === 0) return [];
     const songsRef = collection(db, "songs");
     const q = query(songsRef, where(documentId(), "in", favorite));
 
@@ -468,13 +482,10 @@ export const getRecent = async (userId) => {
     const userData = docSnap.data();
     const history = userData.recently;
 
-    if (history?.length === 0)
-      return null;
+    if (history?.length === 0) return null;
 
     const songsRef = collection(db, "songs");
     const q = query(songsRef, where(documentId(), "in", history));
-
-
 
     const querySnapshot = await getDocs(q);
 
@@ -577,22 +588,62 @@ export const searchSinger = async (text, setResult) => {
   } else setResult([]);
 };
 
+// SEARCH SINGER
+export const searchAlbum = async (text, setResult) => {
+  if (text.trim() !== "") {
+    text = text.trim();
+    try {
+      const querySnapshot = await getDocs(collection(db, "albums"));
+
+      // Lọc các bản ghi chứa chuỗi "text"
+      const filteredDocs = querySnapshot.docs.filter((doc) => {
+        // tìm kiếm tương đối
+        return VN_to_EN(text)
+          .split(" ")
+          .some((char) => VN_to_EN(doc.data().name).includes(char));
+      });
+
+      // Xử lý các bản ghi đã lọc được
+      const albumsArray = await Promise.all(
+        filteredDocs.map(async (album) => {
+          const singerSnapshot = await getDoc(album.data().singer);
+
+          return {
+            id: album.id,
+            image: album.data().image,
+            public: album.data().public,
+            name: album.data().name,
+            singer: {
+              id: singerSnapshot.id,
+              name: singerSnapshot.data().name,
+            },
+          };
+        })
+      );
+
+      setResult(albumsArray);
+      // console.log(albumsArray);
+    } catch (error) {
+      console.log("Fail to SEARCH artists", error);
+    }
+  } else setResult([]);
+};
+
 //fetch limit genre
 export const fetchGenre = async () => {
   try {
     const querySnapshot = await getDocs(collection(db, "genre"));
 
-    const genreArray =
-      querySnapshot.docs.map((docRef) => ({
-        ...docRef.data(),
-        id: docRef.id,
-      }))
+    const genreArray = querySnapshot.docs.map((docRef) => ({
+      ...docRef.data(),
+      id: docRef.id,
+    }));
 
     return genreArray;
   } catch (error) {
     console.log("Fail to fetch history songs", error);
   }
-}
+};
 // fetch Top Song By Genre
 export const fetchTopSongByGenre = async (id, topNumber) => {
   try {
@@ -617,10 +668,12 @@ export const fetchTopSongByGenre = async (id, topNumber) => {
     }));
     return songsArray;
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:567 ~ fetchTopSongByGenre ~ e:", e)
-
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:567 ~ fetchTopSongByGenre ~ e:",
+      e
+    );
   }
-}
+};
 //fetch song by genre
 export const fetchSongByIDGenre = async (id) => {
   try {
@@ -644,26 +697,41 @@ export const fetchSongByIDGenre = async (id) => {
     }));
     return songsArray;
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:616 ~ fetchSongByIDGenre ~ e:", e)
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:616 ~ fetchSongByIDGenre ~ e:",
+      e
+    );
   }
-}
+};
 
 //update artist when is unfollow or follow by user
-export const updateFollowArtistAndUser = async (userId, artistId, type, listIDArtistFollowing) => {
+export const updateFollowArtistAndUser = async (
+  userId,
+  artistId,
+  type,
+  listIDArtistFollowing
+) => {
   try {
-    updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing })
-    updateDoc(doc(db, `artists/${artistId}`), { follower: type === "unfollow" ? increment(-1) : increment(1) })
+    updateDoc(doc(db, `users/${userId}`), { follow: listIDArtistFollowing });
+    updateDoc(doc(db, `artists/${artistId}`), {
+      follower: type === "unfollow" ? increment(-1) : increment(1),
+    });
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:636 ~ updateFollowArtistAndUser ~ e:", e)
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:636 ~ updateFollowArtistAndUser ~ e:",
+      e
+    );
   }
-}
+};
 
 //fetch Data Artist Followed By User
 export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
   try {
-    if (!listIDArtist)
-      return null;
-    const q = query(collection(db, "artists"), where(documentId(), "in", listIDArtist));
+    if (!listIDArtist) return null;
+    const q = query(
+      collection(db, "artists"),
+      where(documentId(), "in", listIDArtist)
+    );
     const querySnapshot = await getDocs(q);
     const artistArray = querySnapshot.docs.map((docRef) => ({
       id: docRef.id,
@@ -676,17 +744,26 @@ export const fetchDataArtistFollowedByUser = async (listIDArtist) => {
       return indexA - indexB;
     });
     return sortedArtist;
-
   } catch (e) {
-    console.log("🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:", e)
+    console.log(
+      "🚀 ~ file: FirebaseHandler.js:644 ~ fetchDataArtistFollowedByUser ~ e:",
+      e
+    );
   }
-}
+};
 
 // save to favorite
-export const saveFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
+export const saveFavorite = async (
+  userId,
+  currentAudio,
+  favoriteData,
+  setFavoriteData,
+  setFavoriteID,
+  favoriteID
+) => {
   const docRef = doc(db, "users/" + userId);
   try {
-    setFavoriteData([currentAudio, ...favoriteData])
+    setFavoriteData([currentAudio, ...favoriteData]);
     setFavoriteID([currentAudio.id, ...favoriteID]);
     updateDoc(docRef, {
       favorite: [currentAudio.id, ...favoriteID],
@@ -697,7 +774,14 @@ export const saveFavorite = async (userId, currentAudio, favoriteData, setFavori
 };
 
 // remove from favorite
-export const removeFavorite = async (userId, currentAudio, favoriteData, setFavoriteData, setFavoriteID, favoriteID) => {
+export const removeFavorite = async (
+  userId,
+  currentAudio,
+  favoriteData,
+  setFavoriteData,
+  setFavoriteID,
+  favoriteID
+) => {
   const docRef = doc(db, "users/" + userId);
   try {
     const newfavoriteID = favoriteID?.filter((item) => {
