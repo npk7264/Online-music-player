@@ -125,8 +125,13 @@ const Comment = () => {
               alignItems: "center",
             }}
           >
-            <Text style={[styles.textType, { fontWeight: "bold" }]}>
-              Sắp xếp
+            <Text
+              style={[
+                styles.textType,
+                { fontWeight: "bold", color: colors.text },
+              ]}
+            >
+              {language.sort}
             </Text>
           </View>
           <TouchableOpacity
@@ -147,7 +152,7 @@ const Comment = () => {
                 { color: searchType === 0 ? "white" : colors.primary },
               ]}
             >
-              Mới nhất
+              {language.new}
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
@@ -168,7 +173,7 @@ const Comment = () => {
                 { color: searchType === 1 ? "white" : colors.primary },
               ]}
             >
-              Cũ nhất
+              {language.old}
             </Text>
           </TouchableOpacity>
         </View>
