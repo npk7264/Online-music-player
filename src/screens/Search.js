@@ -17,9 +17,15 @@ import { ThemeContext } from "../context/ThemeContext";
 import { AudioContext } from "../context/AudioContext";
 import FlatListSong from "../components/FlatListSong";
 import ArtistItem from "../components/ArtistItem";
+import AlbumItem from "../components/AlbumItem";
+
 import { color } from "../constants/color";
 
-import { searchSinger, searchSong } from "../utils/FirebaseHandler";
+import {
+  searchSinger,
+  searchSong,
+  searchAlbum,
+} from "../utils/FirebaseHandler";
 
 const Search = () => {
   const { colors, darkMode, language } = useContext(ThemeContext);
@@ -69,6 +75,7 @@ const Search = () => {
             setSearchText(text);
             if (searchType == 0) searchSong(text, setResult);
             else if (searchType == 1) searchSinger(text, setResult);
+            else if (searchType == 2) searchAlbum(text, setResult);
           }}
         />
       </View>
@@ -128,7 +135,11 @@ const Search = () => {
                 searchType === 2 ? colors.primary : colors.background,
             },
           ]}
-          onPress={() => setSearchType(2)}
+          onPress={() => {
+            setResult([]);
+            setSearchType(2);
+            searchAlbum(searchText, setResult);
+          }}
         >
           <Text
             style={[
@@ -161,8 +172,25 @@ const Search = () => {
           keyExtractor={(item) => item.id}
         />
       )}
+      {result.length != 0 && searchType == 2 && (
+        <FlatList
+          data={result}
+          renderItem={({ item }) => (
+            <AlbumItem
+              id={item.id}
+              name={item.name}
+              singer={item.singer.name}
+              idSinger={item.singer.id}
+              image={item.image}
+            />
+          )}
+          horizontal={false}
+          numColumns={2}
+          keyExtractor={(item) => item.id}
+        />
+      )}
 
-      {searchText != "" && result.length === 0 && (
+      {searchText.trim() != "" && result.length === 0 && (
         <View style={styles.nothingSearch}>
           <Text style={[styles.textType, { color: colors.text }]}>
             Không tìm thấy kết quả nào
