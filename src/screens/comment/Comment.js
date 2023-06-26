@@ -24,6 +24,7 @@ import {
   query,
   orderBy,
   serverTimestamp,
+  deleteDoc,
 } from "firebase/firestore";
 
 const Comment = () => {
@@ -87,6 +88,18 @@ const Comment = () => {
     }
   }
 
+  async function deleteComment(commentId) {
+    setList(list.filter((item) => item.id != commentId));
+    try {
+      const songRef = doc(db, "songs/" + currentAudio.id);
+      const commentRef = doc(collection(songRef, "comments"), commentId);
+      await deleteDoc(commentRef);
+      console.log("ok");
+    } catch (error) {
+      console.log("Fail to delete comment: ", error);
+    }
+  }
+
   useEffect(() => {
     getComments();
   }, [flag, currentAudio]);
@@ -100,10 +113,12 @@ const Comment = () => {
         data={list}
         renderItem={({ item }) => (
           <CommentItem
-            userName={item.user.name}
+            id={item.id}
+            user={item.user}
             content={item.content}
             avatar={item.user.avatar}
             time={item.createdAt}
+            deleteComment={deleteComment}
           />
         )}
         keyExtractor={(item, index) => index}
