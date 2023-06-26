@@ -5,6 +5,7 @@ import {
   TextInput,
   TouchableOpacity,
   SafeAreaView,
+  Alert,
 } from "react-native";
 import { useState, useContext } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -16,6 +17,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 import { ThemeContext } from "../context/ThemeContext";
 
+import { convertErrorCodeToMessage } from "../utils/helper";
 
 const Register = () => {
   const { colors, language } = useContext(ThemeContext);
@@ -57,9 +59,7 @@ const Register = () => {
         navigation.replace("Login");
       })
       .catch((error) => {
-        // const errorCode = error.code;
-        const errorMessage = error.message;
-        alert(errorMessage);
+        Alert.alert("Lỗi đăng ký", convertErrorCodeToMessage(error.code));
       });
   };
 
@@ -114,7 +114,13 @@ const Register = () => {
       />
 
       {/* Button */}
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => {
+          if (name != "" && email != "" && password != "") handleRegister();
+          else Alert.alert("Lỗi đăng ký", "Bạn phải nhập đầy đủ thông tin!");
+        }}
+      >
         <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
           {language.signUp}
         </Text>
@@ -124,13 +130,11 @@ const Register = () => {
       </Text>
       <TouchableOpacity
         style={[styles.button, { backgroundColor: "#006edc", width: "70%" }]}
+        onPress={() => {
+          navigation.replace("Login");
+        }}
       >
-        <Text
-          style={{ fontSize: 18, fontWeight: "bold", color: "white" }}
-          onPress={() => {
-            navigation.replace("Login");
-          }}
-        >
+        <Text style={{ fontSize: 18, fontWeight: "bold", color: "white" }}>
           {language.login}
         </Text>
       </TouchableOpacity>

@@ -26,3 +26,14 @@ export const getTopGenre = (listGenre, topNumber) => {
   const topGenre = sortedGenre.slice(0, topNumber).map(item => item[0]);
   return topGenre;
 }
+
+// convert mã error firebase sang thông báo
+export const convertErrorCodeToMessage = (errorCode) => {
+  if (errorCode === "auth/email-already-in-use")
+    return "Email đã được sử dụng!";
+  if (errorCode === "auth/user-not-found") return "Nhập sai email!";
+  if (errorCode === "auth/wrong-password") return "Nhập sai mật khẩu!";
+  if (errorCode === "auth/invalid-email") return "Email không hợp lệ!";
+  if (errorCode === "auth/too-many-requests") return "Quá nhiều yêu cầu!";
+  return "Lỗi!";
+};
