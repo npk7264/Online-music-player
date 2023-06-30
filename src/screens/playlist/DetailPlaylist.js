@@ -46,7 +46,7 @@ const DetailPlaylist = () => {
       <View style={styles.header}>
         {/* info singer */}
         <Image
-          source={require("../../../assets/temp.jpg")}
+          source={{ uri: renderSong.length > 0 ? renderSong[0].image : "https://cdn.gdgtme.com/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg" }}
           style={styles.poster}
         />
         <Text style={[styles.singer, { color: colors.text }]}>

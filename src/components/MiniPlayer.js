@@ -3,10 +3,10 @@ import { AudioContext } from "../context/AudioContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { NotificationContext } from "../context/NotifyContext";
 import { PlaylistContext } from "../context/PlaylistContext";
-import { selectSong } from "../utils/AudioController";
+import { selectSong, changeSong } from "../utils/AudioController";
 import { useNavigation } from "@react-navigation/native";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 
 const MiniPlayer = () => {
   const contextAudio = useContext(AudioContext);
@@ -69,6 +69,14 @@ const MiniPlayer = () => {
               size={40}
               color="#ff973e"
             />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.controllerItem}
+            onPress={() => {
+              changeSong(contextAudio, "next", contextPlaylist, contextNotify);
+            }}
+          >
+            <AntDesign name="stepforward" size={40} color={colors.primary} />
           </TouchableOpacity>
         </TouchableOpacity>
       </View>

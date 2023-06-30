@@ -74,7 +74,7 @@ const ListSuggest = ({ title, data, id }) => {
           renderItem={({ item }) => (
             <ItemSuggest
               item={item}
-              type={id == 6 || id == 3 ? "singer" : id == 4 ? "genre" : "song"}
+              type={id === 6 || id === 3 ? "singer" : id === 4 ? "genre" : "song"}
               data={data}
               onPressOptionModal={() => {
                 setOptionModalVisible(true);
@@ -87,7 +87,7 @@ const ListSuggest = ({ title, data, id }) => {
           keyExtractor={(item) => item.id}
         />
         <OptionModal
-          options={id !== 3 ? optionSong : optionSinger}
+          options={id === 6 || id === 3 ? optionSinger : optionSong}
           currentItem={currentItem}
           onClose={() => setOptionModalVisible(false)}
           visible={optionModalVisible}
