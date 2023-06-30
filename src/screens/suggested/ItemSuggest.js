@@ -37,7 +37,7 @@ const ItemSuggest = ({ item, type, data, onPressOptionModal }) => {
     <TouchableOpacity
       style={styles.container}
       onPress={handlePressItem}
-      onLongPress={onPressOptionModal}
+      onLongPress={type !== "genre" ? onPressOptionModal : null}
     >
       <Image source={{ uri: item.image }} style={styles.poster} />
       <Text style={[styles.text, { color: colors.text }]}>

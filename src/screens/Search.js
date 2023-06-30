@@ -18,8 +18,9 @@ import { AudioContext } from "../context/AudioContext";
 import FlatListSong from "../components/FlatListSong";
 import ArtistItem from "../components/ArtistItem";
 import AlbumItem from "../components/AlbumItem";
-
+import OptionModal from "../components/OptionModal";
 import { color } from "../constants/color";
+import { optionSinger } from "../utils/optionModal";
 
 import {
   searchSinger,
@@ -35,6 +36,9 @@ const Search = () => {
   const { songData } = useContext(AudioContext);
   const [searchType, setSearchType] = useState(0);
   const [result, setResult] = useState([]);
+  const [optionModalVisible, setOptionModalVisible] = useState(false);
+  const [currentSinger, setCurrentSinger] = useState(null);
+
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
@@ -60,8 +64,8 @@ const Search = () => {
                   ? "#2a221f"
                   : "#fff5ed"
                 : darkMode
-                ? "#1f222a"
-                : "#f5f5f6",
+                  ? "#1f222a"
+                  : "#f5f5f6",
               borderWidth: isFocused ? 1 : 0,
               color: colors.text,
             },
@@ -155,22 +159,33 @@ const Search = () => {
       {/* Search Result */}
       {result.length != 0 && searchType == 0 && <FlatListSong songs={result} />}
       {result.length != 0 && searchType == 1 && (
-        <FlatList
-          data={result}
-          renderItem={({ item }) => (
-            <ArtistItem
-              id={item.id}
-              name={item.name}
-              image={item.image}
-              // follower={item.follower}
-              onPressOptionModal={() => {
-                setOptionModalVisible(true);
-                setCurrentSinger(item);
-              }}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
+        <>
+
+          <FlatList
+            data={result}
+            renderItem={({ item }) => (
+              <ArtistItem
+                id={item.id}
+                name={item.name}
+                image={item.image}
+                // follower={item.follower}
+                onPressOptionModal={() => {
+                  setOptionModalVisible(true);
+                  setCurrentSinger(item);
+                }}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+
+          <OptionModal
+            type="singer"
+            options={optionSinger}
+            currentItem={currentSinger}
+            onClose={() => setOptionModalVisible(false)}
+            visible={optionModalVisible}
+          />
+        </>
       )}
       {result.length != 0 && searchType == 2 && (
         <FlatList
