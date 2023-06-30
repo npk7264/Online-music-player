@@ -192,8 +192,8 @@ export const updateRecent = async (
   try {
     const userRef = doc(db, "users/" + userId);
     let data = await fetchRecent(userRef);
-    let recentList;
-    let recentListData;
+    let recentList = [];
+    let recentListData = [];
     if (recentID?.length > 0) {
       recentList = recentID?.filter((item) => {
         return item != audioId;
@@ -202,9 +202,6 @@ export const updateRecent = async (
       recentListData = recentData?.filter((item) => {
         return item.id != audioId;
       });
-    } else {
-      recentList = [];
-      recentListData = [];
     }
 
     const songRef = doc(db, "songs/" + audioId);
@@ -222,8 +219,8 @@ export const updateRecent = async (
 
     //update recent
     updateDataUser["recently"] = [audioId, ...recentList];
-    setRecentID([audioId, ...recentList]);
-    setRecentData([audio, ...recentListData]);
+    setRecentID([audioId, ...recentList].slice(0, 30));
+    setRecentData([audio, ...recentListData].slice(0, 30));
 
     updateDoc(userRef, updateDataUser);
     updateDoc(songRef, {
@@ -480,10 +477,11 @@ export const getRecent = async (userId) => {
   try {
     const docSnap = await getDoc(doc(db, "users/" + userId));
     const userData = docSnap.data();
-    const history = userData.recently;
+    let history = userData.recently;
 
     if (history?.length === 0) return null;
-
+    if (history?.length > 30)
+      history = [...history.slice(0, 30)];
     const songsRef = collection(db, "songs");
     const q = query(songsRef, where(documentId(), "in", history));
 

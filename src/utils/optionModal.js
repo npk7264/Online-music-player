@@ -7,8 +7,8 @@ const onShare = async (item, type) => {
     try {
         const result = await Share.share({
             message: type === "song" ?
-                `My Music App 🎵🥁\nBài hát: ${song.name}
-          \nCa sĩ trình bày: ${song.singer.name}
+                `My Music App 🎵🥁\nBài hát: ${item.name}
+          \nCa sĩ trình bày: ${item.singer.name}
           \nlinkApp:https://github.com/npk7264/OfflineMusicPlayer`: `My Music App 🎵🥁\nCa sĩ: ${item.name}\nlinkApp:https://github.com/npk7264/OfflineMusicPlayer`,
             title: "My Music App 🎵🥁"
         },);
