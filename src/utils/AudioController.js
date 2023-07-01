@@ -2,6 +2,7 @@ import { updateRecent, updateRecentestPositon } from "./FirebaseHandler";
 
 // play audio
 export const play = async (playbackObj, uri, lastPosition) => {
+  console.log("🚀 ~ file: AudioController.js:5 ~ play ~ lastPosition:", lastPosition)
   try {
     if (!lastPosition)
       return await playbackObj.loadAsync(
@@ -137,6 +138,7 @@ export const selectSong = async (
   try {
     // playing audio for the first time.
     if (soundObj === null) {
+      console.log("114 audioControler: playing audio for the first time.");
       const status = await play(
         playbackObj,
         audio.uri,
@@ -151,7 +153,7 @@ export const selectSong = async (
         songData: songData,
         isPlaying: true,
         playbackDuration: status.durationMillis,
-        // playbackPosition: 0,
+        playbackPosition: 0,
       });
       playbackObj.setOnPlaybackStatusUpdate(onPlaybackStatusUpdate);
       // updateRecent(userId, audio.id);
@@ -178,6 +180,8 @@ export const selectSong = async (
 
     // pause audio
     if (isPlaying && currentAudio.id === audio.id) {
+      console.log("182 audioControler: pause audio");
+
       const status = await pause(playbackObj);
       updateState(context, {
         soundObj: status,
@@ -213,6 +217,8 @@ export const selectSong = async (
 
     // select another audio
     if (currentAudio.id !== audio.id) {
+      console.log("219 audioControler: select another audio");
+
       const status = await playNext(playbackObj, audio.uri);
       const index = songData.findIndex(({ id }) => id === audio.id);
       console.log("select another audio", index);
@@ -224,7 +230,7 @@ export const selectSong = async (
         songData: songData,
         isLooping: false,
         playbackDuration: status.durationMillis,
-        // playbackPosition: 0,
+        playbackPosition: 0,
       });
 
       // updateRecent(userId, audio.id);
