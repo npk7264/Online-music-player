@@ -38,7 +38,7 @@ const Login = () => {
   const context = useContext(AudioContext);
   const { updateState } = context;
   const contextPlaylist = useContext(PlaylistContext);
-  const { setFavoriteID, setRecentID, setRecentData } = contextPlaylist;
+  const { setFavoriteID, setRecentID, setRecentData, clearData } = contextPlaylist;
   const {
     setSuggestData,
     listSong,
@@ -117,6 +117,7 @@ const Login = () => {
 
   useEffect(() => {
     const signInAuto = async () => {
+      clearData();
       await updateState(context, {
         currentAudio: null,
         currentAudioIndex: null,

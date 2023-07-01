@@ -33,6 +33,19 @@ export const PlaylistProvider = ({ children }) => {
     const [favoriteID, setFavoriteID] = useState([]);//danh sach id bai hat yeu thich
     const [recentID, setRecentID] = useState([]);//danh sach id bai hat yeu thich
 
+    const clearData = () => {
+        setIdPlaylist('');
+        setSongs([]);
+        setPlaylistData([]);
+        setRenderSong([]);
+        setSearchText("");
+        setPlaylistArray([]);
+        setFavoriteData([]);
+        setRecentData([]);
+        setFavoriteID([]);
+        setRecentID([]);
+    }
+
     //get song by filter from listSong of playlistData and songData from fireStore 
     const filterSong = async (listSong) => {
 
@@ -199,7 +212,8 @@ export const PlaylistProvider = ({ children }) => {
         handleAddSong,
         setListSong,
         filterSong,
-        addOneSongToPlaylist
+        addOneSongToPlaylist,
+        clearData
     };
 
     return (
