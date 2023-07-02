@@ -87,6 +87,7 @@ const ListSuggest = ({ title, data, id }) => {
           keyExtractor={(item) => item.id}
         />
         <OptionModal
+          type={id === 6 || id === 3 ? "singer" : "song"}
           options={id === 6 || id === 3 ? optionSinger : optionSong}
           currentItem={currentItem}
           onClose={() => setOptionModalVisible(false)}
